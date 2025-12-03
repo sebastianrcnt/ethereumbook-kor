@@ -1,22 +1,22 @@
-# Chapter 8. Smart Contracts and Vyper
+# 8장. 스마트 계약과 Vyper
 
-Vyper is a well-established contract-oriented programming language for the EVM that strives to provide superior auditability by making it easier for developers to produce intelligible code. In fact, one of the principles of Vyper is to make it virtually impossible for developers to write misleading code.
+Vyper는 EVM용으로 잘 정립된 계약 지향 프로그래밍 언어로, 개발자가 이해하기 쉬운 코드를 만들 수 있도록 해 주면서 감사 가능성을 크게 향상시키려는 목표를 갖고 있어요. 사실 Vyper의 원칙 중 하나는 개발자가 오해를 일으키는 코드를 거의 불가능하게 만드는 거예요.
 
-In this chapter, we will look at common problems with smart contracts, introduce the Vyper contract programming language, and compare it to Solidity, demonstrating the differences.
+이 장에서는 스마트 계약에서 흔히 발생하는 문제들을 살펴보고, Vyper 언어를 소개하며 Solidity와 비교하면서 차이점을 보여줄게요.
 
-## Vulnerabilities and Vyper
+## 취약점과 Vyper
 
-In 2023 alone, almost $2 billion were stolen because of smart contract vulnerabilities in the Ethereum ecosystem. Vulnerabilities are introduced into smart contracts via code. It can be strongly argued that these and other vulnerabilities are not introduced intentionally, but regardless, undesirable smart contract code evidently results in the unexpected loss of funds for Ethereum users, and this is not ideal. Vyper is designed to make it easier to write secure code or, equally, to make it more difficult to accidentally write misleading or vulnerable code.
+2023년 한 해 동안 이더리움 생태계에서 스마트 계약 취약점 때문에 거의 20억 달러가 도난당했어요. 이런 취약점은 코드에 의해 발생하죠. 의도적으로 만들어진 건 아니라고 할 수 있지만, 원치 않는 계약 코드는 결국 사용자에게 예상치 못한 자금 손실을 가져오게 되니까 좋지 않아요. Vyper는 안전한 코드를 쓰기 쉽게 만들고, 실수로 오해를 일으키거나 취약한 코드를 작성하기 어렵도록 설계되었어요.
 
-## Comparison to Solidity
+## Solidity와의 비교
 
-One of the ways in which Vyper tries to make unsafe code harder to write is by deliberately omitting some of Solidity’s features. This design choice reflects Vyper’s roots in security-first principles and its inspiration from Python’s clarity and simplicity. It is important for those who are considering developing smart contracts in Vyper to understand what features Vyper does not have and why. In this section, we will explore those features and provide justification for why they have been omitted.
+Vyper가 위험한 코드를 더 어렵게 만드는 방법 중 하나는 Solidity의 일부 기능을 의도적으로 제외하는 거예요. 이 디자인 선택은 Vyper가 보안 우선 원칙에서 비롯됐으며, 파이썬의 명료함과 단순성에서 영감을 받았다는 점을 반영해요. Vyper로 스마트 계약을 개발하려는 사람들은 어떤 기능이 없고 왜 그런지 이해해야 해요. 이 섹션에서는 그 기능들을 살펴보고 제외된 이유를 정당화할게요.
 
-Despite stripping down the feature set to reduce ambiguity, Vyper has evolved to meet the practical needs of developers and auditors. For example, the original philosophy of keeping contracts in a single file helped maximize auditability, but it eventually became a bottleneck as protocols grew larger and more complex. To address this, modern Vyper introduced a sophisticated module system that allows developers to split contracts into multiple files while maintaining strict control over state access and code reuse. This module system follows composition principles rather than traditional inheritance, striking a better balance between structure and readability. Vyper has found a growing role in high-assurance use cases such as decentralized finance (DeFi) protocols and staking systems, where developers place a strong emphasis on clarity and ease of auditing.
+특징 세트를 축소해 모호함을 줄이면서도, Vyper는 실무적인 요구에 맞춰 진화했어요. 예를 들어 계약을 하나의 파일에 두려는 원래 철학은 감사 가능성을 최대화하려는 것이었지만, 프로토콜이 커지고 복잡해지면 병목 현상이 발생했죠. 이를 해결하기 위해 현대 Vyper는 모듈 시스템을 도입해 여러 파일로 계약을 나눌 수 있게 했어요. 이 모듈 시스템은 전통적인 상속 대신 구성(composition) 원칙을 따르며 구조와 가독성 사이의 균형을 잘 맞추고 있어요. Vyper는 DeFi 프로토콜, 스테이킹 시스템 등 고신뢰도(use‑case)에 점점 더 많이 활용되고 있답니다.
 
-### Modifiers
+### 수식어(Modifiers)
 
-As we saw in Chapter 7, in Solidity you can write a function using modifiers. For example, the following function, `changeOwner`, will run the code in a modifier called `onlyBy` as part of its execution:
+7장에서 보았듯 Solidity에서는 수식어를 사용해 함수를 작성할 수 있어요. 예를 들어 `changeOwner` 함수는 실행 중에 `onlyBy`라는 수식어의 코드를 실행합니다:
 
 ```solidity
 function changeOwner(address _newOwner)
@@ -27,7 +27,7 @@ function changeOwner(address _newOwner)
 }
 ```
 
-This modifier enforces a rule in relation to ownership. As you can see, this particular modifier acts as a mechanism to perform a precheck on behalf of the `changeOwner` function:
+이 수식어는 소유권과 관련된 규칙을 적용해요. 아래처럼 보이는 수식어는 `changeOwner` 함수의 사전 검사를 수행하는 메커니즘 역할을 해요:
 
 ```solidity
 modifier onlyBy(address _account)
@@ -37,9 +37,9 @@ modifier onlyBy(address _account)
 }
 ```
 
-But modifiers are not just there to perform checks, as shown here. In fact, as modifiers, they can significantly change a smart contract’s environment, in the context of the calling function. Put simply, modifiers are *pervasive*.
+하지만 수식어는 단순히 검사를 넘어서, 호출되는 함수의 환경을 크게 바꿀 수도 있어요. 즉, 수식어는 *보편적*이에요.
 
-Let’s look at another Solidity-style example:
+다른 Solidity 스타일 예시를 살펴볼게요:
 
 ```solidity
 enum Stages {
@@ -66,29 +66,33 @@ function a()
 }
 ```
 
-On the one hand, developers should always check any other code that their own code is calling. However, it is possible that in certain situations (such as when there are time constraints or exhaustion results in lack of concentration), a developer may overlook a single line of code. This is even more likely if the developer has to jump around inside a large file while mentally keeping track of the function call hierarchy and committing the state of smart contract variables to memory.
+한편, 개발자는 항상 자신의 코드가 호출하는 다른 코드를 확인해야 해요. 하지만 시간 제약이나 자원 고갈 같은 상황에서는 한 줄의 코드를 놓칠 수 있어요. 특히 큰 파일 안에서 함수 호출 계층을 머릿속으로 추적하면서 스마트 계약 변수 상태를 메모리에 저장해야 할 때는 더욱 그렇죠.
 
-Let’s look at the preceding example in a bit more depth. Imagine that a developer is writing a public function called `a`. The developer is new to this contract and is utilizing a modifier written by someone else. At a glance, it appears that the `stageTimeConfirmation` modifier is simply performing some checks regarding the age of the contract in relation to the calling function. What the developer may *not* realize is that the modifier is also calling another function, `nextStage`. In this simplistic demonstration scenario, simply calling the public function `a` results in the smart contract’s `stage` variable moving from `SafeStage` to `DangerStage`.
+이 예시를 좀 더 깊게 들여다보면, `a`라는 공개 함수를 작성 중인 개발자가 있다고 가정해요. 이 개발자는 이 계약에 익숙하지 않고, 다른 사람이 쓴 수식어를 사용하고 있어요. 한눈에 보면 `stageTimeConfirmation` 수식어는 호출 함수와 관련된 계약의 나이를 확인하는 것처럼 보이죠. 하지만 개발자가 깨닫지 못할 수도 있는 점은, 이 수식어가 또 다른 함수인 `nextStage`를 호출한다는 거예요. 아주 단순한 시나리오에서 공개 함수 `a`를 호출하면 계약의 `stage` 변수가 `SafeStage`에서 `DangerStage`로 이동하게 돼요.
 
-Vyper has done away with modifiers altogether. The recommendations from Vyper are as follows: if you are only performing assertions with modifiers, then simply use inline checks and asserts as part of the function; if you are modifying smart contract state and so forth, again make these changes explicitly part of the function. Doing this improves auditability and readability since the reader doesn’t have to mentally (or manually) “wrap” the modifier code around the function to see what it does.
+Vyper는 수식어를 완전히 없앴어요. Vyper가 권장하는 방법은 다음과 같아요:  
+- 수식어를 사용해 단순히 검증만 한다면, 함수 안에 인라인 검사와 assert를 직접 넣으세요.  
+- 스마트 계약 상태를 변경한다면, 그 변화를 명시적으로 함수 내부에 포함시키세요.
 
-### Class Inheritance
+이렇게 하면 감사 가능성과 가독성이 향상돼요. 독자는 수식어 코드를 함수 주위에 “포장”해 보는 대신, 바로 무엇을 하는지 알 수 있거든요.
 
-Inheritance allows programmers to harness the power of prewritten code by acquiring preexisting functionality, properties, and behaviors from existing software libraries. Inheritance is powerful and promotes the reuse of code. Solidity supports multiple inheritance as well as polymorphism, but while these are key features of object-oriented programming, Vyper does not support them. Vyper maintains that the implementation of inheritance requires coders and auditors to jump between multiple files in order to understand what the program is doing. Vyper also takes the view that multiple inheritance can make code too complicated to understand—a view tacitly admitted by the [Solidity documentation](https://oreil.ly/bkGwS), which gives an example of how multiple inheritance can be problematic.
+### 클래스 상속
 
-### Inline Assembly
+상속은 기존 소프트웨어 라이브러리에서 미리 작성된 기능, 속성, 동작을 가져와 재사용할 수 있게 해줘요. Solidity는 다중 상속과 다형성을 지원하지만, Vyper는 이를 지원하지 않아요. Vyper는 상속 구현이 개발자와 감사자가 여러 파일 사이를 오가며 프로그램이 무엇을 하는지 이해해야 하기 때문에 복잡해진다고 주장해요. 또한 다중 상속은 코드를 너무 복잡하게 만들어서 이해하기 어렵다는 관점도 갖고 있어요—Solidity 문서에서도 이를 인정한 예시가 있죠.
 
-Inline assembly gives developers low-level access to the EVM, allowing Solidity programs to perform operations by directly accessing EVM instructions. For example, the following assembly code adds 3 to memory location `0x80`:
+### 인라인 어셈블리
+
+인라인 어셈블리는 개발자에게 EVM에 대한 저수준 접근을 제공해, Solidity 프로그램이 직접 EVM 명령어를 호출하도록 해줘요. 예를 들어 다음 어셈블리 코드는 메모리 위치 `0x80`에 3을 더해요:
 
 ```
 3 0x80 mload add 0x80 mstore
 ```
 
-This would prevent the ability to search for a variable name to locate all occurrences where the variable is read or modified. Vyper considers the loss of readability to be too high a price to pay for the extra power and thus does not support inline assembly.
+이렇게 하면 변수 이름으로 검색해서 변수가 읽히거나 수정되는 모든 곳을 찾기 어려워져요. Vyper는 가독성 손실이 추가적인 힘보다 너무 큰 비용이라고 판단해 인라인 어셈블리를 지원하지 않아요.
 
-### Function Overloading
+### 함수 오버로딩
 
-Function overloading allows developers to write multiple functions of the same name. Which function is used on a given occasion depends on the types of the arguments supplied. Take the following two functions, for example:
+함수 오버로딩은 같은 이름의 함수를 여러 개 작성할 수 있게 해줘요. 호출 시 전달되는 인자 타입에 따라 어떤 함수가 사용될지 결정돼요. 예를 들어:
 
 ```solidity
 function f(uint256 _in) public pure returns (uint256 out) {
@@ -99,172 +103,173 @@ function f(uint256 _in, bytes32 _key) public pure returns (uint256 out) {
 }
 ```
 
-The first function (named `f`) accepts an input argument of type `uint256`; the second function (also named `f`) accepts two arguments, one of type `uint256` and one of type `bytes32`. Having multiple function definitions with the same name taking different arguments can be confusing, so Vyper does not support function overloading.
+같은 이름이지만 다른 인자를 받는 여러 정의가 있으면 혼란스러울 수 있어요. 그래서 Vyper는 함수 오버로딩을 지원하지 않아요.
 
-### Variable Typecasting
+### 변수 타입 캐스팅
 
-Vyper takes a very different approach to type conversion compared to Solidity, prioritizing explicit and safe type handling over convenience. The language requires all type conversions to be made explicitly using the built-in `convert()` function, which ensures that developers are always aware of when and how data types are being modified.
+Vyper는 Solidity와 달리 타입 변환에 대해 매우 다르게 접근해요. 편의성보다 명시적이고 안전한 타입 처리를 우선시해요. 언어는 모든 타입 변환을 내장 함수 `convert()`를 사용해 명시적으로 수행하도록 요구해요. 이렇게 하면 개발자는 언제, 어떻게 데이터 타입이 변경되는지 항상 인식하게 돼요.
 
-We can think of type conversions in two categories: those that might lose information and those that don’t. Vyper’s `convert()` function handles both cases, but always with explicit bounds checking to prevent unexpected behavior. For example, when converting from a larger integer type to a smaller one, Vyper will revert the transaction if the value doesn’t fit within the bounds of the target type.
+타입 변환은 정보 손실 가능성이 있는 경우와 그렇지 않은 경우 두 가지 범주로 생각할 수 있어요. Vyper의 `convert()` 함수는 두 경우를 모두 처리하지만, 예상치 못한 동작을 방지하기 위해 항상 명시적 경계 검사를 수행해요. 예를 들어 큰 정수형에서 작은 정수형으로 변환할 때 값이 대상 타입 범위에 맞지 않으면 트랜잭션이 되돌려져요.
 
-The syntax for type conversion in Vyper is straightforward:
+Vyper의 타입 변환 문법은 간단합니다:
 
 ```
-# Converting between integer types
+# Integer 타입 사이 변환
 small_value: uint8 = 42
-large_value: uint256 = convert(small_value, uint256)  # Safe upcast
-back_to_small: uint8 = convert(large_value, uint8)   # Bounds-checked downcast
+large_value: uint256 = convert(small_value, uint256)  # 안전한 업캐스트
+back_to_small: uint8 = convert(large_value, uint8)   # 경계 검사된 다운캐스트
 ```
 
-This explicit approach means that while Vyper code may be more verbose than Solidity when dealing with type conversions, it’s also much safer. There’s no possibility of accidentally truncating values or having unexpected overflow behavior because every conversion must be intentional and explicit. The `convert()` function will revert the transaction if the conversion would result in data loss or if the input value is outside the valid range for the target type.
+이 명시적 접근 방식 덕분에 Vyper 코드는 Solidity보다 타입 변환 시 더 장황할 수 있지만, 훨씬 안전해요. 값이 무심코 잘리거나 예기치 않은 오버플로우가 발생할 가능성이 없어요—모든 변환은 의도적이고 명시적이어야 해요.
 
-## Decorators
+## 데코레이터
 
-The following decorators may be used at the start of each function:
+각 함수 시작에 사용할 수 있는 데코레이터는 다음과 같아요:
 
 **@internal**
 
-The `@internal` decorator makes the function inaccessible from outside the contract. This is the default function visibility, and as such, it is optional.
+`@internal` 데코레이터는 함수를 계약 외부에서 접근할 수 없게 만들어요. 이는 기본 가시성으로, 선택적으로 사용해도 돼요.
 
 **@external**
 
-The `@external` decorator makes the function both visible and executable publicly. For example, even the Ethereum wallet will display such functions when viewing the contract.
+`@external` 데코레이터는 함수를 공개적으로 보이면서 실행 가능하게 해줘요. 예를 들어 이더리움 지갑에서도 해당 함수가 표시돼요.
 
 **@view**
 
-Functions with the `@view` decorator are not allowed to change state variables. In fact, the compiler will reject the entire program (with an appropriate error) if the function tries to change a state variable.
+`@view` 데코레이터가 붙은 함수는 상태 변수를 변경할 수 없어요. 실제로 컴파일러는 함수가 상태 변수를 바꾸려 하면 전체 프로그램을 거부해요.
 
 **@pure**
 
-Functions with the `@pure` decorator are not allowed to read any blockchain state or make a call to nonpure methods or to other contracts.
+`@pure` 데코레이터가 붙은 함수는 블록체인 상태를 읽거나 비순수(non‑pure) 메서드, 다른 계약에 호출할 수 없어요.
 
 **@payable**
 
-Only functions with the `@payable` decorator are allowed to transfer value.
+`@payable` 데코레이터가 붙은 함수만 가치를 전송할 수 있어요.
 
 **@deploy**
 
-The `@deploy` decorator is used to mark the constructor function of a contract. This function runs exactly once when the contract is deployed to the blockchain, typically for setting up initial state variables and configuration. In Vyper, only the `__init__()` function can be marked with `@deploy`, and this decorator is required if you want to include constructor logic in your contract.
+`@deploy` 데코레이터는 계약의 생성자 함수를 표시해요. 이 함수는 블록체인에 배포될 때 한 번만 실행돼 초기 상태 변수와 구성을 설정하죠. Vyper에서는 `__init__()` 함수만 `@deploy`로 마킹할 수 있고, 이 데코레이터가 없으면 생성자 로직을 포함할 수 없어요.
 
 **@raw_return**
 
-Functions with the `@raw_return` decorator return raw bytes without applying ABI encoding. This decorator is particularly useful in proxy contracts and helper contracts where you need to forward the exact output of another contract call without wrapping it in another layer of encoding. However, there are important limitations: this decorator can be used only on `@external` functions. It cannot be used in interface definitions, and when calling such functions from other contracts, you should use `raw_call` instead of interface calls since the return data may not be ABI encoded.
+`@raw_return` 데코레이터가 붙은 함수는 ABI 인코딩 없이 원시 바이트를 반환해요. 프록시 계약이나 헬퍼 계약에서 다른 계약 호출의 정확한 출력을 래핑하지 않고 전달해야 할 때 유용해요. 하지만 이 데코레이터는 `@external` 함수에만 사용할 수 있고, 인터페이스 정의에서는 사용 불가하며, 다른 계약에서 호출할 때는 `raw_call`을 써야 해요.
 
 **@nonreentrant**
 
-The `@nonreentrant` decorator places a lock on a function, preventing reentrant calls to any function covered by the decorator. The reentrancy lock ensures that such functions cannot be entered again until they have finished executing. This decorator is used to prevent reentrancy attacks, where an external contract might call back into the protected functions, potentially causing unexpected behavior or contract exploits. Vyper also supports a pragma for nonreentrancy by default, making all external functions nonreentrant unless explicitly overridden. For example, if contract A uses this decorator for reentrancy protection and makes an external call to contract B, any attempt by contract B to call back into a protected function on contract A will cause the transaction to revert.
+`@nonreentrant` 데코레이터는 함수를 잠그어 재진입 공격을 방지해요. 이 락은 함수가 실행이 끝날 때까지 다시 들어갈 수 없게 만들어요. Vyper는 기본적으로 모든 외부 함수를 비재진입성으로 설정하는 pragma를 지원해요. 예를 들어 계약 A가 이 데코레이터를 사용하고 계약 B에 외부 호출을 하면, 계약 B가 계약 A의 보호된 함수로 다시 콜백하려 할 때 트랜잭션이 되돌려져요.
 
-> **Note**
->
-> This nonreentrant feature in Vyper versions 0.2.15, 0.2.16, and 0.3.0 contained a critical bug that was discovered and exploited to attack the Curve protocol in mid-2023. We will dive deeper into the reentrancy vulnerability in Chapter 9.
+> **참고**  
+> Vyper 0.2.15, 0.2.16, 0.3.0 버전에서는 이 비재진입 기능에 치명적인 버그가 있었고, 2023년 중반 Curve 프로토콜을 공격하는 데 사용됐어요. Chapter 9에서 재진입 취약점에 대해 더 깊이 다룰게요.
 
-Vyper implements the logic of decorators explicitly. For example, the Vyper compilation process will fail if a function has both a `@payable` decorator and a `@view` decorator. This makes sense because a function that transfers value has by definition updated the state so cannot be `@view`. Each Vyper function must be decorated with either `@external` or `@internal` (but not both!).
+Vyper는 데코레이터 로직을 명시적으로 구현해요. 예를 들어 `@payable`과 `@view` 두 개가 동시에 붙은 함수는 컴파일 타임에 실패해요—값을 전송하는 함수는 상태를 업데이트하기 때문에 `@view`일 수 없거든요. 각 Vyper 함수는 반드시 `@external` 또는 `@internal` 중 하나로 데코레이트돼야 해요(둘 다 안 됨).
 
-## Function and Variable Ordering
+## 함수와 변수 순서
 
-Vyper’s approach to scoping and declarations follows C99 scoping rules, which provide more flexibility than you might initially expect. While Vyper contracts must still be contained within a single file (unless you are using the module system), the strict ordering requirements that were present in earlier versions have been relaxed for module-scope declarations.
+Vyper의 스코프 및 선언 방식은 C99 스코프 규칙을 따르며, 처음 생각보다 더 유연해요. Vyper 계약은 여전히 한 파일에 있어야 하지만(모듈 시스템 사용 시 예외), 이전 버전에서 요구되던 엄격한 순서가 완화돼요.
 
-Variables and functions that are declared at the module scope (outside of any function body) are visible throughout the entire contract, even before their formal declaration. This means you can reference state variables and call functions before they appear in the file, similar to how many modern programming languages handle forward declarations.
+모듈 범위(함수 바디 밖)에서 선언된 변수와 함수는 계약 전체에서 보이므로, 실제로 선언되기 전에 참조할 수 있어요. 이는 많은 현대 언어가 전방 선언을 처리하는 방식과 비슷해요.
 
-Here’s a practical example showing how scoping works in modern Vyper:
+예시를 들어볼게요:
 
 ```
-# This function can reference the state variable below
+# 이 함수는 아래에 있는 상태 변수를 참조할 수 있어요
 @external
 def get_stored_value() -> uint256:
-    return self.stored_data  # References variable declared later
-# This function can call the function above
+    return self.stored_data  # 나중에 선언된 변수 참조
+
+# 이 함수는 위 함수를 호출할 수 있어요
 @external
 def check_if_positive() -> bool:
-    return self.get_stored_value() > 0
-# State variable declaration - accessible by functions above
+    return self.get_stored_value() > 0
+
+# 상태 변수 선언 - 위 함수에서 접근 가능
 stored_data: public(uint256)
 ```
 
-However, within function scope, Vyper still maintains strict ordering rules. Local variables must be declared before use, and you cannot shadow the names of constants, immutable variables, or other module-level declarations with local variables. This scoping approach strikes a balance between Python’s flexibility and the needs of smart contract development, where clear visibility of state variables and function relationships is important for security auditing.
+하지만 함수 범위 안에서는 여전히 엄격한 순서 규칙이 적용돼요. 지역 변수를 사용하기 전에 선언해야 하고, 상수, 불변 변수, 모듈 수준 선언을 지역 변수로 덮어쓰는 것은 허용되지 않아요. 이 스코프 접근 방식은 파이썬의 유연성과 스마트 계약 개발에 필요한 명확한 가시성 사이에서 균형을 맞춰줘요.
 
-## Compilation
+## 컴파일
 
-The easiest way to experiment with Vyper is to use the [Remix online compiler](https://remix.ethereum.org), which allows you to write and then compile your smart contracts using only your web browser (you will need to activate the vyper-remix plug-in in the plug-in manager).
+Vyper를 실험해 보는 가장 쉬운 방법은 [Remix 온라인 컴파일러](https://remix.ethereum.org)를 사용하는 거예요. Remix에서는 브라우저만으로 스마트 계약을 작성하고 컴파일할 수 있어요(플러그인 매니저에서 vyper‑remix 플러그인을 활성화해야 해요).
 
-> **Note**
->
-> Vyper comes with [built-in common interfaces](https://oreil.ly/GazPW), such as ERC-20 and ERC-721, allowing interaction with such contracts out of the box. Contracts in Vyper must be declared as global variables. An example of declaring an ERC-20 variable is as follows:
-> `from vyper.interfaces import ERC20` `token: ERC20`
+> **참고**  
+> Vyper는 ERC‑20, ERC‑721 같은 [공통 인터페이스](https://oreil.ly/GazPW)를 내장하고 있어서 바로 해당 계약과 상호작용할 수 있어요. 예를 들어 ERC‑20 변수를 선언하려면 다음처럼 해요:  
+> `from vyper.interfaces import ERC20`  
+> `token: ERC20`
 
-You can also compile a contract using the command line. Each Vyper contract is saved in a file with the *.vy* extension. Once Vyper is installed, you can compile a contract by running the following command:
+커맨드 라인에서도 컴파일이 가능해요. Vyper 계약은 *.vy* 확장자를 가진 파일에 저장돼요. Vyper가 설치되면 다음 명령으로 컴파일할 수 있어요:
 
 ```bash
 vyper ~/hello_world.vy
 ```
 
-The compiler offers extensive output options. To get the human-readable ABI description in JSON format, use:
+컴파일러는 다양한 출력 옵션을 제공해요. 사람이 읽기 쉬운 ABI를 JSON 형식으로 얻으려면:
 
 ```bash
 vyper -f abi ~/hello_world.vy
 ```
 
-For development and testing, you’ll likely want additional outputs like bytecode, opcodes, or interface files. The compiler supports numerous output formats:
+개발 및 테스트 시 바이트코드, 오퍼코드, 인터페이스 파일 같은 추가 출력을 원하면 다음처럼 해요:
 
 ```bash
 vyper -f abi,bytecode,interface,source_map ~/hello_world.vy
 ```
 
-Modern Vyper also includes advanced optimization modes. You can optimize for gas efficiency with `--optimize gas` (the default) or for smaller contract sizes with `--optimize codesize`. The newer, experimental Venom IR pipeline can be enabled with `--experimental-codegen` for even better optimizations.
+현대 Vyper는 고급 최적화 모드를 포함해요. `--optimize gas`(기본)으로 가스 효율을 최적화하거나, `--optimize codesize`로 계약 크기를 줄일 수 있어요. 최신 실험적인 Venom IR 파이프라인은 `--experimental-codegen` 옵션으로 활성화돼 더 나은 최적화를 제공해요.
 
-While Remix and the command-line compiler are excellent for learning and experimentation, developers working on larger projects typically need comprehensive development frameworks. [ApeWorx](https://oreil.ly/AJRSa) (formerly Ape) provides excellent Vyper support with features like automated testing, deployment scripting, and integration with various networks. [Foundry](https://oreil.ly/CWIKj), while primarily focused on Solidity, also supports Vyper development and offers powerful testing and simulation capabilities. These frameworks provide the kind of mature development environment that professional smart contract developers need for building complex applications.
+Remix와 커맨드 라인 컴파일러는 학습과 실험에 훌륭하지만, 대규모 프로젝트를 진행할 때는 종합적인 개발 프레임워크가 필요해요. [ApeWorx](https://oreil.ly/AJRSa) (이전 이름: Ape)는 자동 테스트, 배포 스크립트, 다양한 네트워크와의 통합 같은 훌륭한 Vyper 지원을 제공해요. Solidity에 주로 초점을 맞추지만 Vyper도 지원하는 [Foundry](https://oreil.ly/CWIKj) 역시 강력한 테스트 및 시뮬레이션 기능을 제공해요. 이 프레임워크들은 전문 스마트 계약 개발자가 복잡한 애플리케이션을 구축할 때 필요한 성숙한 개발 환경을 제공해줘요.
 
-## Protecting Against Overflow Errors at the Compiler Level
+## 컴파일러 수준에서 오버플로우 오류 방지
 
-Overflow errors in software can be catastrophic when dealing with real value. For example, one [transaction from mid-April 2018](https://oreil.ly/zOy06) shows the malicious transfer of more than 57,896,044,618,658,100,000,000,000,000,000,000,000,000, 000,000,000,000,000,000 BEC tokens. This transaction was the result of an integer-overflow issue in Beauty Chain’s ERC-20 token contract (*BecToken.sol*).
+소프트웨어에서 오버플로우 오류는 실제 가치를 다룰 때 파괴적일 수 있어요. 예를 들어 2018년 중반의 한 트랜잭션은 Beauty Chain의 ERC‑20 토큰 계약(BecToken.sol)에서 발생한 정수 오버플로우 문제 때문에 57,896,044,618,658,100,000,000,000,000,000,000,000,000,000,000 BEC 토큰을 악의적으로 전송했어요.
 
-One of the core features of Vyper has always been its built-in overflow protection, which mitigates the risk of the overflow errors that have historically plagued smart contract development. Vyper’s approach to overflow protection is comprehensive: it includes SafeMath-equivalent protection that handles the necessary exception cases for integer arithmetic, ensuring that operations like addition, subtraction, multiplication, and division are safe by default and throwing exceptions when an overflow or underflow occurs. Additionally, Vyper uses clamps to enforce value limits whenever a literal constant is loaded, a value is passed to a function, or a variable is assigned.
+Vyper는 항상 내장된 오버플로우 보호 기능을 제공해왔어요. 이는 정수 연산에 필요한 예외 상황을 처리하는 SafeMath와 유사한 보호를 포함하며, 덧셈, 뺄셈, 곱셈, 나눗셈이 기본적으로 안전하도록 하고, 오버플로우나 언더플로우가 발생하면 예외를 던져요. 또한 Vyper는 리터럴 상수 로딩 시, 함수에 인자를 전달할 때, 변수 할당 시 값 한계를 강제하는 클램프(clamp) 연산을 사용해요.
 
-It’s worth noting that recent versions of Solidity (0.8.0 and later) have also integrated native overflow checks at the compiler level, similar to what Vyper has provided from the beginning. This means that arithmetic operations in modern Solidity now automatically include overflow checks, significantly reducing the risk of overflow errors without requiring additional libraries like SafeMath. While this change has brought Solidity closer to Vyper’s safety-first approach, Vyper’s implementation remains more comprehensive, including the clamp operations and more consistent bounds checking throughout the language. The key difference is philosophical: Vyper was designed from the ground up with overflow protection as a core principle, while Solidity added it as an enhancement to address historical vulnerabilities. This difference in approach reflects Vyper’s broader commitment to making unsafe code harder to write by default.
+최근 Solidity 0.8.0 이후 버전은 컴파일러 수준에서 네이티브 오버플로우 검사를 통합했어요—Vyper가 처음부터 제공한 것과 유사해요. 이는 현대 Solidity에서도 정수 연산이 자동으로 오버플로우 검사를 포함하도록 해 위험을 크게 줄여줘요. 하지만 Vyper의 구현은 더 포괄적이며, 클램프 연산과 일관된 경계 검사까지 포함돼 있어요. 핵심 차이는 철학에 있어요: Vyper는 오버플로우 보호를 핵심 원칙으로 설계했지만, Solidity는 과거 취약점을 해결하기 위한 향상 기능으로 추가한 거죠. 이 접근 방식 차이는 Vyper가 기본적으로 위험 코드를 더 어렵게 만드는 전반적인 의지를 반영해요.
 
-## Reading and Writing Data
+## 데이터 읽기와 쓰기
 
-Even though it is costly to store, read, and modify data, these storage operations are a necessary component of most smart contracts. Smart contracts can write data to two places:
+데이터를 저장하고 읽고 수정하는 것은 비용이 많이 들지만, 대부분의 스마트 계약에서 필수적이에요. 스마트 계약은 데이터를 두 곳에 쓸 수 있어요:
 
-**Global state**
+**글로벌 상태**
 
-The state variables in a given smart contract are stored in Ethereum’s global state trie; a smart contract can only store, read, and modify data in relation to that particular contract’s address (i.e., smart contracts cannot directly read or write to other smart contracts).
+주어진 스마트 계약의 상태 변수는 이더리움의 글로벌 상태 트라이(global state trie)에 저장돼요. 한 계약은 자신만의 주소와 관련된 데이터만 읽고 수정할 수 있고, 다른 계약을 직접 읽거나 쓸 수 없어요.
 
-**Logs**
+**로그**
 
-A smart contract can write to Ethereum’s chain data through log events. In Vyper, the syntax for declaring and using events is clean and straightforward, aligning with Vyper’s focus on code clarity.
+스마트 계약은 로그 이벤트를 통해 체인에 데이터를 기록할 수 있어요. Vyper에서는 이벤트 선언과 사용이 깔끔하고 직관적이에요—코드 명료성에 초점을 맞춘 결과죠.
 
-Event declarations in Vyper look similar to struct declarations. For example, the declaration of an event called `MyLog` is written as:
+Vyper에서의 이벤트 선언은 구조체 선언과 비슷해요. 예를 들어 `MyLog`라는 이벤트를 선언하려면:
 
 ```
 event MyLog:
-    arg1: indexed(address)
-    arg2: uint256
-    message: indexed(bytes[100])
+    arg1: indexed(address)
+    arg2: uint256
+    message: indexed(bytes[100])
 ```
 
-You can have up to four indexed arguments (these become searchable topics) and any number of nonindexed arguments that become part of the event data. Indexed arguments are useful for filtering and searching events, while nonindexed arguments can contain larger amounts of data.
+최대 4개의 인덱스된 인자를 가질 수 있고(검색 가능한 토픽이 됨), 비인덱스 인자는 이벤트 데이터에 포함돼요. 인덱스 인자는 필터링과 검색에 유용하고, 비인덱스 인자는 더 많은 데이터를 담을 수 있어요.
 
-The execution of the log event uses the `log` statement with straightforward syntax:
+로그 이벤트 실행은 `log` 문으로 간단히 해요:
 
 ```
 log MyLog(msg.sender, 42, b"Hello, Vyper!")
 ```
 
-You can also create events with no arguments using the `pass` statement:
+아무 인자도 없는 이벤트를 만들려면 `pass` 문을 써요:
 
 ```
 event SimpleEvent: pass
-# Later in your code:
+# 나중에 코드에서:
 log SimpleEvent()
 ```
 
-While smart contracts can write to Ethereum’s chain data through log events, they are unable to read the on-chain log events they’ve created. However, one of the advantages of writing to Ethereum’s chain data via log events is that logs can be discovered and read on the public chain by light clients. For example, the `logsBloom` value in a published block can indicate whether or not a log event is present. Once the existence of log events has been established, the log data can be obtained from a given transaction receipt.
+스마트 계약은 로그 이벤트를 통해 체인 데이터를 기록할 수 있지만, 자신이 만든 온체인 로그 이벤트를 읽을 수는 없어요. 하지만 로그를 기록하는 장점 중 하나는 라이트 클라이언트가 공개 체인에서 이를 발견하고 읽을 수 있다는 거예요. 예를 들어 게시된 블록의 `logsBloom` 값은 로그 이벤트가 있는지 여부를 나타낼 수 있어요. 로그 이벤트 존재가 확인되면, 해당 트랜잭션 영수증에서 로그 데이터를 얻을 수 있죠.
 
-## Conclusion
+## 결론
 
-Vyper is a powerful and fascinating contract-oriented programming language. Its design is biased toward “correctness,” prioritizing security and simplicity. This approach may allow programmers to write better smart contracts and avoid certain pitfalls that can cause serious vulnerabilities to arise.
+Vyper는 강력하고 매혹적인 계약 지향 프로그래밍 언어예요. 설계는 “정확성”에 기울어져 있고, 보안과 단순성을 우선시해요. 이 접근 방식은 개발자가 더 나은 스마트 계약을 작성하고 심각한 취약점을 초래할 수 있는 함정을 피하도록 도와줄 수 있어요.
 
-However, it’s important to recognize that everything has trade-offs. While Vyper’s stringent design principles enhance security and code clarity, they also limit some of the flexibility that developers may find in other languages. Additionally, Vyper is not as widely used or as developed as Solidity, which means fewer resources, libraries, and tools are available for developers. This can pose challenges for those who are looking to find community support, prebuilt solutions, and comprehensive documentation.
+하지만 모든 것에는 트레이드‑오프가 있다는 점을 인식해야 해요. Vyper의 엄격한 설계 원칙은 보안과 코드 명료성을 높여주지만, 다른 언어에서 찾을 수 있는 유연성 일부를 제한해요. 또한 Vyper는 Solidity만큼 널리 사용되거나 발전되지 않았기 때문에, 개발자에게 커뮤니티 지원, 사전 구축 솔루션, 포괄적인 문서가 부족할 수 있어요. 이는 커뮤니티 지원이나 기존 솔루션을 찾고자 하는 사람들에게 도전을 줄 수 있죠.
 
-Next, we will look at smart contract security in more detail. Some of the nuances of Vyper design may become more apparent once you read about all the possible security problems that can arise in smart contracts.
+다음 장에서는 스마트 계약 보안을 더 자세히 살펴볼 거예요. Vyper 설계의 미묘한 점들이 스마트 계약에서 발생할 수 있는 모든 잠재적 보안 문제를 읽어보면 더욱 명확해질 거예요.
