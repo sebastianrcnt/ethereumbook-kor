@@ -1,223 +1,224 @@
-# Chapter 3. Ethereum Nodes
+# 3장. 이더리움 노드란?
 
-An Ethereum node is a software application that implements the Ethereum specification and communicates over the P2P network with other Ethereum nodes.
+이더리움 노드는 이더리움 스펙을 구현한 소프트웨어로, 다른 이더리움 노드들과 P2P 네트워크로 소통하는 프로그램이에요.
 
-Initially, a node only had to run a single client to completely implement all the requirements to be part of the Ethereum ecosystem. On September 15, 2022, The Merge hard fork happened, changing the consensus protocol from a PoW-based scheme to Gasper, the new PoS-based consensus protocol. This also led to the separation of concerns—consensus and execution—and the creation of a new type of Ethereum client: a consensus client.
+원래는 노드를 하나만 실행하면 이더리움 생태계에 참여하는 데 필요한 모든 기능을 쓸 수 있었죠. 그런데 2022년 9월 15일에 ‘머지(The Merge)’ 하드포크가 일어나면서 합의 방식이 기존의 작업증명(PoW)에서 새 지분증명(PoS) 방식인 Gasper로 바뀌었어요. 그러면서 합의(Consensus)와 실행(Execution) 역할이 분리됐고, 새로운 종류의 이더리움 클라이언트인 '합의 클라이언트'도 생겼습니다.
 
-And so, at the time of writing, an Ethereum node must run two pieces of software at the same time to be compatible with the latest spec, as shown in Figure 3-1, with the definitions as follows:
+그래서 지금은 최신 이더리움 노드를 제대로 돌리려면 그림 3-1처럼 소프트웨어 두 개를 동시에 실행해야 해요. 각각의 역할은 아래와 같아요.
 
-**Consensus client**
+**합의(Consensus) 클라이언트**
 
-This new software is now in charge of the consensus protocol that lets all nodes agree on a single history of the blockchain.
+이 소프트웨어는 블록체인의 단일 히스토리에 대해 모든 노드가 합의하도록 만드는 역할을 맡아요.
 
-**Execution client**
+**실행(Execution) 클라이언트**
 
-This software focuses on receiving all the blocks and transactions happening on the network, executing them inside the EVM, and verifying their correctness.
+이건 네트워크에서 발생하는 모든 블록과 트랜잭션을 받고, EVM에서 실행하며, 결과가 맞는지 검증하는 역할입니다.
 
-![Figure 3-1. The architecture of an Ethereum node](./images/ch3/maet_0301.png)
+![그림 3-1. 이더리움 노드의 구조](./images/ch3/maet_0301.png)
 
-Different Ethereum clients—both execution and consensus clients—interoperate if they comply with the reference specification and the standardized communication protocols. While these different clients are implemented by different teams and in different programming languages, they all “speak” the same protocol and follow the same rules. As such, they can all be used to operate and interact with the same Ethereum network.
+여러 종류의 이더리움 클라이언트(실행, 합의 모두)는 공식 스펙과 표준화된 통신 프로토콜을 잘 지키면 서로 잘 호환됩니다. 클라이언트마다 개발팀도 다르고, 사용하는 프로그래밍 언어도 다양하지만, 모두 같은 프로토콜을 ‘말’하고 똑같은 규칙을 따라요. 그래서 네트워크상에서 같이 잘 동작할 수 있죠.
 
-Ethereum is an open source project, and the source code for all major clients is available under open source licenses (e.g., LGPL v3.0), free to download and use for any purpose. Open source means more than simply free to use, though. It also means that Ethereum is developed by an open community of volunteers and can be modified by anyone. More eyes mean more trustworthy code.
+이더리움은 오픈 소스 프로젝트라 주요 클라이언트의 소스코드는 누구나 다운로드해서 원하는 대로 쓸 수 있습니다(LGPL v3.0 같은 오픈 소스 라이선스). 오픈 소스라는 건 단순히 ‘공짜’라는 의미 그 이상이에요. 누구나 개발에 참여할 수 있고, 코드를 들여다보며 개선도 할 수 있죠. 많은 사람이 코드에 참여하면 더 신뢰할 수 있는 소프트웨어가 됩니다.
 
-Ethereum was originally defined by a single formal specification called the “Yellow Paper,” which was written by one of the original coauthors of this book, Gavin Wood. Even though this specification is periodically updated as major changes are made to Ethereum, there is a clear path toward two different reference implementations, one for execution clients and one for consensus clients. These reference implementations are written in Python and prioritize readability and simplicity.
+이더리움의 공식 스펙은 원래 '옐로우 페이퍼'라는 문서에 정의되어 있어요. 이 문서는 이 책 공동 저자인 개빈 우드가 썼고, 지금도 이더리움에 주요 변화가 있을 때마다 계속 업데이트됩니다. 이 공식 문서를 토대로 각각 실행 클라이언트와 합의 클라이언트를 위한 두 가지 레퍼런스(참고용) 구현이 존재해요. 이 참고 구현들은 파이썬으로 작성되어, 읽기 쉽고 이해하기 쉽게 만들어져 있습니다.
 
-> **Note**  
+> **참고**  
 >
-> These specs are not intended to be full-node implementations. They serve as executable pseudocode specifications.
+> 이 참고 스펙은 실제로 완전한 노드 소프트웨어를 만들기 위한 게 아니라, 구현할 때 참고할 수 있는 실행 가능한 '의사코드(pseudocode)'예요.
 
-This is in contrast to Bitcoin, for example, which is not defined in any formal way. Where Bitcoin’s “specification” is the reference implementation Bitcoin Core, Ethereum’s execution specification is documented in a paper that combines an English and a mathematical (formal) specification. This formal specification, in addition to various Ethereum Improvement Proposals (EIPs) and the new consensus specification written in Python, defines the standard behavior of an Ethereum node.
+비트코인과 비교하면, 비트코인은 이런 공식 스펙 문서가 없고, 사실상 '비트코인 코어(Bitcoin Core)'라는 구현 자체가 스펙처럼 취급돼요. 반면 이더리움은 공식 문서(영어+수학적 명세), EIP(이더리움 개선 제안), 파이썬으로 작성된 합의 스펙 등을 조합해서 이더리움 노드의 표준 동작이 정의되어 있습니다.
 
-As a result of Ethereum’s clear formal specification, there are a number of independently developed yet interoperable software implementations of an Ethereum client. Ethereum has a greater diversity of implementations running on the network than any other blockchain, which is generally regarded as a good thing. Indeed, this has, for example, proven to be an excellent way of defending against attacks on the network because exploitation of a particular client’s implementation strategy simply hassles the developers while they patch the exploit, while other clients keep the network running almost unaffected.
+이렇게 명확한 공식 명세 덕분에 이더리움에는 서로 독립적으로 개발된 다양한 소프트웨어 클라이언트가 존재해요. 실제로 이더리움 네트워크엔 블록체인 중에서 가장 다양한 구현이 돌아가고 있죠. 이 다양성은 네트워크를 공격으로부터 지키는 데도 도움이 됩니다. 특정 클라이언트에 문제가 생겨도 나머지 클라이언트가 네트워크를 계속 지탱해주니까요.
 
-## Ethereum Networks
+## 이더리움 네트워크 종류
 
-A variety of Ethereum-based networks exist that largely conform to the formal specification defined in the original Ethereum “Yellow Paper” but that may or may not interoperate with one another.
+이더리움에는 원래 ‘옐로우 페이퍼’의 공식 명세를 대체로 따르지만, 서로 완전히 호환되지는 않을 수도 있는 다양한 네트워크가 있어요.
 
-Several EVM-compatible chains, such as Ethereum Classic, BNB Chain, and Polygon, share large portions of the execution spec, though many deviate in consensus and parameters. While they are mostly compatible at the protocol level, these networks often have features or attributes that require maintainers of Ethereum client software to make small changes to support each network. Because of this, not every version of Ethereum client software runs every Ethereum-based blockchain.
+예를 들어, 이더리움 클래식(Ethereum Classic), BNB 체인, 폴리곤(Polygon) 같은 EVM 호환 체인들도 실행 스펙의 상당 부분을 공유하지만, 합의 방식이나 일부 파라미터는 서로 다릅니다. 그래서 거의 같은 프로토콜을 쓰지만, 약간의 추가 작업이 필요해서 모든 이더리움 클라이언트가 모든 이더리움 기반 체인을 바로 지원하는 건 아니에요.
 
-As of June 2025, there are five main implementations of the Ethereum execution protocol, written in four different languages, and five implementations of the Ethereum consensus protocol, written in five different languages:
+2025년 6월 기준으로, 이더리움 실행 클라이언트는 4개 언어로 5종류, 합의 클라이언트는 5개 언어로 5종류가 있습니다:
 
-The execution clients are:
+실행 클라이언트:
 
-- Geth, written in Go
-- Nethermind, written in C#
-- Besu, written in Java
-- Erigon, written in Go
-- Reth, written in Rust
+- Geth (Go 언어)
+- Nethermind (C#)
+- Besu (Java)
+- Erigon (Go)
+- Reth (Rust)
 
-The consensus clients are:
+합의 클라이언트:
 
-- Lighthouse, written in Rust
-- Lodestar, written in TypeScript
-- Nimbus, written in Nim
-- Prysm, written in Go
-- Teku, written in Java
+- Lighthouse (Rust)
+- Lodestar (TypeScript)
+- Nimbus (Nim)
+- Prysm (Go)
+- Teku (Java)
 
-In this section, we will look at the following two execution clients:
+이번 장에서는 아래 두 가지 실행 클라이언트를 다룹니다:
 
 **Geth**
 
-The oldest and most widely used execution client, maintained by the Ethereum Foundation
+이더리움 재단이 유지하는, 가장 오래되고 많이 쓰이는 실행 클라이언트
 
 **Reth**
 
-A new Rust-based execution client created by Paradigm after Parity/OpenEthereum was discontinued
+Parity/OpenEthereum 프로젝트 종료 후 Paradigm에서 새로 만든 러스트 기반 실행 클라이언트
 
-And we will look at the following two consensus clients:
+그리고 아래 두 가지 합의 클라이언트도 살펴봐요:
 
 **Prysm**
 
-The first consensus client, now maintained by Offchain Labs
+최초의 합의 클라이언트, 현재는 Offchain Labs가 관리
 
 **Lighthouse**
 
-The most used consensus client, maintained by Sigma Prime
+가장 많이 쓰이는 합의 클라이언트, Sigma Prime에서 관리
 
-We’ll show how to set up a node using each client. Specifically, we’ll use the Geth-Prysm and Reth-Lighthouse combinations, and we’ll explore some of their command-line options and APIs.
+각 클라이언트로 노드를 어떻게 세팅하는지, 특히 Geth-Prysm 조합과 Reth-Lighthouse 조합으로 설치하고, 주요 명령줄 옵션과 API도 살펴볼 거예요.
 
-> **Note**  
+> **참고**  
 >
-> These pairs are just examples; you can choose to combine whatever execution and consensus clients you like the most to run an Ethereum node.
+> 여기서 소개하는 클라이언트 조합은 예시일 뿐이고, 마음에 드는 실행 클라이언트와 합의 클라이언트를 자유롭게 골라서 조합할 수 있습니다.
 
-## Should I Run a Full Node?
+## 내가 풀노드를 직접 운영해야 할까?
 
-The health, resilience, and censorship resistance of blockchains depend on them having many independently operated and geographically dispersed full nodes—that is, nodes that download the entirety of the blockchain and keep data indefinitely. Each full node can help other new nodes obtain the block data to bootstrap their operations as well as offer the operator an authoritative and independent verification of all transactions and contracts.
+블록체인의 건강, 안정성, 검열 저항성은 여러 곳에서 독립적으로 운영되는 풀노드(전체 블록 데이터를 저장하는 노드)가 얼마나 많으냐에 달려 있어요. 풀노드는 새로운 노드가 네트워크에 참여할 때 데이터를 제공할 수도 있고, 모든 트랜잭션과 스마트컨트랙트를 직접 검증할 수도 있습니다.
 
-> **Note**
+> **참고**
 >
-> To be really precise, there is a distinction between these nodes:  
+> 좀 더 정확히 구분하면,  
 >
-> **Archive nodes**  
-> Ethereum nodes that keep all data indefinitely  
+> **아카이브(Archive) 노드**  
+> 블록체인 데이터를 모두 영구적으로 저장하는 노드  
 >
-> **Full nodes**  
-> Ethereum nodes that discard historical state and receipts—usually the default option when you spin up a node
+> **풀(Full) 노드**  
+> 과거 상태와 영수증 데이터는 일정 시점 이후 버리는 노드(노드 설치 시 기본 옵션)
 
-However, running a full node will incur a cost in hardware resources and bandwidth. A full node must download at least 2 TB of data (as of June 2025, depending on the client configuration) and store it on a local hard drive. This data burden increases quite rapidly every day as new transactions and blocks are added. We discuss this topic in greater detail in the later section “Hardware Requirements for a Full Node”.
+다만, 풀노드를 돌리려면 하드웨어와 네트워크 트래픽이 꽤 필요해요. 2025년 6월 기준으로, 최소 2TB 이상의 데이터를 다운받아서 하드디스크에 저장해야 하고, 이 데이터 용량은 계속 빠르게 늘어나고 있습니다. 이 내용은 뒷부분 ‘풀노드 하드웨어 요구사항’에서 더 자세히 다룹니다.
 
-A full node running on a live mainnet network is not necessary for Ethereum development. You can do almost everything you need to do with a testnet node (which connects you to one of the smaller public test blockchains), with a local private blockchain like Anvil, or with a hosted node API offered by a service provider like Infura or Alchemy.
+실제로 이더리움 개발을 할 때는 꼭 메인넷 풀노드를 운영하지 않아도 돼요. 테스트넷 노드(테스트용 공개 체인)나, Anvil 같은 로컬 블록체인, Infura나 Alchemy 같은 서비스 제공자의 노드 API를 써도 거의 대부분의 개발 작업이 가능합니다.
 
-You also have the option of running a remote client, which does not store a local copy of the blockchain or validate blocks and transactions. These clients offer the functionality of a wallet and can create and broadcast transactions. Remote clients can be used to connect to existing networks, such as your own full node, a public blockchain, a public or permissioned (proof-of-authority) testnet, or a private local blockchain. In practice, you will likely use a remote client, such as MetaMask, Rabby Wallet, or Coinbase Wallet, as a convenient way to switch between all the different node options.
+로컬에 블록체인 데이터를 저장하거나 블록, 트랜잭션을 직접 검증하지 않고, 원격에서 동작하는 클라이언트(리모트 클라이언트)를 사용할 수도 있어요. 이런 클라이언트는 지갑 기능을 제공하며, 트랜잭션 생성과 전송도 할 수 있죠. 리모트 클라이언트는 내 풀노드, 공개 블록체인, 공개/허가형(Proof-of-Authority) 테스트넷, 개인용 블록체인 등 다양한 네트워크에 연결하는 데 쓸 수 있어요. 실제로는 MetaMask, Rabby Wallet, Coinbase Wallet 같은 리모트 클라이언트를 많이 쓰게 될 거예요. 여러 노드 옵션을 편하게 오갈 수 있으니까요.
 
-The terms remote client and wallet are used interchangeably, although there are some differences. Usually, a remote client offers an API (such as the web3.js API) in addition to the transaction functionality of a wallet.
+보통 리모트 클라이언트와 지갑이라는 용어는 거의 같은 의미로 쓰이지만, 약간의 차이가 있긴 해요. 리모트 클라이언트는 지갑의 트랜잭션 기능에 더해, web3.js 같은 API도 제공하는 경우가 많거든요.
 
-Do not confuse the concept of a remote client in Ethereum with that of a light client (which is analogous to a Simplified Payment Verification [SPV] client in Bitcoin). Light clients validate block headers and use Merkle proofs to validate the inclusion of transactions in the blockchain and determine their effects, giving them a similar level of security as a full node. Conversely, Ethereum remote clients do not validate block headers or transactions. They entirely trust a full node to give them access to the blockchain and hence lose significant security and anonymity guarantees. You can mitigate these problems by using a full node you run yourself.
+여기서 말하는 이더리움의 리모트 클라이언트는 ‘라이트 클라이언트’랑은 다른 개념이에요(비트코인의 SPV 클라이언트와 비슷한 게 라이트 클라이언트임). 라이트 클라이언트는 블록 헤더만 검증하고 머클 증명을 통해 트랜잭션의 포함 여부와 영향을 확인해서, 어느 정도 풀노드와 비슷한 보안을 누릴 수 있어요. 반면 이더리움의 리모트 클라이언트는 블록 헤더나 트랜잭션 검증을 아예 하지 않고, 풀노드를 완전히 신뢰해서 블록체인에 접근합니다. 그래서 보안이나 익명성이 좀 떨어질 수 있죠. 이런 문제는 내가 직접 운영하는 풀노드를 사용하면 어느 정도 해결할 수 있어요.
 
-### Full Node Advantages and Disadvantages
+### 풀노드의 장단점
 
-Choosing to run a full node helps with the operation of the networks you connect it to but also incurs some mild to moderate costs for you. Let’s look at some of the advantages and disadvantages.
+풀노드를 직접 돌리면 내가 연결하는 네트워크의 운영에도 도움을 주지만, 어느 정도 비용도 발생해요. 장단점을 정리해보면 아래와 같아요.
 
-**Advantages**:
+**장점:**
 
-- Supports the resilience and censorship resistance of Ethereum-based networks
-- Authoritatively validates all transactions
-- Can interact with any contract on the public blockchain without an intermediary
-- Can directly deploy contracts into the public blockchain without an intermediary
-- Can query (read only) the blockchain status (accounts, contracts, etc.) offline
-- Can query the blockchain without letting a third party know the information you’re reading
+- 이더리움 네트워크의 건강과 검열 저항성 강화에 기여할 수 있음
+- 모든 트랜잭션을 직접 검증함
+- 중개자 없이 퍼블릭 블록체인에 있는 어떤 컨트랙트와도 직접 상호작용 가능
+- 중개자 없이 직접 컨트랙트를 퍼블릭 블록체인에 배포할 수 있음
+- 블록체인 상태(계정, 컨트랙트 등)를 오프라인으로 조회할 수 있음
+- 내가 어떤 정보를 조회하는지 제3자에게 노출하지 않고 블록체인을 쿼리할 수 있음
 
-**Disadvantages**:
+**단점:**
 
-- Requires significant and growing hardware and bandwidth resources
-- May require several days to fully sync when first started
-- Must be maintained, upgraded, and kept online to remain synced
+- 꽤 많은 하드웨어, 저장공간, 인터넷 트래픽이 필요함(점점 더 늘어남)
+- 처음 동기화할 때 며칠이 걸릴 수 있음
+- 동기화를 유지하려면 꾸준히 관리·업데이트하고, 계속 켜두어야 함
 
-### Public Testnet Advantages and Disadvantages
+### 공개 테스트넷의 장단점
 
-Whether or not you choose to run a full node, you will probably want to run a public testnet node. Let’s look at some of the advantages and disadvantages of using a public testnet.
+풀노드를 직접 돌리든 아니든, 공개 테스트넷 노드를 한 번쯤 써볼 필요는 있어요. 테스트넷 노드의 장단점도 한번 볼게요.
 
-**Advantages:**
+**장점:**
 
-- A testnet node needs to sync and store much less data—about 100–300 GB depending on the network (as of June 2025).
-- A testnet node can fully sync in a few hours.
-- Deploying contracts or making transactions requires test ether, which has no value and can be acquired for free from several “faucets.”
-- Testnets are public blockchains with many other users and contracts, running “live.”
+- 테스트넷은 저장해야 할 데이터가 훨씬 적어요(2025년 6월 기준, 네트워크별로 100~300GB 정도)
+- 동기화도 몇 시간 만에 끝남
+- 컨트랙트 배포나 트랜잭션에는 실제 가치가 없는 테스트 이더(test ether)를 써요. 여러 곳에서 공짜로 받을 수 있음
+- 테스트넷도 공개 블록체인이라 다른 사용자, 컨트랙트와 “라이브” 환경에서 테스트 가능
 
-**Disadvantages:**
+**단점:**
 
-- You can’t use “real” money on a testnet; it runs on test ether. Consequently, you can’t test security against real adversaries, as there is nothing at stake.
-- There are some aspects of a public blockchain that you cannot test realistically on a testnet. For example, transaction fees, although necessary to send transactions, are not a consideration on a testnet, since gas is free (meaning that testnet ETH doesn’t have any real economic value). Further, the testnets do not experience network congestion like the public mainnet sometimes does.
-- Some testnets are designed for specific purposes, and they could be slightly different than Ethereum mainnet.
+- 실제 돈을 쓸 수는 없어요(가치 없는 테스트 이더만 가능). 그래서 진짜 공격자 상황에서의 보안 테스트는 힘듦
+- 테스트넷에서는 가스비가 의미가 없어서(무료임), 실제 메인넷 환경처럼 트랜잭션 수수료를 테스트하기 어려움. 또 메인넷에서 발생하는 네트워크 혼잡도 경험하기 힘듦
+- 어떤 테스트넷은 특수 목적용으로 설계돼서 메인넷과 살짝 다를 수도 있음
 
-### Local Blockchain Simulation Advantages and Disadvantages
+### 로컬 블록체인 시뮬레이션의 장단점
 
-For many testing purposes, the best option is to launch a single-instance private blockchain. Anvil is one of the most popular local blockchain simulations that you can run and interact with without any other participants.
+여러 가지 테스트 목적이라면, 나만의 프라이빗 블록체인(단일 인스턴스)을 띄우는 게 제일 편할 때도 많아요. Anvil이 대표적인 로컬 블록체인 시뮬레이터고, 혼자서 마음껏 실험해볼 수 있습니다.
 
-**Advantages:**
+**장점:**
 
-- No syncing and almost no data on disk; you produce the first block yourself.
-- No need to obtain test ether; you “award” yourself block rewards that you can use for testing.
-- No other users, just you.
-- No other contracts, just the ones you deploy after you launch it.
+- 동기화가 필요 없고, 데이터도 거의 없음(블록 1번부터 내가 직접 만들어요)
+- 테스트 이더가 필요 없음; 직접 블록 보상으로 원하는 만큼 받을 수 있음
+- 사용자도, 컨트랙트도 나 혼자뿐
+- 내가 배포한 컨트랙트만 있어서 환경이 깔끔함
 
-**Disadvantages:**
+**단점:**
 
-- Having no other users means that your local chain doesn’t behave the same as a public blockchain. There’s no competition for transaction space or sequencing of transactions.
-- No block producers other than you means that block production is more predictable; therefore, you can’t test some scenarios that occur on a public blockchain. It’s worth mentioning that Anvil (and other tools like Hardhat) let you configure the block production modes to try to reproduce mainnet-like behavior, but still, it’s not the same as being on Ethereum mainnet.
-- Having no other contracts means you have to deploy everything you want to test, including dependencies and contract libraries. Luckily for you, tools like Anvil let you fork the Ethereum mainnet chain at arbitrary blocks and experiment with your smart contracts in a mainnet-like state.
+- 사용자가 나 하나뿐이라 실제 퍼블릭 블록체인처럼 경쟁 상황이 없음(트랜잭션 공간 경쟁, 트랜잭션 순서 경쟁이 없음)
+- 블록 생성도 내가 하기 때문에 예측이 쉬움. 그래서 퍼블릭 블록체인에서만 벌어지는 다양한 상황은 테스트가 어려움. 참고로 Anvil이나 Hardhat 같은 도구는 메인넷 환경에 가깝게 블록 생성 모드를 설정할 수 있지만, 진짜 메인넷과 똑같진 않아요
+- 다른 컨트랙트가 없으니, 테스트하려는 것뿐 아니라 의존성이나 라이브러리도 다 내가 배포해야 함. 다행히 Anvil 같은 도구는 메인넷 특정 블록을 ‘포크’해서 실험할 수도 있어서, 실제 환경과 최대한 비슷하게 만들 수 있어요.
 
-## Running an Ethereum Node
+## 이더리움 노드 실행하기
 
-If you have the time and resources, you should attempt to run a full node, even if only to learn more about the process. In this section, we cover how to download, compile, and run the Ethereum clients Geth-Prysm and Reth-Lighthouse. This requires some familiarity with using the command-line interface (CLI) on your operating system. It’s worth installing these clients, whether you choose to run them as full nodes, as testnet nodes, or as clients to a local private blockchain.
+시간과 여유가 있다면, 한 번쯤은 풀노드를 직접 돌려보는 걸 추천해요. 배우는 것도 많고, 프로세스를 직접 경험할 수 있거든요. 이 섹션에서는 Geth-Prysm과 Reth-Lighthouse 클라이언트를 다운로드·컴파일·실행하는 방법을 다룰 거예요. 명령줄(CLI) 사용이 조금은 익숙해야 하니, 미리 연습해두면 좋아요. 풀노드, 테스트넷, 개인용 블록체인 클라이언트로 쓸 때 모두 설치 방법은 비슷해요.
 
-### Hardware Requirements for a Full Node
+### 풀노드 하드웨어 요구사항
 
-Before we get started, you should ensure that you have a computer with sufficient resources to run an Ethereum full node. You will need at least 2 TB of disk space to store a full copy of the Ethereum blockchain. If you also want to run a full node on the Ethereum testnet, you will need at least an additional 100–400 GB. Downloading 2 TB of blockchain data can take a long time, so it’s recommended that you work on a fast internet connection.
+시작하기 전에, 내 컴퓨터가 이더리움 풀노드를 돌릴 수 있을지 먼저 확인해야 해요.  
+풀노드를 제대로 돌리려면 최소 2TB의 저장공간이 필요합니다. 테스트넷 풀노드까지 같이 돌릴 거라면 추가로 100~400GB가 더 필요해요. 2TB 데이터를 받으려면 인터넷도 빠른 게 좋아요.
 
-Syncing the Ethereum blockchain is very input/output (I/O) intensive. It is best to have a solid-state drive (SSD). If you have a mechanical hard-disk drive (HDD), you will need at least 8 GB of RAM to use as cache. Otherwise, you may discover that your system is too slow to keep up and fully sync.
+이더리움 동기화는 저장장치(I/O) 부담이 커서, SSD를 꼭 추천드려요. 하드디스크(HDD)밖에 없다면 최소 8GB 메모리를 캐시로 써야 좀 쾌적하게 돌아갑니다. 안 그러면 속도가 너무 느릴 수 있어요.
 
-Here is a summary of the minimum requirements to sync a full copy of an Ethereum-based blockchain:
+정리하면, 이더리움 풀노드 동기화에 필요한 최소 사양은 다음과 같아요:
 
-- CPU with 2 or more cores
-- At least 2 TB free storage space
-- 8 GB RAM minimum with an SSD, or 8+ GB if you have an HDD (SSD is highly preferable)
-- 7+ Mbps download internet service
+- 2코어 이상 CPU
+- 2TB 이상 여유 저장공간
+- SSD 기준 8GB RAM 이상(혹은 HDD면 8GB 이상, SSD가 훨씬 유리함)
+- 7Mbps 이상의 다운로드 인터넷
 
-If you want to sync in a reasonable amount of time and store all the development tools, libraries, clients, and blockchains we discuss in this book, you will want a more capable computer. Here are our recommended specifications:
+개발 도구, 클라이언트, 여러 블록체인까지 모두 저장하고 쾌적하게 쓰려면 이 정도는 권장해요:
 
-- Fast CPU with 4+ cores—a higher clock speed is more important than core count
-- 16+ GB RAM
-- Fast NVMe SSD with at least 2 TB free space
-- 24+ Mbps download internet service
-	
-It’s difficult to predict how fast a blockchain’s size will increase and when more disk space will be required, so it’s recommended to check the blockchain’s latest size before you start syncing.
+- 4코어 이상, 클럭 속도가 빠른 CPU(코어 수보단 속도가 중요)
+- 16GB 이상 메모리
+- NVMe SSD 2TB 이상
+- 24Mbps 이상의 인터넷
 
-> **Note**
+블록체인 크기가 얼마나 빠르게 커질지는 예측이 어렵기 때문에, 동기화 전에 블록체인 최신 용량을 꼭 확인하는 게 좋아요.
+
+> **참고**
 >
-> The disk-size requirements listed here assume you will be running a node with default settings, where the blockchain is “pruned” of old state data. If you instead run a full “archival” node, where all state is kept on disk, it will likely require more than 2 TB (up to 12–15 TB) of disk space, depending on the client. Always consult the latest hardware requirements on the official client website before running a node.
+> 여기 적힌 저장공간 기준은 블록체인 과거 데이터를 일정 부분 삭제하는 ‘프루닝(pruning)’ 설정을 쓴 경우예요. 만약 모든 상태 데이터를 저장하는 ‘아카이브 노드’로 돌리면, 2TB로는 부족하고 12~15TB까지도 필요할 수 있습니다(클라이언트마다 다름). 항상 최신 하드웨어 요구사항은 클라이언트 공식 웹사이트에서 확인해 주세요.
 
-### Software Requirements for Building and Running a Client
+### 클라이언트 빌드 및 실행을 위한 소프트웨어 요구사항
 
-This section covers Geth-Prysm and Reth-Lighthouse client software. It also assumes you are using a Unix-like command-line environment. The examples show the commands and output as they appear on macOS running the Bash shell (command-line execution environment). Instructions work unchanged on most Linux distros. Windows users can use Windows Subsystem for Linux (WSL2).
+여기서는 Geth-Prysm과 Reth-Lighthouse 클라이언트를 다루지만, 대부분 유닉스 계열 환경(리눅스/맥)에서 명령줄로 실행하는 걸 전제로 하고 있어요. 예시 명령어와 결과는 macOS의 Bash 쉘 기준인데, 대부분의 리눅스에서도 똑같이 동작해요. 윈도우 사용자라면 WSL2(Windows Subsystem for Linux 2)를 쓰는 게 편해요.
 
-> **Tip**
+> **팁**
 >
-> In many of the examples in this chapter, we will be using the operating system’s CLI (also known as a shell), accessed via a terminal application. The shell will display a prompt; you type a command, and the shell responds with some text and a new prompt for your next command. The prompt may look different on your system, but in the following examples, it is denoted by a $ symbol. In the examples, when you see text after a $ symbol, don’t type the $ symbol but type the command immediately following it (shown in bold), then press Enter to execute the command. In the examples, the lines below each command are the operating system’s responses to that command. When you see the next $ prefix, you’ll know it’s a new command and you should repeat the process.
+> 이 장의 예제 대부분은 터미널에서 운영체제의 명령줄(CLI, shell)을 사용하는 방식입니다. 쉘 프롬프트에 명령어를 입력하면 결과가 나오고, 다시 프롬프트가 나타나죠. 예제에서 $ 기호 뒤에 나오는 굵은 글씨가 실제 입력해야 할 명령어고, $는 입력하지 않아도 됩니다. 명령어 밑에 나오는 줄은 명령 실행 후 터미널에 출력되는 결과예요. 다시 $가 나오면, 다음 명령어를 입력하라는 뜻입니다.
 
-Before we get started, you may need to install some software. If you’ve never done any software development on the computer you are currently using, you will probably need to install some basic tools. For the examples that follow, you will need to install git, the source-code management system; golang, the Go programming language and standard libraries; and Rust, a systems programming language.
+시작하기 전에, 필요한 소프트웨어를 설치해야 할 수도 있어요. 지금 쓰는 컴퓨터에서 소프트웨어 개발을 한 번도 해본 적이 없다면, git(소스코드 관리), golang(Go 언어), rust(시스템 프로그래밍 언어) 같은 도구들을 설치해야 합니다.
 
-Here are the documentation pages for the four clients we’ll use in this example:
+아래는 예제에서 사용할 네 가지 클라이언트의 공식 문서 링크예요:
 
-- [Geth](https://oreil.ly/zYviP)
-- [Prysm](https://oreil.ly/9-2FC)
-- [Reth](https://oreil.ly/KDmMt)
-- [Lighthouse](https://oreil.ly/RRpAs)
+- [Geth 공식 문서](https://oreil.ly/zYviP)
+- [Prysm 공식 문서](https://oreil.ly/9-2FC)
+- [Reth 공식 문서](https://oreil.ly/KDmMt)
+- [Lighthouse 공식 문서](https://oreil.ly/RRpAs)
 
-Feel free to consult these websites to understand more details about each client’s architecture and for troubleshooting during installation.
+각 클라이언트의 구조나 설치 시 자주 발생하는 문제 등 더 자세한 정보가 궁금하다면 위 웹사이트들을 참고하면 좋아요!
 
-### Preparation Phase
+### 준비 단계
 
-Starting from your home directory, create a folder in your computer called *ethereum-node1* and then two subfolders within it called *execution* and *consensus*:
+홈 디렉터리에서 시작해서, *ethereum-node1*라는 폴더를 만들고 그 안에 *execution*과 *consensus*라는 하위 폴더 두 개를 만들어주세요:
 
 ```bash
 $ mkdir ethereum-node1
 $ cd ethereum-node1
 $ mkdir execution
 $ mkdir consensus
-```
+````
 
-Now you should have a folder structure like this:
+폴더 구조는 이렇게 생겼을 거예요:
 
 ```bash
 ethereum-node1
@@ -225,23 +226,23 @@ ethereum-node1
 └── execution
 ```
 
-Repeat the previous step with a new folder called *ethereum-node2*:
+이번엔 위에서 했던 걸 *ethereum-node2*라는 폴더로 한 번 더 반복해볼게요:
 
 ```bash
-$ cd .. # this command is used to go back to your home directory
+$ cd .. # 홈 디렉터리로 다시 이동하는 명령어
 $ mkdir ethereum-node2
 $ cd ethereum-node2
 $ mkdir execution
 $ mkdir consensus
 ```
 
-In the end you should have two root folders — *ethereum-node1* and *ethereum-node2* — with two subfolders within each root folder: *execution* and *consensus*.
+최종적으로 *ethereum-node1*과 *ethereum-node2*라는 두 개의 루트 폴더가 생기고, 각각의 폴더 안에 *execution*과 *consensus* 하위 폴더가 들어가 있어야 합니다.
 
-You will also need to install [Go](https://golang.org/) and [Rust](https://www.rust-lang.org/). You can have a look at their official websites for a guide on how to install them.
+그리고 [Go 언어](https://golang.org/)와 [Rust](https://www.rust-lang.org/)도 설치해야 해요. 설치 방법은 공식 사이트에서 친절하게 설명해주니 참고하면 어렵지 않아요.
 
 ### Geth-Prysm
 
-Go into the newly created folder *ethereum-node1*:
+먼저 만든 *ethereum-node1* 폴더로 이동합니다:
 
 ```bash
 $ cd ethereum-node1
@@ -249,24 +250,28 @@ $ cd ethereum-node1
 
 #### Geth
 
-First we’re going to install Geth by building it from the source code. Geth is a Go language implementation of the execution specs that is actively developed by the Ethereum Foundation, so it is considered the “official” implementation of the Ethereum client. Typically, every Ethereum-based blockchain will have its own Geth implementation. If you’re running Geth, then you’ll want to make sure you grab the correct version for your blockchain using one of the following repository links:
+먼저 Geth를 소스 코드에서 빌드해서 설치해볼 거예요.
+Geth는 Go 언어로 작성된 공식 이더리움 실행 클라이언트입니다(이더리움 재단에서 개발 중).
+대부분의 이더리움 계열 블록체인은 저마다 전용 Geth를 가지고 있어요. 내 네트워크에 맞는 버전을 아래 저장소 링크 중에서 골라 사용해야 해요.
 
-- [Ethereum](https://oreil.ly/qzK-O)
-- [BNB Chain](https://oreil.ly/tGtL3)
-- [Polygon PoS](https://oreil.ly/ZWhh3)
+* [Ethereum](https://oreil.ly/qzK-O)
+* [BNB Chain](https://oreil.ly/tGtL3)
+* [Polygon PoS](https://oreil.ly/ZWhh3)
 
-> **Note**
+> **참고**
 >
-> You can skip these instructions and install a precompiled binary for your platform of choice. The precompiled releases are much easier to install and can be found in the “releases” section of any of the repositories listed here. However, you may learn more by downloading and compiling the software yourself.
+> 꼭 이렇게 직접 소스 코드로 빌드하지 않아도, 운영체제별로 미리 컴파일된 실행파일(바이너리)을 받아서 간단히 설치할 수도 있습니다. 각 저장소의 ‘releases’ 섹션에서 다운로드할 수 있어요.
+> 하지만 직접 빌드해보면 내부 동작 원리를 더 잘 이해할 수 있습니다!
 
-**Cloning the repository**. The first step is to clone the Git repository to get a copy of the source code. To make a local clone of your chosen repository, use the git command as follows in the execution subfolder:
+**저장소 클론하기**
+첫 번째로, Git 저장소를 복제해서 소스 코드를 가져올 거예요. *execution* 폴더 안에서 아래 명령어를 입력하세요:
 
 ```bash
 $ cd execution
 $ git clone https://github.com/ethereum/go-ethereum.git
 ```
 
-You should see a progress report as the repository is copied to your local system:
+아래처럼 복제 진행 상황이 출력됩니다:
 
 ```bash
 Cloning into 'go-ethereum'...
@@ -278,16 +283,19 @@ Receiving objects: 100% (130745/130745), 204.15 MiB | 6.13 MiB/s, done.
 Resolving deltas: 100% (80729/80729), done.
 ```
 
-Great! Now that you have a local copy of Geth, you can compile an executable for your platform.
+이제 로컬에 Geth 소스 코드가 준비됐으니, 실행 파일로 빌드할 차례예요.
 
-**Building Geth from source code**. To build Geth, change to the directory where the source code was downloaded and use the make command after selecting the latest release—right now, it’s v1.14.3, but you can always check for the latest one:
+**Geth 빌드하기**
+다운로드한 디렉터리로 들어가서 최신 릴리스를 선택한 뒤 make 명령을 입력하면 됩니다.
+현재(예시 기준)는 v1.14.3이지만, 항상 최신 릴리스를 확인해 주세요.
 
 ```bash
 $ cd go-ethereum
-$ git checkout v1.14.3$ make geth
+$ git checkout v1.14.3
+$ make geth
 ```
 
-If all goes well, you will see the Go compiler building each component until it produces the Geth executable:
+컴파일이 잘 진행되면 이런 메시지가 뜰 거예요:
 
 ```bash
 go run build/ci.go install ./cmd/geth
@@ -301,7 +309,7 @@ Done building.
 Run "./build/bin/geth" to launch geth.
 ```
 
-Let’s make sure Geth works without actually starting it:
+실제로 Geth가 잘 설치됐는지 확인해봅시다:
 
 ```bash
 $ ./build/bin/geth version
@@ -314,47 +322,54 @@ Operating System: darwin
 [...]
 ```
 
-Your `geth version` command may show slightly different information, but you should see a version report much like the one shown here.
+`geth version` 명령 결과는 컴퓨터마다 다를 수 있지만, 위와 비슷하게 나오면 성공입니다.
 
-Don’t run Geth yet because we still need to install a consensus client to let the Ethereum node sync up to the tip of the chain.
+아직 Geth는 실행하지 마세요! 이더리움 노드 동기화를 위해서는 합의 클라이언트도 같이 설치해야 하거든요.
 
 #### Prysm
 
-Now it’s the consensus client’s turn. Prysm is a Go language implementation of the consensus specs that is actively developed by Offchain Labs. Initially, it was by far the most used consensus client after The Merge. Now, thanks to a great community effort to boost client diversity, its share of the market is greatly reduced, standing at 37%.
+이번엔 합의 클라이언트인 Prysm을 설치할 차례예요.
+Prysm은 Offchain Labs에서 Go 언어로 개발 중인 합의 클라이언트입니다.
+머지 이후 한동안 가장 널리 쓰였던 합의 클라이언트이고, 최근엔 다양성이 늘어나 점유율이 37% 정도로 줄었어요.
 
-**Installing the binary**. Prysm can be built from source code as we did for Geth, but it’s a bit more complicated. The suggested way to install it is the following method. First, go to the *consensus* folder:
+**바이너리 설치하기**
+Geth처럼 소스 빌드도 가능하지만, Prysm은 바이너리로 설치하는 게 더 간편합니다.
+먼저 *consensus* 폴더로 이동하세요:
 
 ```bash
-$ cd ../.. # this command is used to go back in the ethereum-node1 folder
+$ cd ../.. # ethereum-node1 폴더로 이동
 $ cd consensus
 ```
 
-Now, run the following command:
+아래 명령어를 입력하면 Prysm 실행 스크립트를 다운로드하고 실행 권한을 줍니다:
 
 ```bash
 $ curl https://raw.githubusercontent.com/prysmaticlabs/prysm/master/prysm.sh --output prysm.sh && chmod +x prysm.sh
 ```
 
-**Generating a JWT Secret**. The execution and consensus clients that made up an Ethereum node are two distinct pieces of software, but they always have to interact with each other. To achieve that, there is a sort of password that is used by both the execution and the consensus client to authenticate their connection. Now we need to generate it:
+**JWT 시크릿 생성하기**
+실행 클라이언트와 합의 클라이언트가 서로 통신하려면 비밀번호 같은 역할을 하는 시크릿 파일이 필요합니다.
+아래 명령어로 생성해 주세요:
 
 ```bash
 $ ./prysm.sh beacon-chain generate-auth-secret
 ```
 
-A *jwt.hex* file should appear. Let’s move it to the parent folder:
+*jwt.hex* 파일이 생겼을 거예요. 이 파일을 상위 폴더로 옮겨주세요:
 
 ```bash
 $ mv jwt.hex ../jwt.hex
 ```
 
-#### Run the node
+#### 노드 실행하기
 
-Now that you have both the execution and the consensus clients and you have correctly generated the JWT secret, you can spin up the clients and have an Ethereum full node running.
+이제 실행 클라이언트, 합의 클라이언트 모두 준비됐고, JWT 시크릿 파일도 제대로 만들었으니 이더리움 풀노드를 직접 돌릴 수 있습니다!
 
-**Running the execution client**. First, you need to run the execution client, Geth. Navigate back to the *execution* folder and run this command:
+**실행 클라이언트(Geth) 실행하기**
+먼저 *execution* 폴더로 이동해서 Geth를 실행해 봅시다:
 
 ```bash
-$ cd .. # this command is used to go back in the ethereum-node1 folder
+$ cd .. # ethereum-node1 폴더로 이동
 $ cd execution
 $ ./go-ethereum/build/bin/geth --mainnet \
 	--http \
@@ -362,7 +377,7 @@ $ ./go-ethereum/build/bin/geth --mainnet \
 	--authrpc.jwtsecret=../jwt.hex
 ```
 
-If you see something like this, everything is running fine:
+아래처럼 로그가 나오면 정상입니다:
 
 ```bash
 INFO [06-08|17:56:38.738] Starting Geth on Ethereum mainnet...
@@ -374,7 +389,8 @@ INFO [06-08|17:56:38.771] Allocated trie memory caches             clean=614.00M
 INFO [06-08|17:56:38.772] Using pebble as the backing database…
 ```
 
-**Running the consensus client**. Now you should run the consensus client, Prysm. Don’t close the terminal tab in which the execution client lives. Just open a new terminal window or tab and navigate to the *consensus* folder:
+**합의 클라이언트(Prysm) 실행하기**
+이제 터미널 새 창 또는 새 탭을 열고, *consensus* 폴더로 가서 Prysm을 실행하세요:
 
 ```bash
 $ cd ethereum-node1
@@ -387,7 +403,8 @@ $ ./prysm.sh beacon-chain \
 	--genesis-beacon-api-url=https://beaconstate.info
 ```
 
-You could be asked to accept Prysm terms and conditions. If that’s the case, type **accept**, and you should be done:
+처음 실행할 때 Prysm의 이용 약관 동의 화면이 뜰 수도 있어요.
+그럴 때는 **accept**라고 입력하면 됩니다:
 
 ```bash
 Prysm Terms of Use
@@ -398,9 +415,10 @@ TERMS AND CONDITIONS: https://github.com/prysmaticlabs/prysm/blob/develop/TERMS_
 Type “accept” to accept this terms and conditions [accept/decline]: (default: decline):
 ```
 
-And you’re done! You should see both the execution and consensus client start logging lots of data on the terminal.
+````
+이제 끝났어요! 터미널에서 실행 클라이언트와 합의 클라이언트가 쉴 새 없이 로그를 쏟아내는 걸 볼 수 있을 거예요.
 
-Execution client:
+실행 클라이언트:
 
 ```bash
 INFO [06-08|18:08:49.039] Forkchoice requested sync to new head    number=20,048,206 hash=8df21a..4afb49 finalized=unknown
@@ -408,9 +426,9 @@ INFO [06-08|18:08:52.507] Syncing beacon headers                   downloaded=32
 INFO [06-08|18:08:57.515] Looking for peers                        peercount=1 tried=42 static=0
 INFO [06-08|18:09:00.508] Syncing beacon headers                   downloaded=370,688 left=19,677,449 eta=43m35.827s
 INFO [06-08|18:09:01.637] Forkchoice requested sync to new head    number=20,048,207 hash=d99dab..0293c9 finalized=unknown
-```
+````
 
-Consensus client:
+합의 클라이언트:
 
 ```bash
 [2024-06-08 18:09:24]  INFO blockchain: Called new payload with optimistic block payloadBlockHash=0xd44520a09a7a slot=9253245
@@ -421,21 +439,22 @@ Consensus client:
 [2024-06-08 18:09:28]  INFO sync: Subscribed to topic=/eth2/6a95a1a9/beacon_attestation_35/ssz_snappy[2024-06-08 18:09:36]  INFO blockchain: Called new payload with optimistic block payloadBlockHash=0xff879102f29e slot=9253246
 ```
 
-Now you have an Ethereum full node that is syncing up to the tip of the chain. Note that the synchronization can take a lot of time (hours or days depending on your hardware and internet connectivity).
+이제 이더리움 풀노드가 체인 맨 끝까지 동기화를 시작한 거예요. 동기화에는 하드웨어 성능과 인터넷 속도에 따라 몇 시간에서 며칠이 걸릴 수도 있습니다.
 
-> **Note**
+> **참고**
 >
-> If you want to learn more about the specific commands and CLI flags we’ve used in this example, the official docs for [Geth](https://oreil.ly/zYviP) and [Prysm](https://oreil.ly/4sn6-) are the best places to look.
+> 위 예제에서 사용한 명령어와 옵션이 궁금하다면, [Geth 공식 문서](https://oreil.ly/zYviP)와 [Prysm 공식 문서](https://oreil.ly/4sn6-)를 참고해 보세요.
 
 ### Reth-Lighthouse
 
-Let’s do the same thing but using two different clients: Reth as the execution client and Lighthouse as the consensus client.
+이번에는 실행 클라이언트로 Reth, 합의 클라이언트로 Lighthouse를 써서 같은 과정을 반복해 볼게요.
 
 #### Reth
 
-First, you need to install Reth. Go into the *ethereum-node2* folder and then into the execution folder.
+먼저 Reth를 설치해야 합니다. *ethereum-node2* 폴더로 이동해서 *execution* 폴더로 들어가 주세요.
 
-**Cloning the repository**. The first step is to clone the Git repository to get a copy of the source code. Go back to your home directory and type the following commands:
+**저장소 클론하기**
+먼저 Git 저장소를 복제해 소스 코드를 내려받아야 해요. 홈 디렉터리에서 아래 명령어를 입력하세요:
 
 ```bash
 $ cd ethereum-node2
@@ -443,22 +462,24 @@ $ cd execution
 $ git clone https://github.com/paradigmxyz/reth
 ```
 
-Great! Now that you have a local copy of Reth, you can compile an executable for your platform.
+좋아요! 이제 로컬에 Reth 소스가 준비됐으니, 실행파일로 빌드할 수 있습니다.
 
-**Building Reth from source code**. To build Reth, you need to run the following command:
+**Reth 빌드하기**
+Reth를 빌드하려면 아래 명령어를 실행하세요:
 
 ```bash
 $ cd reth
 $ cargo install --locked --path bin/reth --bin reth
 ```
 
-It could take more than 10 minutes to complete the installation. When it’s done, you can check if Reth is correctly installed by running:
+설치가 끝나려면 10분 이상 걸릴 수도 있어요.
+완료 후에 아래처럼 실행해서 Reth가 잘 설치됐는지 확인해 보세요:
 
 ```bash
 $ reth --version
 ```
 
-You should see something like (the version can change):
+아래와 비슷하게 나오면 성공입니다(버전은 달라질 수 있음):
 
 ```bash
 reth Version: 0.2.0-beta.6-dev
@@ -469,53 +490,54 @@ Build Features: jemallocBuild Profile: maxperf+
 
 #### Lighthouse
 
-Now you need to install Lighthouse, the consensus client. Go back to the *ethereum-node2* folder and dive into the *consensus* folder:
+이제 합의 클라이언트인 Lighthouse를 설치해볼게요. *ethereum-node2* 폴더로 돌아가서 *consensus* 폴더로 이동합니다:
 
 ```bash
-$ cd .. # this command is used to go back in the ethereum-node2 folder
+$ cd .. # ethereum-node2 폴더로 돌아가기
 $ cd consensus
 ```
 
-You have to install some dependencies first. If you are on a macOS, you need to run:
+먼저 의존성 패키지부터 설치해야 해요. macOS라면:
 
 ```bash
 $ brew install cmake
 ```
 
-If you’re using a different operating system, you can refer to the [Lighthouse official documentation](https://oreil.ly/vEghS).
+다른 운영체제라면 [Lighthouse 공식 문서](https://oreil.ly/vEghS)에서 안내를 참고하세요.
 
-**Cloning the repository**. The first step is to clone the Git repository to get a copy of the source code:
+**저장소 클론하기**
+다음으로 Git 저장소를 복제합니다:
 
 ```bash
 $ git clone https://github.com/sigp/lighthouse.git
 ```
 
-Great! Now that you have a local copy of Lighthouse, you can compile an executable for your platform.
+이제 로컬에 Lighthouse가 준비됐으니, 빌드해볼게요.
 
-**Building Lighthouse from source code**. To build Lighthouse, you need to run the following command:
+**Lighthouse 빌드하기**
+아래 명령어를 실행하면 빌드가 시작돼요(10분 이상 걸릴 수 있음):
 
 ```bash
 $ cd lighthouse
-$ git checkout stable\
+$ git checkout stable
 $ make
 ```
 
-This could take more than 10 minutes to complete.
+#### 노드 실행하기
 
-#### Run the node
+이번에도 실행 클라이언트(Reth)를 먼저 실행해야 해요.
 
-Again, you need to run the execution client, Reth, first.
-
-**Running the execution client**. Navigate back to the *execution* folder and run this command:
+**실행 클라이언트 실행하기**
+*execution* 폴더로 이동해서 Reth를 실행하세요:
 
 ```bash
-$ cd ../.. # this command is used to go back to the ethereum-node2 folder
-$ cp ../ethereum-node1/jwt.hex ./jwt.hex # we use the same jwt.hex file we generated before
+$ cd ../.. # ethereum-node2 폴더로 이동
+$ cp ../ethereum-node1/jwt.hex ./jwt.hex # 앞서 만든 jwt.hex 파일을 복사해서 사용합니다
 $ cd execution
 $ reth node --full --http --http.api all --authrpc.jwtsecret=../jwt.hex
 ```
 
-If you see something like this, everything is running fine:
+아래처럼 나오면 정상이에요:
 
 ```bash
 2024-06-08T16:58:43.498297Z  INFO Starting reth version="0.2.0-beta.6-dev (ac29b4b73)"
@@ -525,7 +547,8 @@ If you see something like this, everything is running fine:
 2024-06-08T16:58:43.514917Z  INFO Pre-merge hard forks (block based):…
 ```
 
-**Running the consensus client**. Now you should run the consensus client, Lighthouse. Don’t close the terminal tab in which the execution client lives. Just open a new terminal window or tab and navigate into the *consensus* folder:
+**합의 클라이언트 실행하기**
+새 터미널 창/탭을 열고, *consensus* 폴더로 들어가서 Lighthouse를 실행하세요:
 
 ```bash
 $ cd ethereum-node2
@@ -537,9 +560,9 @@ $ lighthouse bn \
 	--genesis-beacon-api-url=https://beaconstate.info
 ```
 
-And you’re done! You should see both the execution and consensus client start logging lots of data on the terminal.
+그리고 완료! 실행 클라이언트와 합의 클라이언트가 터미널에 로그를 계속 쏟아내는 걸 볼 수 있을 거예요.
 
-Execution client:
+실행 클라이언트:
 
 ```bash
 2024-06-08T17:03:03.355648Z  INFO Received headers total=10000 from_block=18458372 to_block=18448373
@@ -548,7 +571,7 @@ Execution client:
 2024-06-08T17:03:04.913377Z  INFO Received headers total=10000 from_block=18428372 to_block=18418373
 ```
 
-Consensus client:
+합의 클라이언트:
 
 ```bash
 Jun 08 17:03:24.929 INFO New block received                      root: 0xa49c057026cea3190df38548d49963e271ebdc4d6f93d2301adc4034d6563113, slot: 9253515
@@ -556,43 +579,55 @@ Jun 08 17:03:29.001 WARN Head is optimistic                      execution_block
 Jun 08 17:03:29.001 INFO Synced                                  slot: 9253515, block: 0xa49c…3113, epoch: 289172, finalized_epoch: 289170, finalized_root: 0xca35…2b06, exec_hash: 0x5a14…a7a5 (unverified), peers: 31, service: slot_notifier
 ```
 
-Now you have an Ethereum full node that is syncing up to the tip of the chain. Note that the synchronization can take a lot of time (hours or days depending on your hardware and internet connectivity).
+이제 이더리움 풀노드가 체인 끝까지 동기화되고 있어요! 동기화에는 시간(하드웨어/인터넷 속도에 따라 몇 시간~며칠)이 걸릴 수 있습니다.
 
-> **Note**
+> **참고**
 >
-> If you want to learn more about the specific commands and CLI flags we’ve used in this example, the official docs for [Reth](https://reth.rs) and [Lighthouse](https://oreil.ly/vEghS) are the best places to look.
+> 여기 예제에서 사용된 명령어/옵션에 대해 더 알고 싶다면 [Reth 공식 문서](https://reth.rs)와 [Lighthouse 공식 문서](https://oreil.ly/vEghS)를 참고하세요.
 
-The next section explains the challenges with the initial synchronization of Ethereum’s blockchain.
+다음 섹션에서는 이더리움 블록체인을 처음 동기화할 때 어떤 점이 어려운지 설명합니다.
 
-> **Tip**
+> **꿀팁**
 >
-> Do all these steps look complicated and confusing to you? But you would still like to contribute to the network and really don’t depend on any trusted third party running your own Ethereum full node?
+> 위 과정이 너무 복잡하게 느껴진다면? 그래도 내 이더리움 풀노드를 직접 돌리고, 제3자를 신뢰하지 않는 환경을 원한다면?
 >
-> There is a perfect solution for you: it’s the BuidlGuidl Client, a project that created a one-line command that lets you run an Ethereum node. You don’t believe it? [See it yourself](https://oreil.ly/9FKZd).
+> 정말 쉬운 솔루션이 있어요! 바로 BuidlGuidl Client라는 프로젝트인데, 한 줄 명령어로 이더리움 노드를 돌릴 수 있습니다. 믿기 힘들다면 [직접 확인해보세요!](https://oreil.ly/9FKZd)
 >
-> Another option is to use [Dappnode](https://dappnode.com). You can choose two different solutions:
+> 또 다른 방법으론 [Dappnode](https://dappnode.com)를 사용하는 것! 두 가지 선택지가 있습니다:
 >
-> - Buy a plug-n-play device that comes with an Ethereum full node built in.
->
-> - Install Dappnode Core software that makes it really easy to launch an Ethereum full node.
+> * 이더리움 풀노드가 내장된 플러그앤플레이(plug-n-play) 디바이스 구매
+> * 직접 설치해서 누구나 쉽게 풀노드를 돌릴 수 있게 해주는 Dappnode Core 소프트웨어 설치
 
-## The First Synchronization of Ethereum-Based Blockchains
+## 이더리움 기반 블록체인 최초 동기화
 
-Normally when syncing an Ethereum blockchain, your client will download and validate every block and every transaction since the very start—that is, from the genesis block. While it is possible to fully sync the blockchain this way, the sync will take a very long time and has high resource requirements (it will need much more RAM and will take a very long time indeed if you don’t have fast storage).
+이더리움 블록체인을 처음 동기화할 땐, 클라이언트가 제네시스 블록부터 지금까지 모든 블록과 트랜잭션을 다 다운받아 검증해야 해요.
+이 방식도 가능하지만, 시간도 오래 걸리고 메모리와 저장장치 등 리소스 요구사항이 매우 높습니다.
 
-Many Ethereum-based blockchains were the victims of DoS attacks at the end of 2016. Affected blockchains will tend to sync slowly when doing a full sync. For example, on Ethereum, a new client will make rapid progress until it reaches block 2,283,397. This block was mined on September 18, 2016, and marks the beginning of the DoS attacks. From this block to block 2,700,031 (November 26, 2016), the validation of transactions becomes extremely slow, memory intensive, and I/O intensive. This results in validation times exceeding one minute per block on contemporary 2016 hardware. Ethereum implemented a series of upgrades, using hard forks, to address the underlying vulnerabilities that were exploited in the DoS attacks. These upgrades also cleaned up the blockchain by removing some 20 million empty accounts created by spam transactions.
+2016년 말, 많은 이더리움 계열 블록체인들이 DoS 공격을 당했었어요.
+이 영향으로 전체 동기화(풀 싱크)를 시도하면 특정 구간에서 속도가 급격히 느려지게 됩니다.
+예를 들어 이더리움 메인넷에서는 블록 2,283,397(2016년 9월 18일)부터 DoS 공격이 시작되어, 블록 2,700,031(2016년 11월 26일)까지 트랜잭션 검증 속도가 엄청 느려졌죠. 그 시기에는 한 블록 검증에 1분 이상 걸렸습니다.
+이후 여러 번의 하드포크를 통해 공격을 막고, 스팸 트랜잭션으로 생긴 2천만 개의 빈 계정도 정리했습니다.
 
-If you are syncing with full validation, your client will slow, and it may take several days, or perhaps even longer, to validate the blocks affected by the DoS attacks. Fortunately, most Ethereum clients include an option to perform a “fast” synchronization that skips the full validation of transactions until it has synced to the tip of the blockchain, then resumes full validation starting from the new tip of the chain. For execution clients, the option to enable fast synchronization is typically snap sync. For consensus clients, the option for fast synchronization is checkpoint sync.
+풀 검증 모드로 동기화하면, 이 구간을 검증하는 데 며칠 이상 걸릴 수도 있어요.
+다행히 대부분의 이더리움 클라이언트는 '빠른 동기화(fast sync)' 옵션이 있습니다.
+빠른 동기화는 체인 맨 끝까지는 블록 검증을 생략하고, 최신 블록부터는 다시 모든 트랜잭션을 검증합니다.
+실행 클라이언트에선 snap sync, 합의 클라이언트에선 checkpoint sync가 이 역할을 해요.
+이번 튜토리얼에서는 기본적으로 이 옵션을 모두 사용했지만, Reth는 아직 snap sync를 지원하지 않아요(2025년 6월 기준).
 
-In this tutorial, we’ve been using by default fast synchronization both with snap sync on the execution client and checkpoint sync on the consensus client, with the exception of Reth, which doesn’t support snap sync yet (as of June 2025).
+## JSON-RPC 인터페이스
 
-## The JSON-RPC Interface
+이더리움 클라이언트는 API, 즉 RPC 명령어 세트를 제공합니다.
+이 명령들은 JSON으로 인코딩되어, 흔히 "JSON-RPC API"라고 불려요.
+이 API를 통해 이더리움 클라이언트를 프로그램적으로 제어하거나, 블록체인 데이터를 가져올 수 있습니다.
 
-Ethereum clients offer an API and a set of RPC commands, which are encoded as JSON. You will see this referred to as the JSON-RPC API. Essentially, the JSON-RPC API is an interface that allows us to write programs that use an Ethereum client as a gateway to an Ethereum network and blockchain.
+일반적으로 이 RPC 인터페이스는 8545번 포트에서 HTTP 서비스로 제공돼요.
+보안을 위해 기본적으로는 로컬호스트(127.0.0.1)에서만 접속 가능하게 설정되어 있습니다.
 
-Usually, the RPC interface is offered as an HTTP service on port 8545. For security reasons, it is restricted by default to accept connections only from localhost (the IP address of your own computer, which is 127.0.0.1).
+JSON-RPC API에 접근하는 방법은 여러 가지가 있어요.
+직접 HTTP 요청을 만들어도 되고, 원하는 언어에 맞는 라이브러리를 써서 각 명령어에 맞는 함수처럼 쓸 수도 있죠.
+또는 curl 같은 커맨드라인 HTTP 클라이언트로도 바로 호출할 수 있습니다.
 
-To access the JSON-RPC API, you can use a specialized library (written in the programming language of your choice) that provides “stub” function calls corresponding to each available RPC command, or you can manually construct HTTP requests and send/receive JSON-encoded requests. You can even use a generic command-line HTTP client like curl to call the RPC interface. Let’s try that. First, ensure that you have the execution client configured and running. Then, switch to a new terminal window and type the following command:
+예를 들어, 아래처럼 하면 실행 클라이언트가 잘 켜져 있다면 버전을 확인할 수 있어요:
 
 ```bash
 $ curl -X POST -H "Content-Type: application/json" --data \
@@ -602,43 +637,40 @@ $ curl -X POST -H "Content-Type: application/json" --data \
 {"jsonrpc":"2.0","id":1,"result":"Geth/1.14.3-stable/darwin-arm64/go1.22.2"}
 ```
 
-In this example, we use curl to make an HTTP connection to the address *http://localhost:8545*. We are already running the execution client, which offers the JSON-RPC API as an HTTP service on port 8545. We instruct curl to use the HTTP POST method and to identify the content as type **application/json**. Finally, we pass a JSON-encoded request as the data component of our HTTP request. Most of our command line is just setting up curl to make the HTTP connection correctly. The interesting part is the actual JSON-RPC command we issue:
+여기서 curl로 *[http://localhost:8545*에](http://localhost:8545*에) POST 방식으로, JSON 형식의 요청을 보낸 거예요.
+재미있는 부분은 실제로 보내는 JSON-RPC 명령어 부분입니다:
 
 ```bash
 {"jsonrpc":"2.0","method":"web3_clientVersion","params":[],"id":1}
 ```
 
-The JSON-RPC request is formatted according to the [JSON-RPC 2.0 specification](https://oreil.ly/m0HLL). Each request contains four elements:
+이 요청은 [JSON-RPC 2.0 명세](https://oreil.ly/m0HLL)에 따라 네 가지 필드를 포함해요:
 
 **jsonrpc**
-
-Version of the JSON-RPC protocol. This must be exactly "2.0".
+프로토콜 버전(항상 "2.0")
 
 **method**
-
-The name of the method to be invoked.
+실행할 메서드 이름
 
 **params**
-
-A structured value that holds the parameter values to be used during the invocation of the method. This member may be omitted.
+호출에 쓸 파라미터(없으면 생략 가능)
 
 **id**
+요청을 구분하는 식별자(숫자, 문자열, null 등), 응답에서도 같은 값으로 돌아옵니다
 
-An identifier established by the client that must contain a string, number, or NULL value if included. The server must reply with the same value in the response object if included. This member is used to correlate the context between the two objects.
-
-> **Tip**
+> **꿀팁**
 >
-> The id parameter is used primarily when you are making multiple requests in a single JSON-RPC call, a practice called batching. Batching is used to avoid the overhead of a new HTTP and TCP connection for every request. In the Ethereum context, for example, we would use batching if we wanted to retrieve thousands of transactions over one HTTP connection. When batching, you set a different id for each request and then match it to the id in each response from the JSON-RPC server. The easiest way to implement this is to maintain a counter and increment the value for each request.
+> id 파라미터는 여러 요청을 한 번에 처리하는 ‘배치 요청(batch)’에서 주로 쓰여요. 배치는 매번 HTTP 연결을 새로 맺지 않고, 여러 요청을 한 번에 보내서 효율을 높이는 방법입니다. 예를 들어 수천 개 트랜잭션을 한 번에 조회하고 싶을 때 쓰죠. 각각의 요청마다 id를 다르게 해주면, 응답에서도 각각의 id로 결과를 확인할 수 있습니다. 보통 카운터를 하나 만들어서 요청마다 값을 올려주면 간단하게 구현할 수 있어요.
 
-The response we receive is:
+응답은 아래처럼 옵니다:
 
 ```bash
 {"jsonrpc":"2.0","id":1,"result":"Geth/1.14.3-stable/darwin-arm64/go1.22.2"}
 ```
 
-This tells us that the JSON-RPC API is being served by Geth client version 1.14.3-stable.
+즉, 현재 Geth 1.14.3-stable 버전이 JSON-RPC API를 제공 중임을 알 수 있죠.
 
-Let’s try something a bit more interesting. In the next example, we ask the JSON-RPC API for the current price of gas in wei:
+좀 더 재미있는 예로, 현재 가스 가격을 가져오는 명령어도 이렇게 쓸 수 있어요:
 
 ```bash
 $ curl -X POST -H "Content-Type: application/json" --data \
@@ -648,107 +680,103 @@ $ curl -X POST -H "Content-Type: application/json" --data \
 {"jsonrpc":"2.0","id":4213,"result":"0x1B1717FC7"}
 ```
 
-
-The response, 0x1B1717FC7, tells us that the current gas price is 7.27 gwei (gigawei or billion wei). If, like us, you don’t think in hexadecimal, you can convert it to decimal on the command line with a little Bash-fu:
+0x1B1717FC7라는 응답값이 현재 가스 가격(7.27 gwei, 1 gwei = 10억 wei)이라는 뜻이에요.
+16진수가 익숙하지 않다면, 커맨드라인에서 아래처럼 바꿔볼 수 있습니다:
 
 ```bash
-$ echo $((0x1B1717FC7))7271972807
+$ echo $((0x1B1717FC7))
+7271972807
 ```
 
-The full JSON-RPC API can be investigated on the [Ethereum wiki](https://oreil.ly/lO2Z0).
+전체 JSON-RPC API 목록은 [이더리움 위키](https://oreil.ly/lO2Z0)에서 확인할 수 있어요.
 
-> **Tip**
+> **꿀팁**
 >
-> In this section, we used raw curl requests to show the Ethereum JSON-RPC interface. In real life, you probably want to access it through a better, more programmatic way. Here is where libraries come into play. Feel free to explore the three most famous and used ones:
+> 여기서는 curl로 직접 요청을 보냈지만, 실제 개발에선 라이브러리를 쓰는 게 훨씬 편해요. 아래 유명 라이브러리들을 써볼 수 있습니다:
 >
-> - [ethers.js](https://oreil.ly/JKvSJ)
->
-> - [web3.py](https://oreil.ly/dHSF4)
->
-> - [alloy](https://alloy.rs)
+> * [ethers.js](https://oreil.ly/JKvSJ)
+> * [web3.py](https://oreil.ly/dHSF4)
+> * [alloy](https://alloy.rs)
 
-## Remote Ethereum Clients
+## 원격 이더리움 클라이언트
 
-Remote clients offer a subset of the functionality of a full client. They do not store the full Ethereum blockchain, so they are faster to set up and require far less data storage.
+원격(리모트) 클라이언트는 전체 클라이언트(풀 노드)가 제공하는 모든 기능을 다 하진 않아요. 대신 이더리움 블록체인을 전부 저장하지 않아서 설치도 빠르고 저장공간도 훨씬 적게 들어요.
 
-These clients typically provide the ability to do one or more of the following:
+보통 이런 클라이언트로 할 수 있는 일들은 아래와 같아요:
 
-- Manage private keys and Ethereum addresses in a wallet
-- Create, sign, and broadcast transactions
-- Interact with smart contracts using the data payload
-- Browse and interact with DApps
-- Offer links to external services, such as block explorers
-- Convert ether units and retrieve exchange rates from external sources
-- Inject a Web3 instance into the web browser as a JavaScript object
-- Use a Web3 instance provided or injected into the browser by another client
-- Access RPC services on a local or remote Ethereum node
+* 지갑에서 개인키랑 이더리움 주소 관리하기
+* 트랜잭션 만들고, 서명해서 네트워크에 보내기
+* 스마트 컨트랙트와 상호작용하기 (데이터 페이로드 사용)
+* DApp(디앱)을 둘러보고 사용하기
+* 블록 탐색기 같은 외부 서비스로 연결해주기
+* 이더 단위 변환이나 환율 정보를 외부에서 받아오기
+* 웹 브라우저에 Web3 인스턴스(자바스크립트 객체) 주입하기
+* 다른 클라이언트가 제공하거나 주입한 Web3 인스턴스 사용하기
+* 로컬이나 원격 이더리움 노드에 RPC 서비스로 접속하기
 
-Remote clients commonly offer some of the functions of a full-node Ethereum client without synchronizing a local copy of the Ethereum blockchain by connecting to a full node being run elsewhere—for example, by you locally on your machine or on a web server or by a third party on its server.
+원격 클라이언트는 흔히 전체 노드와 연결해서, 블록체인을 내 컴퓨터에 동기화하지 않아도 주요 기능을 사용할 수 있어요. 연결 대상은 내 PC에서 직접 실행하는 전체 노드일 수도 있고, 웹 서버나 타사의 서버에 있는 전체 노드일 수도 있죠.
 
-Let’s look at some of the most popular remote clients and the functions they offer.
+이제 인기 있는 원격 클라이언트와 각각의 주요 기능을 살펴볼게요.
 
-### Mobile (Smartphone) Wallets
+### 모바일(스마트폰) 지갑
 
-Most production mobile wallets operate as remote clients because smartphones do not have adequate resources to run a full Ethereum client. Light clients are in development and are not in general use for Ethereum. The most famous one is [Helios](https://oreil.ly/4joTo), which is still experimental software.
+실제로 서비스 중인 모바일 지갑의 대부분은 원격 클라이언트로 동작해요. 스마트폰은 리소스가 부족해서 전체 이더리움 클라이언트를 돌리기엔 힘들거든요. 라이트 클라이언트도 개발은 되고 있지만, 이더리움에서 널리 쓰이진 않아요. 그나마 가장 유명한 게 [Helios](https://oreil.ly/4joTo)인데, 아직 실험 단계의 소프트웨어입니다.
 
-Popular mobile wallets include the following (we list these merely as examples; this is not an endorsement or an indication of the security or functionality of these wallets):
+인기 있는 모바일 지갑으로는 아래와 같은 것들이 있어요 (예시일 뿐, 공식 추천이나 보안·기능에 대한 보장은 아니에요):
 
 **Coinbase Wallet**
 
-A mobile wallet that supports a bunch of different chains, such as Ethereum (and all L2s), EVM-compatible L1s, Bitcoin, Solana, Litecoin, and Dogecoin. It can also connect to a Coinbase account.
+이더리움(그리고 L2 포함), EVM 호환 L1, 비트코인, 솔라나, 라이트코인, 도지코인 등 여러 체인을 지원하는 모바일 지갑이에요. 코인베이스 계정과도 연동 가능해요.
 
 **Phantom**
 
-Phantom is another multichain wallet that is compatible with Ethereum, Solana, Bitcoin, and Polygon.
+이것도 멀티체인 지갑이에요. 이더리움, 솔라나, 비트코인, 폴리곤을 지원해요.
 
 **Trust Wallet**
 
-A mobile multichain wallet that supports more than one hundred blockchains. Trust Wallet is available for iOS and Android.
+100개가 넘는 블록체인을 지원하는 멀티체인 모바일 지갑이에요. iOS랑 안드로이드 모두에서 사용할 수 있어요.
 
 **Uniswap Wallet**
 
-A mobile wallet that supports only Ethereum and EVM-compatible L2s and L1s. It’s made by the Uniswap team. It’s quite new, available both for iOS and Android.
+유니스왑 팀에서 만든 모바일 지갑이에요. 이더리움이랑 EVM 호환 L1, L2만 지원해요. iOS, 안드로이드 모두에서 쓸 수 있고, 출시된 지는 꽤 최근이에요.
 
-### Browser Wallets
+### 브라우저 지갑
 
-A variety of wallets and DApp browsers are available as plug-ins or extensions of web browsers like Chrome and Firefox. These are remote clients that run inside your browser. Some of the more popular ones include:
+브라우저(크롬, 파이어폭스 등) 확장 프로그램이나 플러그인으로 설치해서 쓸 수 있는 지갑이나 디앱 브라우저도 다양하게 있어요. 이런 것들도 브라우저 안에서 돌아가는 원격 클라이언트죠. 대표적으로 아래와 같은 것들이 있어요:
 
 **MetaMask**
 
-[MetaMask](https://metamask.io), introduced in [Chapter 2](https://masteringethereum.xyz/chapter_2.html#getting-started-with-metamask), is a versatile browser-based wallet, RPC client, and basic contract explorer. It is available on Chrome, Firefox, Opera, and Brave Browser.
+[MetaMask](https://metamask.io)는 [2장](https://masteringethereum.xyz/chapter_2.html#getting-started-with-metamask)에서 다뤘듯이, 다양한 기능을 가진 브라우저 지갑이에요. RPC 클라이언트이기도 하고, 기본적인 스마트 컨트랙트 탐색도 할 수 있어요. 크롬, 파이어폭스, 오페라, 브레이브 브라우저 등에서 쓸 수 있습니다.
 
 **Phantom**
 
-Phantom also has a web browser wallet that has a very nice and clean UI.
+Phantom도 웹 브라우저 지갑이 있는데, 인터페이스가 아주 깔끔하고 사용하기 쉬워요.
 
 **Rabby Wallet**
 
-Rabby is a new multichain web browser wallet that supports more than one hundred different blockchains (EVM-compatible chains).
+Rabby는 새로 나온 멀티체인 웹 브라우저 지갑이에요. 100개가 넘는 EVM 호환 체인을 지원합니다.
 
 **Coinbase Wallet**
 
-Coinbase Wallet also has the web browser wallet. It has the same features as the mobile version.
+코인베이스 월렛도 웹 브라우저 버전이 있어요. 모바일 버전과 기능은 비슷해요.
 
-### Hardware Wallets
+### 하드웨어 지갑
 
-The majority of mobile and browser wallets can be coupled with the higher security of hardware wallets: offline devices designed to never connect to the internet and built to resist tampering and other forms of physical attacks, providing a higher level of security. Several companies are building these kinds of devices, but two of the most widely used are Ledger and Trezor.
+대부분의 모바일·브라우저 지갑은 하드웨어 지갑이랑 연동해서 쓸 수 있어요. 하드웨어 지갑은 인터넷에 절대 직접 연결되지 않는, 오프라인 장치라 보안이 훨씬 더 좋아요. 물리적인 공격이나 변조에도 강하게 만들어졌죠. 대표적인 제품은 Ledger와 Trezor가 있어요.
 
-## Conclusion
+## 마무리
 
-In this chapter, we explored Ethereum clients. You downloaded, installed, and synchronized a client, becoming a participant in the Ethereum network and contributing to the health and stability of the system by replicating the blockchain on your own computer.
+이번 장에서는 이더리움 클라이언트에 대해 살펴봤어요. 클라이언트를 다운받고 설치해서 동기화하면, 여러분도 이더리움 네트워크의 일원이 되어 블록체인을 복제하면서 전체 시스템의 안정성과 건강에 기여하게 되는 거죠.
 
-In the future, new types of Ethereum clients will be available since the research and development around Ethereum is huge. Interesting areas include:
+앞으로도 다양한 이더리움 클라이언트가 계속 나올 거예요. 워낙 연구와 개발이 활발하게 이루어지고 있으니까요. 앞으로 주목할 만한 주제는 이런 게 있어요:
 
-**History pruning**
+**히스토리 프루닝(History pruning)**
+풀 노드의 저장 공간 부담을 줄이기 위해 옛날 데이터를 잘라내는 기능
 
-Prune historical data to lower the storage requirement for a full node
-
-**Verkle trees and statelessness**
-
-Be able to verify a block without having the full Ethereum state
+**버클 트리와 스테이트리스(Verkle trees and statelessness)**
+이더리움 전체 상태를 가지지 않아도 블록을 검증할 수 있는 기술
 
 **zk-EVM**
+블록 안의 트랜잭션 전체를 재실행하지 않아도, 영지식증명(zk)을 통해 블록의 정당성을 검증하는 방법
 
-Verify the correctness of a block by verifying a zero-knowledge proof without having to reexecute all the transactions in the block
-
-We’ll explore each of these concepts in the following chapters, but first, we need to uncover the true magic that makes all this possible: cryptography.
+이런 내용들은 다음 장들에서 차근차근 다뤄볼 거예요. 그 전에, 이 모든 걸 가능하게 하는 진짜 마법—암호학—에 대해 먼저 알아봅시다!
