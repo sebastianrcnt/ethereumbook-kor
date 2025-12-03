@@ -1,263 +1,260 @@
-# Chapter 1. What Is Ethereum?
+# 1장. 이더리움이란 무엇인가?
 
-Ethereum is often described as the “world computer.” But what does that mean? Let’s start with a computer science–focused description and then try to decipher that with a more practical analysis of Ethereum’s capabilities and characteristics while comparing it to Bitcoin and other decentralized information exchange platforms (or *blockchains*, to be precise).
+이더리움은 종종 "세계 컴퓨터"라고 불립니다. 하지만 그게 무슨 뜻일까요? 컴퓨터 과학적인 관점에서 먼저 설명하고, 실제로 이더리움이 가진 기능과 특성을 살펴보며, 비트코인과 다른 블록체인(즉, 분산 정보 교환 플랫폼)들과 비교해 보겠습니다.
 
-From a computer science perspective, Ethereum is a deterministic but practically unbounded state machine, consisting of a globally accessible singleton state and a virtual machine that applies changes to that state.
+컴퓨터 과학적으로 보면, 이더리움은 결정론적이면서도 사실상 무한한 상태 머신입니다. 전 세계적으로 접근 가능한 단일 상태(singleton state)와, 그 상태를 변화시키는 가상 머신으로 구성되어 있습니다.
 
-From a more practical perspective, Ethereum is an open source, globally decentralized computing infrastructure that executes programs called *smart contracts*. It uses a blockchain to synchronize and store the system’s state changes, along with a cryptocurrency called *ether* to meter and constrain execution resource costs.
+실제적인 관점에서 보면, 이더리움은 오픈 소스이자 전 세계적으로 분산된 컴퓨팅 인프라로, *스마트 컨트랙트*라는 프로그램을 실행합니다. 이더리움은 블록체인으로 시스템 상태의 변화를 동기화하고 저장하며, *이더(ether)*라는 암호화폐를 사용해 실행 리소스의 비용을 측정하고 제한합니다.
 
-The Ethereum platform enables developers to build powerful decentralized applications with built-in economic functions. It provides high availability, auditability, transparency, and neutrality while reducing or eliminating censorship and reducing certain counterparty risks.
+이더리움은 개발자가 경제적 기능이 내장된 강력한 분산 애플리케이션을 만들 수 있게 해줍니다. 높은 가용성, 감시 가능성, 투명성, 중립성을 제공하면서도, 검열을 줄이거나 제거하고 특정 카운터파티 위험도 낮춰줍니다.
 
-## Ethereum Compared to Bitcoin
+## 이더리움과 비트코인의 비교
 
-Many people approach Ethereum with some prior experience of cryptocurrencies, specifically Bitcoin. Ethereum shares many elements with other open blockchains: a peer-to-peer (P2P) network connecting participants; a Byzantine, fault-tolerant consensus algorithm for synchronization of state updates; the use of cryptographic primitives, such as digital signatures and hashes; and a digital currency (ether). Yet in many ways, both the purpose and construction of Ethereum are strikingly different from those of the open blockchains that preceded it, including Bitcoin.
+많은 사람들이 이더리움을 비트코인 등 기존 암호화폐 경험을 통해 접하게 됩니다. 이더리움도 다른 오픈 블록체인처럼, 참가자를 연결하는 P2P(피어 투 피어) 네트워크, 상태 업데이트 동기화를 위한 비잔틴 장애 허용 합의 알고리즘, 디지털 서명과 해시 같은 암호학적 기술, 그리고 디지털 화폐(이더)를 가지고 있습니다. 그러나 이더리움은 목적과 구조 면에서 비트코인 등 이전 블록체인과 매우 다릅니다.
 
-Ethereum’s purpose is not primarily to be a digital currency payment network. While the digital currency ether is both integral to and necessary for the operation of Ethereum, ether is intended as a *utility currency* to pay for use of the Ethereum platform as the world computer.
+이더리움의 주된 목적은 디지털 화폐 결제 네트워크가 아닙니다. 이더(ether)는 이더리움 운영에 필수적이긴 하지만, 어디까지나 *플랫폼 이용료*를 내기 위한 유틸리티 화폐로 설계된 것입니다.
 
-Unlike Bitcoin, which has a very limited scripting language, Ethereum is designed to be a general-purpose, programmable blockchain that runs a virtual machine capable of executing code of arbitrary and unbounded complexity. Where Bitcoin’s Script language is intentionally constrained to simple true/false evaluation of spending conditions, Ethereum’s language is *Turing complete*, meaning that Ethereum can function as a general-purpose computer.
+비트코인은 매우 제한적인 스크립트 언어만 지원하지만, 이더리움은 임의의 복잡한 코드를 실행할 수 있는 범용 프로그래머블 블록체인입니다. 비트코인의 Script 언어가 단순한 참/거짓 조건만 다루는 반면, 이더리움은 *튜링 완전(Turing complete)* 언어로 어떤 계산도 가능합니다. 즉, 이더리움은 범용 컴퓨터와 같은 역할을 하게 됩니다.
 
-In September 2022, Ethereum further distinguished itself from Bitcoin with The Merge upgrade, transitioning its consensus model from proof of work (PoW) to proof of stake (PoS). This important change not only underlines Ethereum’s commitment to reducing its environmental impact—aligning with its innovative vision—but also enhances its scalability and security features.
+2022년 9월, 이더리움은 더 머지(The Merge) 업그레이드로 비트코인과의 차이를 더욱 명확히 했습니다. 합의 모델을 작업 증명(PoW)에서 지분 증명(PoS)으로 전환하며, 친환경적 비전을 실천하고 확장성 및 보안성도 높였습니다.
 
-## Components of a Blockchain
+## 블록체인의 구성 요소
 
-The components of an open, public blockchain are (usually) as follows:
+공개 블록체인은 보통 아래와 같은 요소로 구성됩니다:
 
-- A P2P network connecting participants and propagating transactions and blocks of verified transactions, based on a standardized “gossip” protocol
-- Messages, in the form of transactions, representing state transitions
-- A set of consensus rules governing what constitutes a transaction and what makes for a valid state transition
-- A state machine that processes transactions according to the consensus rules
-- A chain of cryptographically secured blocks that acts as a journal of all the verified and accepted state transitions
-- A consensus algorithm that decentralizes control over the blockchain by forcing participants to cooperate in the enforcement of the consensus rules
-- A game-theory-sound incentivization scheme (e.g., PoW costs plus block rewards) to economically secure the state machine in an open environment
-- One or more open source software implementations of these components (“clients”)
+- 참가자를 연결하고, 검증된 거래와 블록을 전파하는 P2P 네트워크(일명 "가십" 프로토콜)
+- 상태 전이를 나타내는 거래 메시지
+- 어떤 거래와 상태 전이가 유효한지 정의하는 합의 규칙
+- 합의 규칙에 따라 거래를 처리하는 상태 머신
+- 모든 검증 및 승인된 상태 전이의 기록이 되는 암호화된 블록체인
+- 참가자들이 합의 규칙을 강제하는 분산화된 합의 알고리즘
+- 오픈 환경에서 경제적 안전을 보장하는 인센티브 구조(예: 작업 증명 비용 + 블록 보상)
+- 이 모든 구성요소가 구현된 오픈 소스 소프트웨어(“클라이언트”)
 
-All or most of these components are usually combined in a single software client. For example, in Bitcoin, the reference implementation is developed by the Bitcoin Core open source project and implemented as the Bitcoin client. Initially, Ethereum also required a single client before its transition to PoS. However, Ethereum now utilizes two distinct clients: one for consensus and another for execution. Instead of a reference implementation, Ethereum relies on a reference specification: a mathematical description detailed in the [“Yellow Paper”](https://oreil.ly/IJ7_B), which has been consistently updated throughout Ethereum’s development. The Ethereum community is currently transitioning toward a reference specification written in Python for both the [consensus](https://oreil.ly/yjU6s) and the [execution](https://oreil.ly/ggODg) clients. A number of clients have been built according to the reference specification. We will dive deeper into this topic in Chapter 3.
-
-Figure 1-1 shows a graphical representation of the blockchain components.
+대부분의 블록체인에서는 이 모든 요소가 단일 소프트웨어 클라이언트에 통합되어 있습니다. 예를 들어 비트코인에서는 Bitcoin Core 프로젝트의 레퍼런스 클라이언트가 있습니다. 이더리움도 초창기엔 단일 클라이언트를 사용했지만, PoS로 전환하면서 합의와 실행을 분리한 두 종류의 클라이언트 구조를 갖추게 되었습니다. 레퍼런스 구현 대신 [“Yellow Paper”](https://oreil.ly/IJ7_B)로 대표되는 수학적 명세서(reference specification)를 기준으로 다양한 클라이언트가 개발되고 있습니다. 자세한 내용은 3장에서 다룹니다.
 
 ![Components of a blockchain](images/ch1/maet_0101.png)
 
-**Figure 1-1.** Components of a blockchain
+**그림 1-1.** 블록체인의 구성 요소
 
-In the past, we used the term *blockchain* to represent all the components listed as a shorthand reference to the combination of technologies that encompass all the characteristics described. Today, however, there are a huge variety of blockchains with different properties. We need qualifiers to help us understand the characteristics of the blockchain in question, such as *open,**public, global, decentralized, neutral,* and *censorship resistant*, to identify the important emergent characteristics of a “blockchain” system that these components allow.
+과거에는 위의 요소 전체를 뭉뚱그려 “블록체인”이라고 불렀지만, 지금은 특성이 다양한 여러 블록체인이 생겨나면서, 그 블록체인이 *공개, 글로벌, 분산, 중립, 검열 저항적*인지 등의 특성을 구분해야 합니다.
 
-Not all blockchains are created equal. Despite the huge amount of property they show, we can broadly categorize blockchains into permissioned versus permissionless and public versus private:
+블록체인은 크게 허가형(permissioned) vs 무허가형(permissionless), 공개(public) vs 사설(private)로 나눌 수 있습니다:
 
-**Permissionless**
+**무허가형(permissionless)**
 
-Permissionless blockchains, like Bitcoin and Ethereum, are accessible to anyone. These decentralized networks allow anyone to join, participate in the consensus process, and read and write data, promoting trust through transparency.
+비트코인, 이더리움처럼 누구나 참여 가능한 블록체인입니다. 누구든 네트워크에 참여하고, 합의 과정에 기여하며, 데이터를 읽고 쓸 수 있습니다. 투명성을 바탕으로 신뢰를 쌓습니다.
 
-**Permissioned**
+**허가형(permissioned)**
 
-Permissioned blockchains restrict access, allowing only authorized participants to join the network and perform certain actions.
+허가형 블록체인은 허가받은 사람만 네트워크에 참여하거나 특정 행위를 할 수 있습니다.
 
-**Public**
+**공개(public)**
 
-Public blockchains are decentralized and open to everyone, allowing broad participation in network activities and ensuring transparency through widespread distribution and consensus mechanisms.
+공개 블록체인은 분산화되어 있고, 누구에게나 열려 있습니다. 폭넓은 참여와 투명성을 보장합니다.
 
-**Private**
+**사설(private)**
 
-Private blockchains limit access to a specific group of participants, often within organizations or among trusted partners.
+사설 블록체인은 특정 조직이나 신뢰할 수 있는 파트너들만 접근 가능합니다.
 
-## The Birth of Ethereum
+## 이더리움의 탄생
 
-All great innovations solve real problems, and Ethereum is no exception. Ethereum was conceived at a time when people recognized the power of the Bitcoin model and were trying to move beyond cryptocurrency applications. But developers faced a conundrum: they either needed to build on top of Bitcoin or start a new blockchain. Building on Bitcoin meant living within the intentional constraints of the network and trying to find workarounds. The limited set of transaction types, data types, and sizes of data storage seemed to restrict the kinds of applications that could run directly on Bitcoin; anything else needed additional off-chain layers, and that immediately negated many of the advantages of using a public blockchain. For projects that required more freedom and flexibility while staying on chain, a new blockchain was the only option. But that meant a lot of work: bootstrapping all the infrastructure elements, exhaustive testing, and so on.
+모든 위대한 혁신은 실제 문제를 해결합니다. 이더리움도 예외는 아닙니다. 이더리움이 등장할 당시, 사람들은 비트코인 모델의 힘을 인지하고 더 다양한 응용을 꿈꿨지만, 기존 비트코인에 추가하려면 많은 제약을 감수해야 했고, 완전히 새 블록체인을 만들려면 막대한 노력이 필요했습니다.
 
-Toward the end of 2013, Vitalik Buterin, a young programmer and Bitcoin enthusiast, started thinking about further extending the capabilities of Bitcoin and Mastercoin (an overlay protocol that extended Bitcoin to offer rudimentary smart contracts). In October of that year, Buterin proposed a more generalized approach to the Mastercoin team, one that allowed flexible and scriptable (but not Turing complete) contracts to replace the specialized contract language of Mastercoin. Although the Mastercoin team was impressed, this proposal was too radical a change to fit into their development roadmap.
+2013년 말, 젊은 프로그래머이자 비트코인 열성팬이었던 비탈릭 부테린(Vitalik Buterin)이 마스터코인(Mastercoin, 비트코인 위에서 간단한 스마트 컨트랙트를 구현하던 오버레이 프로토콜)과 비트코인의 확장 가능성에 대해 고민합니다. 그는 마스터코인팀에 보다 유연하고 스크립트가 가능한(하지만 튜링 완전하지 않은) 계약 방식을 제안했지만, 너무 급진적인 변화라서 받아들여지지 않았습니다.
 
-In December 2013, Buterin started sharing a whitepaper that outlined the idea behind Ethereum: a Turing-complete, general-purpose blockchain. A few dozen people saw this early draft and offered feedback, helping Buterin evolve the proposal.
+2013년 12월, 부테린은 이더리움의 초기 아이디어를 담은 백서를 공유하기 시작했습니다. 몇십 명이 이 초안에 피드백을 주었고, 그 과정에서 아이디어가 발전했습니다.
 
-Both of the original authors of this book, Andreas M. Antonopoulos and Dr. Gavin Wood, received an early draft of the whitepaper and commented on it. Antonopoulos was intrigued by the idea and asked Buterin many questions about the use of a separate blockchain to enforce consensus rules on smart contract execution and the implications of a Turing-complete language. Antonopoulos continued to follow Ethereum’s progress with great interest but was in the early stages of writing his book *Mastering Bitcoin* and did not participate directly in Ethereum until much later. Wood, however, was one of the first people to reach out to Buterin and offer to help with his C++ programming skills. Wood became Ethereum’s cofounder, co-designer, and CTO.
+이 책의 공동 저자인 안드레아스 M. 안토노풀로스와 개빈 우드도 초기 초안을 읽고 의견을 남겼습니다. 안토노풀로스는 흥미를 느꼈으나 당시 *Mastering Bitcoin*을 집필 중이라 직접 참여하지는 않았고, 우드는 C++ 실력을 바탕으로 이더리움의 공동 창업자이자 CTO로 합류했습니다.
 
-Buterin recounts in his [“A Prehistory of the Ethereum Protocol” post](https://oreil.ly/kEjpX):
+부테린은 ["A Prehistory of the Ethereum Protocol" 포스트](https://oreil.ly/kEjpX)에서 이렇게 회상합니다:
 
-> This was the time when the Ethereum protocol was entirely my own creation. From here on, however, new participants started to join the fold. By far the most prominent on the protocol side was Gavin Wood.
+> 이때까지만 해도 이더리움 프로토콜은 전적으로 내 작품이었다. 이후로는 새로운 참여자들이 합류하기 시작했다. 그중에서도 프로토콜 측면에서 가장 두드러진 인물은 개빈 우드였다.
 
-Wood can also be largely credited for the subtle change in vision from seeing Ethereum as a platform for building programmable money, with blockchain-based contracts that can hold digital assets and transfer them according to preset rules, to viewing it as a general-purpose computing platform. This started with subtle changes in emphasis and terminology, and later this influence became stronger with the increasing emphasis on the “Web3” ensemble, which saw Ethereum as one piece of a suite of decentralized technologies, with the other two being Whisper and Swarm. Starting in December 2013, Buterin and Wood refined and evolved the idea, together building the protocol layer that became Ethereum.
+개빈 우드는 이더리움을 "프로그래밍 가능한 돈"을 위한 플랫폼에서 "범용 컴퓨팅 플랫폼"으로 바라보는 방향성을 잡는 데 큰 역할을 했습니다. 두 사람은 2013년 말부터 이더리움 프로토콜을 공동 설계하고 발전시켜 나갑니다.
 
-Ethereum’s founders were thinking about a blockchain without a specific purpose, which could support a broad variety of applications by being *programmed*. The idea was that by using a general-purpose blockchain like Ethereum, a developer could program their particular application without having to implement the underlying mechanisms of P2P networks, blockchains, consensus algorithms, and the like. Ethereum abstracts away those details and offers a deterministic, secure environment for writing decentralized applications. This shift in thinking didn’t just make development easier; it fundamentally expanded what blockchains could do. It laid the groundwork for entirely new sectors like decentralized finance, NFTs, and decentralized autonomous organizations (DAOs), which wouldn’t have been feasible with earlier single-purpose blockchains.
+이더리움 창업자들은 특정 목적 없이, 다양한 애플리케이션을 *프로그래밍* 할 수 있는 블록체인을 고민했습니다. 이더리움을 사용하면 P2P 네트워크, 블록체인, 합의 알고리즘 같은 인프라를 직접 구현하지 않아도 되고, 개발자는 자기만의 애플리케이션 로직만 작성하면 됩니다. 이 생각의 전환은 블록체인의 가능성을 크게 확장시켰고, 이후 디파이, NFT, DAO 등도 가능하게 만들었습니다.
 
-Much like Satoshi Nakamoto (the pseudonymous developer of Bitcoin), Buterin and Wood didn’t just invent a new technology; they combined new inventions with existing technologies in a novel way and delivered the prototype code to prove their ideas to the world.
+비트코인의 사토시 나카모토처럼, 부테린과 우드도 새로운 아이디어와 기존 기술을 새롭게 결합해 프로토타입 코드를 세상에 내놓았습니다.
 
-The founders worked for years to build and refine their vision. And on July 30, 2015, the first Ethereum block was mined. The world’s computer started serving the world.
+몇 년간 비전을 다듬고 구현한 끝에, 2015년 7월 30일 이더리움의 첫 블록이 채굴되며 "세계 컴퓨터"가 가동을 시작했습니다.
 
-> **Note**
+> **참고**
 >
-> Vitalik Buterin’s article [“A Prehistory of the Ethereum Protocol”](https://oreil.ly/kEjpX) was published in September 2017 and provides a fascinating first-person view of Ethereum’s earliest moments.
+> 비탈릭 부테린의 ["A Prehistory of the Ethereum Protocol"](https://oreil.ly/kEjpX) 글에는 이더리움 초창기 이야기가 흥미롭게 담겨 있습니다.
 
-## Ethereum’s Stages of Development
+## 이더리움의 개발 단계
 
-Ethereum’s development was planned over four distinct stages, with major changes occurring at each stage. A stage may include subreleases, known as *hard forks*, that change functionality in a way that is not backward compatible.
+이더리움의 개발은 네 가지 주요 단계로 기획되었고, 각 단계마다 큰 변화가 있었습니다. 한 단계는 하위 단계인 *하드 포크*를 포함할 수 있는데, 이는 이전과 호환되지 않는 기능 변경입니다.
 
-The four main development stages are codenamed Frontier, Homestead, Metropolis, and Serenity. At the time of writing, we are in the last stage: Serenity. The Serenity stage has been further broken down into six substages codenamed The Merge, The Surge, The Scourge, The Verge, The Purge, and The Splurge.
+네 가지 주요 개발 단계의 코드네임은 프런티어(Frontier), 홈스테드(Homestead), 메트로폴리스(Metropolis), 세레니티(Serenity)입니다. 이 글을 쓰는 시점에서는 마지막 단계인 세레니티에 와 있습니다. 세레니티는 더 머지, 더 서지, 더 스커지, 더 버지, 더 퍼지, 더 스플러지라는 여섯 하위 단계로 나뉩니다.
 
-Let’s now dive into the four development stages and describe their main purposes:
+각 개발 단계를 간단히 살펴보면:
 
-**Frontier (July 30, 2015)**
+**프런티어 (2015년 7월 30일)**
 
-Launched at Genesis (when the first Ethereum block was mined), Frontier prepared the foundation for miners and developers by enabling the setup of mining rigs, the initiation of ETH token trading, and the testing of decentralized applications (DApps) in a minimal network setting. Initially, blocks had a gas limit of five thousand, but that was lifted in September 2015, allowing for transactions and introducing the “difficulty bomb.” Ethereum’s *difficulty bomb* is a mechanism designed to exponentially increase the difficulty of mining over time, ultimately making it infeasible. This incentivizes the transition from the original PoW consensus to the more energy-efficient PoS model currently in use.
+첫 블록이 채굴되며 시작된 초기 단계로, 채굴자와 개발자가 채굴 장비를 설정하고, ETH 토큰 거래를 시작하며, DApp을 소규모 네트워크에서 테스트할 수 있었습니다. 초기에 가스 한도가 5,000이었으나 곧 해제되었고, "난이도 폭탄"도 도입되었습니다. 난이도 폭탄은 채굴 난이도를 기하급수적으로 증가시켜 PoW에서 PoS로의 전환을 유도하는 장치입니다.
 
-**Homestead (March 14, 2016)**
+**홈스테드 (2016년 3월 14일)**
 
-Initiated at block 1,150,000, Homestead made Ethereum safer and more stable through key protocol updates (EIP-2, EIP-7, and EIP-8). These upgrades enhanced developer friendliness and paved the way for further protocol improvements, although the network remained in the beta phase.
+1,150,000번째 블록에서 시작. 프로토콜 업데이트(EIP-2, 7, 8)로 보안성과 안정성을 높이고, 개발자 친화성을 강화하며, 향후 프로토콜 개선을 준비했습니다.
 
-**Metropolis (October 16, 2017)**
+**메트로폴리스 (2017년 10월 16일)**
 
-Starting at block 4,370,000, Metropolis aimed to increase network functionality, fostering DApp creation and overall network utility. Significant forks like Byzantium, Constantinople, and Istanbul during this phase optimized gas costs, enhanced security, and introduced layer-2 (L2) scaling solutions. Byzantium reduced mining rewards and implemented cryptographic provisions, while Constantinople further optimized gas costs and allowed interactions with uncreated addresses. Istanbul made the network more resilient against distributed denial of service (DDoS) attacks and introduced zero-knowledge cryptographic proofs (zk-SNARKs and STARKs) for improved scalability and privacy. These enhancements collectively set the stage for Ethereum 2.0, representing the final phase of Ethereum 1.0.
+4,370,000번째 블록에서 시작. 네트워크 기능성 강화와 DApp 개발 지원이 목적이었습니다. 비잔티움(Byzantium), 콘스탄티노플(Constantinople), 이스탄불(Istanbul) 같은 중요한 하드 포크를 거치며, 가스 비용 최적화, 보안 강화, 레이어2(L2) 확장 솔루션을 도입했습니다. 이 시기의 혁신은 이더리움 2.0, 즉 세레니티로 가는 기반을 다졌습니다.
 
-**Serenity (September 15, 2022)**
+**세레니티 (2022년 9월 15일)**
 
-Serenity, commonly known as *Ethereum 2.0*, represents a major upgrade aimed at transforming Ethereum from a PoW to a PoS consensus mechanism. Serenity focuses on making Ethereum more sustainable and capable of handling a growing number of users and applications. This stage addresses critical issues like high energy consumption and network congestion, clearing the way for a more robust and efficient blockchain.
+이른바 *이더리움 2.0* 단계로, 이더리움을 PoW에서 PoS로 전환하고, 지속가능성과 확장성을 크게 높이는 대규모 업그레이드입니다.
 
-The Serenity upgrade is divided into several substages, each addressing specific aspects of the network’s evolution. While the main four development stages have been implemented sequentially, the five Serenity substages are being developed at the same time. This parallel approach is a strategic departure from the previous development method and is made possible because the foundational work laid down by the initial four stages was necessary for the simultaneous development of the Serenity substages. Each of these substages improves the Ethereum chain in a different aspect, unrelated to the others, enabling a more flexible and dynamic upgrade process:
+세레니티는 여러 하위 단계로 나눠 개발 중입니다. 이전 단계들이 순차적으로 진행됐다면, 세레니티 하위 단계들은 동시에 진행 중입니다. 각 하위 단계는 서로 다른 개선을 목표로 하고 있습니다:
 
-**The Merge**
+**더 머지(The Merge)**
 
-The Merge combines Ethereum’s mainnet with the Beacon Chain (the sidechain handling the PoS consensus), officially transitioning the network to PoS and reducing energy consumption significantly.
+메인넷과 비콘 체인(Beacon Chain, PoS 합의 전용)을 합쳐, 공식적으로 PoS로 전환하고 에너지 소비를 대폭 줄였습니다.
 
-**The Surge**
+**더 서지(The Surge)**
 
-The Surge introduces sharding, increasing Ethereum’s scalability by splitting the network into smaller, manageable pieces, which allows for more transactions per second.
+샤딩(sharding) 기술을 도입해, 네트워크를 여러 조각으로 나눠 동시 처리량을 높이고 확장성을 개선합니다.
 
-**The Scourge**
+**더 스커지(The Scourge)**
 
-The Scourge addresses issues of centralization and censorship resistance, ensuring that Ethereum remains a decentralized and open network.
+중앙화 및 검열 문제를 해결해, 이더리움의 분산성과 개방성을 지키는 데 초점을 맞춥니다.
 
-**The Verge**
+**더 버지(The Verge)**
 
-The Verge implements Verkle trees, reducing the data storage required for nodes and thus improving network efficiency and scalability.
+버클 트리(Verkle tree)라는 새로운 데이터 구조로 노드의 저장 데이터량을 줄이고, 효율성과 확장성을 높입니다.
 
-**The Purge**
+**더 퍼지(The Purge)**
 
-The Purge aims to reduce the historical data stored on Ethereum, simplifying node operation and lowering network congestion.
+이더리움에 누적된 과거 데이터를 줄여, 노드 운영을 쉽게 하고 네트워크 혼잡도도 낮춥니다.
 
-**The Splurge**
+**더 스플러지(The Splurge)**
 
-The Splurge includes various minor upgrades and optimizations to ensure that Ethereum runs smoothly and efficiently after all major changes are implemented.
+앞선 업그레이드 이후 네트워크가 원활하게 동작하도록 다양한 마이너 업그레이드와 최적화 작업을 포함합니다.
 
-## Ethereum: A General-Purpose Blockchain
+## 이더리움: 범용 블록체인
 
-The original blockchain—namely, Bitcoin’s blockchain—tracks the state of units of Bitcoin and their ownership. You can think of Bitcoin as a distributed-consensus *state machine*, where transactions cause a global *state transition*, altering the ownership of coins. The state transitions are constrained by the rules of consensus, allowing all participants to (eventually) converge on a common (consensus) state of the system, after several blocks are mined.
+원조 블록체인인 비트코인은 비트코인의 소유 상태만 추적합니다. 일종의 분산 합의 상태 머신으로, 거래가 일어나면 전 세계적으로 "상태 전이"가 발생하고, 이는 합의 규칙에 의해 제한됩니다.
 
-Ethereum is also a distributed state machine. But instead of tracking only the state of currency ownership, Ethereum tracks the state transitions of a general-purpose data store—that is, a store that can hold any data expressible as a *key-value tuple*. A key-value data store holds arbitrary values, each referenced by some key: for example, the value “Mastering Ethereum” referenced by the key “Book Title.” In some ways, this serves the same purpose as the data-storage model of random-access memory (RAM) used by most general-purpose computers.
+이더리움도 분산 상태 머신이지만, 단순히 코인 소유 상태만이 아니라 *키-값 쌍* 형태의 어떤 데이터든 저장하고, 그 상태 변화를 추적합니다. 마치 일반 컴퓨터의 RAM(랜덤 액세스 메모리)처럼, 이더리움은 코드와 데이터를 저장할 수 있고, 블록체인에 이 상태 변화를 기록합니다.
 
-Ethereum has memory that stores both code and data, and it uses the Ethereum blockchain to track how this memory changes over time. Like a general-purpose, stored-program computer, Ethereum can load code into its state machine and *run* that code, storing the resulting state changes in its blockchain. Two of the critical differences from most general-purpose computers are that Ethereum state changes are governed by the rules of consensus and the state is distributed globally. Ethereum answers the question “What if we could track any arbitrary state and program the state machine to create a worldwide computer operating under consensus?”
+이더리움은 코드(프로그램)를 상태 머신에 로드하고 실행할 수 있으며, 그 결과를 블록체인에 기록합니다. 단, 이더리움의 상태 변화는 합의 규칙에 따라야 하고, 그 상태가 전 세계적으로 분산 저장된다는 점이 다릅니다. 이더리움은 "임의의 상태를 추적하고, 그 상태 머신을 전 세계가 합의하는 방식으로 운영하면 어떨까?"라는 질문에서 출발했습니다.
 
-## Ethereum’s Components
+## 이더리움의 구성 요소
 
-In Ethereum, the components of a blockchain system (described in “Components of a Blockchain”) are, more specifically, as follows:
+블록체인 시스템의 구성 요소(앞서 설명한 것)를 이더리움에 맞춰 구체적으로 보면:
 
-**P2P network**
+**P2P 네트워크**
 
-Ethereum runs on the *Ethereum main network*, which is addressable on TCP port 30303, and runs a protocol called [*ÐΞVp2p*](https://oreil.ly/pUfGC).
+이더리움 메인 네트워크는 TCP 포트 30303에서 접속할 수 있고, [*ÐΞVp2p*](https://oreil.ly/pUfGC) 프로토콜을 사용합니다.
 
-**Consensus rules**
+**합의 규칙**
 
-Ethereum’s original consensus protocol was Ethash, a PoW model defined in the reference specification: the “Yellow Paper.” It then evolved to PoS in September 2022 during The Merge upgrade (see Chapter 15).
+초기에는 이타시(Ethash)라는 작업증명(PoW) 합의 프로토콜을 썼고, 2022년 머지 이후에는 PoS 합의로 전환했습니다.
 
-**Transactions**
+**거래**
 
-Ethereum transactions are network messages that include (among other things) a sender, a recipient, a value, and a data payload.
+이더리움의 거래는 송신자, 수신자, 값, 데이터 페이로드 등 여러 정보를 담고 있는 네트워크 메시지입니다.
 
-**State machine**
+**상태 머신**
 
-Ethereum state transitions are processed by the *Ethereum Virtual Machine* (EVM), a stack-based virtual machine that executes *bytecode* (machine-language instructions). EVM programs called *smart contracts* are written in high-level languages (e.g., Solidity) and compiled to bytecode for execution on the EVM.
+이더리움의 상태 전이는 *이더리움 가상 머신(EVM)*이라는 스택 기반 가상 머신에서 실행됩니다. 스마트 컨트랙트는 주로 솔리디티(Solidity) 같은 고급 언어로 작성되어 바이트코드로 컴파일되어 EVM에서 실행됩니다.
 
-**Data structures**
+**데이터 구조**
 
-Ethereum’s state is stored locally on each node as a *database* (usually Google’s LevelDB), which contains the transactions and system state in a serialized hashed data structure called a *Merkle-Patricia trie*.
+이더리움의 상태는 보통 LevelDB 같은 데이터베이스에 저장되고, 머클-파트리시아 트라이(Merkle-Patricia trie)라는 해시 구조로 직렬화되어 있습니다.
 
-**Consensus algorithm**
+**합의 알고리즘**
 
-Ethereum transitioned from a PoW to a PoS consensus mechanism to enhance energy efficiency and scalability. In PoS, validators stake their cryptocurrency to earn the right to validate transactions, create new blocks, and maintain network security. Ethereum’s PoS is the fusion of two distinct algorithms: Casper the Friendly Finality Gadget (FFG) and GHOST (Greedy Heaviest Observed Subtree) with latest message driven (LMD) updates (more on this in Chapter 15).
+이더리움은 확장성과 효율성 향상을 위해 PoW에서 PoS로 전환했습니다. PoS에서는 검증자가 암호화폐를 스테이킹해 블록 검증, 생성, 네트워크 보안에 참여합니다. 이더리움의 PoS는 Casper FFG와 GHOST (LMD 버전)를 결합한 모델입니다(자세한 내용은 15장에서 다룸).
 
-**Economic security**
+**경제적 보안**
 
-Ethereum uses a PoS algorithm called Gasper that provides economic security to the blockchain. We’ll explore how Gasper works in detail in Chapter 15, including its role in finality and validator coordination.
+이더리움은 Gasper라는 PoS 알고리즘을 통해 경제적 보안을 제공합니다. Gasper가 어떻게 작동하는지는 15장에서 자세히 다룹니다.
 
-**Clients**
+**클라이언트**
 
-Ethereum has several interoperable implementations of its execution and consensus client software, the most prominent of which are *go-ethereum* (Geth) and Nethermind for execution and Prysm and Lighthouse for consensus.
+이더리움은 여러 클라이언트가 상호운용될 수 있도록 구현되어 있습니다. 대표적으로 실행 클라이언트는 go-ethereum(Geth), Nethermind, 합의 클라이언트는 Prysm, Lighthouse 등이 있습니다.
 
-These references provide additional information on the technologies mentioned here:
+아래 자료에서 더 많은 정보를 확인할 수 있습니다:
 
-- [Ethereum “Yellow Paper”](https://oreil.ly/IJ7_B)
-- [Consensus client Python specifications](https://oreil.ly/yjU6s)
-- [Execution client Python specifications](https://oreil.ly/ggODg)
+- [이더리움 “Yellow Paper”](https://oreil.ly/IJ7_B)
+- [합의 클라이언트 Python 명세](https://oreil.ly/yjU6s)
+- [실행 클라이언트 Python 명세](https://oreil.ly/ggODg)
 
-## Ethereum and Turing Completeness
+## 이더리움과 튜링 완전성
 
-As soon as you start reading about Ethereum, you will encounter the term *Turing complete*. Ethereum, they say, is Turing complete, unlike Bitcoin. What exactly does that mean?
+이더리움에 대해 공부하다 보면 *튜링 완전(Turing complete)*이라는 말을 자주 접하게 됩니다. 이더리움은 비트코인과 달리 튜링 완전하다고 하죠. 그게 무슨 뜻일까요?
 
-The term refers to English mathematician Alan Turing, who is considered the father of computer science. In 1936, he created a mathematical model of a computer consisting of a state machine that manipulates symbols by reading and writing them on sequential memory (resembling an infinite-length paper tape). With this construct, Turing went on to provide a mathematical foundation to answer (in the negative) questions about *universal computability*, meaning whether all problems are solvable. He proved that there are classes of problems that are uncomputable. Specifically, he proved that the *halting problem* (whether it is possible, given an arbitrary program and its input, to determine whether the program will eventually stop running) is not solvable.
+튜링 완전성은 영국 수학자 앨런 튜링이 만든 개념입니다. 튜링은 컴퓨터의 수학적 모델로, 상태 머신이 기호를 읽고 쓰며 조작하는 구조(일종의 무한한 길이의 종이테이프)를 제안했습니다. 튜링은 모든 문제가 계산 가능한지에 대한 질문(“보편 계산 가능성”)에 대해, 일부 문제는 풀 수 없음을 증명했습니다. 그중 대표적인 것이 *멈춤 문제(halting problem)*로, 임의의 프로그램과 입력이 주어졌을 때 그 프로그램이 멈출지 예측할 수 없다는 내용입니다.
 
-Turing further defined a system to be *Turing complete* if it can be used to simulate any Turing machine. Such a system is called a *universal Turing machine* (UTM).
+튜링은 어떤 시스템이 임의의 튜링 기계를 시뮬레이션할 수 있으면 *튜링 완전*하다고 정의했습니다.
 
-Ethereum’s ability to execute a stored program—in a state machine called the EVM—while reading and writing data to memory makes it a Turing-complete system and therefore a UTM. Ethereum can compute any algorithm that can be computed by any Turing machine, given the limitations of finite memory.
+이더리움은 상태 머신(EVM)에서 프로그램을 실행하고 데이터를 읽고 쓸 수 있기 때문에, 튜링 완전한 시스템입니다. 즉, 이론상 메모리만 충분하다면 어떤 알고리즘이든 계산할 수 있습니다.
 
-Ethereum’s groundbreaking innovation is to combine the general-purpose computing architecture of a stored-program computer with a decentralized blockchain, thereby creating a distributed single-state (singleton) world computer. Ethereum programs run “everywhere” yet produce a common state that is secured by the rules of consensus.
+이더리움의 혁신은 범용 컴퓨터 아키텍처와 분산 블록체인을 결합해, 전 세계적으로 합의된 단일 상태(world computer)를 만들어냈다는 점입니다.
 
-## Turing Completeness as a “Feature”
+## 튜링 완전성: "기능"인가?
 
-Hearing that Ethereum is Turing complete, you might arrive at the conclusion that this is a *feature* that is somehow lacking in a system that is Turing incomplete. Rather, it is the opposite. Turing completeness is very easy to achieve; in fact, [the simplest Turing-complete state machine known](https://oreil.ly/JhL2o) has four states and uses six symbols, with a state definition that is only 22 instructions long. Indeed, sometimes systems are found to be “accidentally Turing complete” (here’s a [fun reference of such systems](https://oreil.ly/7pt2q)).
+이더리움이 튜링 완전하다는 이야기를 들으면, 마치 그게 꼭 필요한 기능인 것처럼 느껴질 수도 있습니다. 하지만 사실은 그 반대입니다. 튜링 완전성은 구현하기 매우 쉽고, 심지어 [가장 단순한 튜링 완전 상태 머신](https://oreil.ly/JhL2o)은 네 개의 상태와 여섯 개의 기호, 22개의 명령만으로도 충분합니다. [우연히 튜링 완전해진 시스템](https://oreil.ly/7pt2q)도 있을 정도죠.
 
-However, Turing completeness is very dangerous, particularly in open-access systems like public blockchains, because of the halting problem described in the previous section. For example, modern printers are Turing complete and can be given files to print that send them into a frozen state. The fact that Ethereum is Turing complete means that any program of any complexity can be computed by Ethereum. But that flexibility brings some thorny security and resource management problems. An unresponsive printer can be turned off and turned back on again. That is not possible with a public blockchain.
+하지만 튜링 완전성은 공개 블록체인 같은 시스템에서 매우 위험할 수 있습니다. 바로 멈춤 문제 때문입니다. 예를 들어, 프린터도 튜링 완전한데, 잘못된 파일을 주면 먹통이 될 수 있죠. 이더리움도 마찬가지로, 어떤 프로그램이든 실행 가능하지만, 그만큼 보안과 리소스 관리가 어려워집니다. 블록체인은 프린터처럼 전원을 껐다 켤 수 없으니, 무한 루프에 빠지면 곤란합니다.
 
-## Implications of Turing Completeness
+## 튜링 완전성의 함의
 
-Turing proved that you cannot predict whether a program will terminate by simulating it on a computer. In simple terms, we cannot predict the path of a program without running it. Turing-complete systems can run in *infinite loops*, a term used (in oversimplification) to describe a program that does not terminate. It is trivial to create a program that runs a loop that never ends. But unintended never-ending loops can arise without warning due to complex interactions between the starting conditions and the code. In Ethereum, this poses a challenge: every participating node (client) must validate every transaction, running any smart contracts it calls. But as Turing proved, Ethereum can’t predict if a smart contract will terminate or how long it will run without actually running it (possibly running forever). Whether by accident or on purpose, a smart contract can be created such that it runs forever when a node attempts to validate it. This is effectively a denial-of-service (DoS) attack. And of course, between a program that takes a millisecond to validate and one that runs forever is an infinite range of nasty, resource-hogging, memory-bloating, CPU-overheating programs that simply waste resources. In a world computer, a program that abuses resources gets to abuse the world’s resources. How does Ethereum constrain the resources used by a smart contract if it cannot predict resource use in advance?
+튜링은 프로그램이 종료될지 예측할 수 없음을 증명했습니다. 다시 말해, 프로그램의 실행 경로를 알기 전엔 실제로 돌려봐야만 결과를 알 수 있습니다. 튜링 완전한 시스템은 *무한 루프*에 빠질 수 있습니다. 의도하지 않았더라도 복잡한 상호작용 때문에 종료되지 않는 프로그램이 만들어질 수 있습니다. 이더리움에서는 모든 노드가 거래를 검증할 때 해당 스마트 컨트랙트를 실행해야 하니, 이런 프로그램이 있으면 전체 네트워크에 부하가 걸리게 됩니다.
 
-To answer this challenge, Ethereum introduced a metering mechanism called *gas*. As the EVM executes a smart contract, it carefully accounts for every instruction (computation, data access, etc.). Each instruction has a predetermined cost in units of gas. When a transaction triggers the execution of a smart contract, it must include an amount of gas that sets the upper limit of what can be consumed running the smart contract. The EVM will terminate execution if the amount of gas consumed by computation exceeds the gas available in the transaction. Gas is the mechanism Ethereum uses to allow Turing-complete computation while limiting the resources that any program can consume.
+이 문제를 해결하기 위해, 이더리움은 *가스(gas)*라는 측정 장치를 도입했습니다. EVM은 스마트 컨트랙트 실행 시 모든 명령(연산, 데이터 접근 등)을 가스로 계량합니다. 거래가 스마트 컨트랙트 실행을 유발할 때는 반드시 사용할 가스 한도와 가스 가격을 명시해야 합니다. 만약 가스를 다 쓰면, 실행이 강제로 종료됩니다. 이렇게 해서 이더리움은 튜링 완전한 시스템에서 리소스 낭비를 제어할 수 있습니다.
 
-The next question is: how does one get gas to pay for computation on the Ethereum world computer? You won’t find gas on any exchanges. It can only be purchased as part of a transaction and can only be bought with ether. Ether needs to be sent along with a transaction, and it needs to be explicitly earmarked for the purchase of gas, along with an acceptable gas price. Just like at the pump, the price of gas is not fixed. Gas is purchased for the transaction, the computation is executed, and any unused gas is refunded back to the sender of the transaction.
+여기서 의문이 생길 수 있죠. 가스는 어디서 얻을까요? 거래 시 가스를 구매할 수 있고, 이때 이더(ether)로 결제해야 합니다. 가스 가격은 시장에서 결정되고, 거래와 함께 지불하며, 쓰고 남은 가스는 다시 돌려받습니다.
 
-## From General-Purpose Blockchains to DApps
+## 범용 블록체인에서 DApp까지
 
-Ethereum started as a way to make a general-purpose blockchain that could be programmed for a variety of uses. But very quickly, Ethereum’s vision expanded to become a platform for programming DApps. DApps represent a broader perspective than smart contracts. A DApp is, at the very least, a smart contract and a web user interface. More broadly, a DApp is a web application that is built on top of open, decentralized, P2P infrastructure services.
+이더리움은 처음엔 범용 블록체인을 지향했지만, 곧 DApp 플랫폼이라는 비전으로 확장되었습니다. DApp(탈중앙화 앱)은 스마트 컨트랙트와 웹 인터페이스가 결합된 형태입니다. 더 넓게 보면, DApp은 오픈 P2P 인프라 위에 구축된 웹 애플리케이션입니다.
 
-A DApp is composed of at least:
+DApp의 최소 구성 요소:
 
-- Smart contracts on a blockchain
-- A web frontend user interface
+- 블록체인에 올려진 스마트 컨트랙트
+- 웹 프론트엔드 UI
 
-In addition, many DApps include other decentralized components, such as:
+여기에 추가로 다음과 같은 분산 컴포넌트가 들어갈 수 있습니다:
 
-- A decentralized (P2P) storage protocol and platform
-- A decentralized (P2P) messaging protocol and platform
+- 분산(P2P) 저장소 프로토콜/플랫폼
+- 분산(P2P) 메시징 프로토콜/플랫폼
 
-From a practical perspective, the Ethereum web3.js JavaScript library bridges JavaScript applications that run in your browser with the Ethereum blockchain. It originally included a P2P storage network called Swarm and a P2P messaging service called Whisper—tools that made it possible to develop fully decentralized Web3 DApps. Despite the appeal of this fully decentralized DApp design, it did not gain much traction in the years following. Compromises had to be accepted to improve the user experience and boost user adoption, and a centralized Web2 website interacting with smart contracts is nowadays the standard for a DApp.
+실무적으로, Ethereum의 web3.js 라이브러리는 브라우저에서 자바스크립트 앱과 이더리움 블록체인을 연결해줍니다. 초기엔 P2P 저장소(Swarm), 메시징(Whisper)도 포함됐었지만, 완전 분산 DApp은 사용자 경험 문제가 있어 대중적으로 채택되진 못했습니다. 현재는 중앙화된 웹사이트가 스마트 컨트랙트와 상호작용하는 구조가 DApp의 표준이 되었습니다.
 
-## The Third Age of the Internet
-In 2004, the term *Web 2.0* came to prominence as a label of the evolution of the web toward user-generated content, responsive interfaces, and interactivity. Web 2.0 is not a technical specification but rather a term describing the new focus of web applications.
+## 인터넷의 제3시대
 
-The concept of DApps is meant to take the Web to its next natural evolutionary stage, introducing decentralization with P2P protocols into every aspect of a web application. The term used to describe this evolution is *Web3*, meaning the third “version” of the web. First proposed by Gavin Wood, Web3 represents a new vision and focus for web applications: from centrally owned and managed applications to applications built on decentralized protocols.
+2004년, 웹 2.0(Web 2.0)이라는 용어가 대중화되며, 웹이 사용자 참여와 반응성, 인터랙티브한 환경으로 진화했습니다. 웹 2.0은 기술 사양이라기보다 웹 애플리케이션의 새로운 트렌드를 뜻합니다.
 
-## Ethereum’s Development Culture
+DApp의 개념은 이 웹을 한 단계 더 진화시켜, P2P 프로토콜이 웹앱의 모든 측면에 도입된 *Web3* 시대를 의미합니다. Web3는 개빈 우드가 처음 제안했으며, 중앙 집중형 서비스에서 분산 프로토콜 기반의 애플리케이션으로의 변화를 말합니다.
 
-So far, we’ve talked about how Ethereum’s goals and technology differ from those of other blockchains that preceded it, like Bitcoin. Ethereum also has a very different development culture.
+## 이더리움 개발 문화
 
-In Bitcoin, development is guided by conservative principles: all changes are carefully studied to ensure that none of the existing systems are disrupted. For the most part, changes are only implemented if they are backward compatible. Existing clients are allowed to opt in but will continue to operate if they decide not to upgrade. This cautious approach aligns with Bitcoin’s governance model, where changes go through the Bitcoin Improvement Proposal (BIP) process, an intentionally slow and consensus-driven pipeline designed to preserve stability.
+앞에서 이더리움이 기존 블록체인, 특히 비트코인과 목표나 기술이 얼마나 다른지 살펴봤습니다. 개발 문화 역시 매우 다릅니다.
 
-In Ethereum, by comparison, the community’s development culture is focused on the future rather than the past. The (not entirely serious) mantra is “move fast and break things.” If a change is needed, it is implemented, even if that means invalidating prior assumptions, breaking compatibility, or forcing clients to update. Ethereum’s governance reflects this more hands-on style, with coordination happening publicly through frequent AllCoreDevs calls where researchers, client teams, and ecosystem stakeholders discuss and align on upcoming changes. It’s a more agile and iterative process that trades some stability for a faster pace of innovation.
+비트코인은 매우 보수적인 원칙에 따라 개발이 이뤄집니다. 모든 변경은 신중히 검토되고, 기존 시스템에 영향이 없는지 확인해야 합니다. 대부분의 변경은 하위 호환성을 유지해야 하며, 참여자는 원하지 않으면 구버전을 계속 사용할 수 있습니다. 이런 신중한 접근법은 BIP(비트코인 개선 제안) 프로세스라는 느린 합의 과정을 통해 안정성을 지향합니다.
 
-What this means to you as a developer is that you must remain flexible and be prepared to rebuild your infrastructure as some of the underlying assumptions change. One of the big challenges facing developers in Ethereum is the inherent contradiction between deploying code to an immutable system and a development platform that is still evolving. You can’t simply “upgrade” your smart contracts. You must be prepared to deploy new ones; migrate users, apps, and funds; and start over.
+이더리움은 미래 지향적이고, "빠르게 움직이고 부숴라"는 농담 같은 슬로건도 있습니다. 필요하다면, 이전 가정을 깨거나 호환성을 희생하더라도 변화를 바로바로 도입합니다. 개발자, 연구자, 클라이언트 팀, 생태계 참여자가 참여하는 공개 코어 개발 회의(AllCoreDevs call)를 통해 긴밀하게 조율하며, 빠른 혁신을 우선합니다.
 
-Ironically, this also means that the goal of building systems with more autonomy and less centralized control is still not fully realized. Autonomy and decentralization require a bit more stability in the platform than you’re likely to get in Ethereum in the next few years. To “evolve” the platform, you have to be ready to scrap and restart your smart contracts, which means you have to retain a certain degree of control over them.
+이런 개발 환경에서는 개발자가 언제든 인프라를 다시 짜야 할 수 있습니다. 스마트 컨트랙트는 불변이지만, 이더리움 플랫폼은 여전히 변화 중이기 때문에, 스마트 컨트랙트를 업그레이드하는 대신 새로 배포하고, 사용자와 자금을 이전해야 할 수 있습니다.
 
-But on the positive side, Ethereum is moving forward very quickly. There is little opportunity for *bike-shedding*: an expression that means holding up development by arguing over minor details, such as how to build the bicycle shed at the back of a nuclear power station. If you start bike-shedding, you might suddenly discover that while you were distracted, the rest of the development team changed the plan and ditched bicycles in favor of autonomous hovercraft.
+즉, 이더리움은 아직 완전한 자율성과 분산화를 이루진 못했지만, 빠른 혁신이 이루어지고 있습니다. 사소한 문제로 개발이 지연되는 이른바 "자전거 창고 논쟁(bike-shedding)"을 할 시간도 없습니다. 자칫 논쟁하다 보면, 어느새 개발팀이 자전거가 아니라 공중부양선을 만들고 있을 수도 있습니다.
 
-Eventually, the development of the Ethereum platform will slow, and its interfaces will become fixed. But in the meantime, innovation is the driving principle. You’d better keep up because no one will slow down for you.
+언젠가 이더리움도 개발 속도가 느려지고 인터페이스가 고정될 겁니다. 그전까지는 혁신이 최우선입니다. 따라가지 않으면, 아무도 기다려주지 않습니다.
 
-## Why Learn Ethereum?
+## 왜 이더리움을 배워야 할까?
 
-Blockchains have a very steep learning curve because they combine multiple disciplines into one domain: programming, information security, cryptography, economics, distributed systems, P2P networks, and so on. Ethereum makes this learning curve a lot less steep, so you can get started quickly. But just below the surface of a deceptively simple environment lies a lot more. As you learn and start looking deeper, there’s always another layer of complexity and wonder.
+블록체인은 프로그래밍, 정보보안, 암호학, 경제학, 분산 시스템, P2P 네트워크 등 다양한 분야가 융합되어 있어, 진입 장벽이 높습니다. 이더리움은 이 장벽을 많이 낮춰줍니다. 표면적으로는 쉽게 시작할 수 있지만, 그 아래에는 훨씬 더 복잡한 구조가 숨어 있습니다.
 
-Ethereum is a great platform for learning about blockchains, and it’s building a massive community of developers, faster than any other blockchain platform. More than any other, Ethereum is a *developer’s blockchain*: built by developers for developers. A developer familiar with JavaScript applications can drop into Ethereum and start producing working code very quickly. For the first few years of Ethereum’s life, it was common to see T-shirts announcing that you can create a token in just five lines of code. Of course, this is a double-edged sword. It’s easy to write code, but it’s very hard to write *good* and *secure* code.
+이더리움은 블록체인을 배우기에 훌륭한 플랫폼이고, 전 세계적으로 가장 빠르게 개발자 커뮤니티가 성장하고 있습니다. 이더리움은 개발자를 위한, 개발자에 의한 블록체인입니다. 자바스크립트에 익숙한 개발자라면, 바로 이더리움으로 와서 실제 코드를 만들 수 있습니다. 초창기에는 5줄만으로 토큰을 만들 수 있다는 티셔츠가 유행했죠. 하지만 그만큼 허술한 코드, 보안에 취약한 코드도 많았습니다.
 
-Many blockchain projects, like L2s, are based on Ethereum. Learning Ethereum helps you understand these projects better and gives you the tools to explore further developments in the blockchain world. This knowledge is key for anyone looking to get involved with the latest in blockchain technology.
+많은 블록체인 프로젝트, 예를 들어 L2(레이어2)는 이더리움을 기반으로 하고 있습니다. 이더리움을 배우면 이런 프로젝트도 쉽게 이해할 수 있고, 블록체인 세계의 최신 발전도 따라갈 수 있습니다.
 
-## Conclusion
+## 결론
 
-Ethereum stands out as a groundbreaking platform in the blockchain landscape. Its design as a Turing-complete system allows for the creation of decentralized applications with sophisticated, programmable logic, going beyond the simpler functionality of Bitcoin.
+이더리움은 블록체인 분야에서 혁신적인 플랫폼으로 자리 잡았습니다. 튜링 완전한 설계 덕분에, 비트코인보다 훨씬 복잡한 로직의 분산 애플리케이션을 만들 수 있습니다.
 
-For developers and technologists, understanding Ethereum opens doors to a deeper comprehension of blockchain technology and its potential applications. By mastering Ethereum, you gain the tools to participate in and contribute to the ongoing evolution of the internet, putting yourself at the cutting edge of this exciting field.
+개발자와 기술자라면, 이더리움을 이해함으로써 블록체인 기술과 응용에 대한 더 깊은 통찰을 얻을 수 있습니다. 이더리움을 마스터하면, 인터넷 진화의 최전선에서 주도적으로 참여할 수 있는 힘을 갖게 됩니다.
