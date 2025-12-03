@@ -1,276 +1,320 @@
-# Chapter 2. Ethereum Basics
+# 2장. 이더리움 기초
 
-In this chapter, we will start exploring Ethereum. We'll discuss how to use wallets, create transactions, and run a basic smart contract.
+이 장에서는 이더리움을 처음부터 알아볼 거예요. 지갑을 사용하는 방법, 트랜잭션 만드는 법, 간단한 스마트 컨트랙트를 실행하는 방법까지 다룰 거예요.
 
-## Ether Currency Units
+## 이더(ETH) 단위
 
-Ethereum's currency unit is called *ether*, identified also as ETH or with the symbols Ξ (from the Greek letter *Xi* that looks like a stylized capital *E*) or, less often, ♦: for example, 1 ether, 1 ETH, Ξ1, or ♦1.
+이더리움의 화폐 단위는 *이더(ether)*, 줄여서 ETH라고도 하고, Ξ(그리스어 ‘Xi’에서 따옴), 가끔은 ♦ 기호로도 표시해요. 예를 들면 1 ether, 1 ETH, Ξ1, ♦1 이런 식이죠.
 
-> **Tip**  
+> **팁**
 >
-> Use Unicode characters U+039E for Ξ and U+2666 for ♦.
+> Ξ 기호는 유니코드 U+039E, ♦ 기호는 U+2666을 사용하면 돼요.
 
-Ether is subdivided into smaller units, down to the smallest unit possible, which is named *wei*. One ether is 1 quintillion wei (1 × 10^18^, or 1,000,000,000,000,000,000). You may hear people refer to the currency as "Ethereum," too, but this is a common beginner's mistake. Ethereum is the system; ether is the currency.
+이더는 더 작은 단위로도 쪼갤 수 있는데, 가장 작은 단위를 *웨이(wei)* 라고 불러요. 1 이더는 10^18^(1,000,000,000,000,000,000) 웨이입니다. 종종 ‘이더리움’을 화폐 이름으로 쓰기도 하는데, 사실 이건 초보자들이 많이 하는 실수예요. **이더리움**은 시스템 이름이고, **이더**가 화폐 이름입니다.
 
-The value of ether is always represented internally in Ethereum as an unsigned integer value denominated in wei. When you transact 1 ether, the transaction encodes 1,000,000,000,000,000,000 wei as the value.
+이더의 실제 가치는 이더리움 내부적으로 항상 ‘웨이’로, 부호 없는 정수값으로 저장돼요. 예를 들어 1 이더를 전송한다고 하면, 사실 트랜잭션에는 1,000,000,000,000,000,000 웨이가 담겨서 전달되는 거죠.
 
-Ether's various denominations have both a scientific name using the International System of Units (SI) and a colloquial name that pays homage to many of the great minds of computing and cryptography. Table 2-1 lists the various units, their colloquial (common) names, and their SI names. In keeping with the internal representation of value, the table shows all denominations in wei (first row), with ether shown as 10^18^ wei in the seventh row.
+이더 단위는 SI(국제 단위계) 기준의 이름도 있고, 컴퓨터나 암호학 역사에 기여한 유명 인물들의 이름을 딴 별칭도 있어요. 아래 표는 이더의 다양한 단위와 이름을 정리한 거예요.
 
-**Table 2-1. Ether denominations and unit names**
+**표 2-1. 이더 단위와 이름**
 
-| Value (in wei) | Exponent | Common name | SI name |
-|---|---|---|---|
-| 1 | 1 | Wei | Wei |
-| 1,000 | 10^3^ | Babbage | Kilowei or femtoether |
-| 1,000,000 | 10^6^ | Lovelace | Megawei or picoether |
-| 1,000,000,000 | 10^9^ | Shannon | Gigawei or nanoether |
-| 1,000,000,000,000 | 10^12^ | Szabo | Microether or micro |
-| 1,000,000,000,000,000 | 10^15^ | Finney | Milliether or milli |
-| *1,000,000,000,000,000,000* | *10^18^* | *Ether* | *Ether* |
-| 1,000,000,000,000,000,000,000 | 10^21^ | Grand | Kiloether |
-| 1,000,000,000,000,000,000,000,000 | 10^24^ | | Megaether |
+| 값 (웨이 기준)                         | 지수       | 별칭(일반 명칭)       | SI 명칭                             |
+| --------------------------------- | -------- | --------------- | --------------------------------- |
+| 1                                 | 1        | 웨이(Wei)         | 웨이(Wei)                           |
+| 1,000                             | 10^3^    | 배비지(Babbage)    | 킬로웨이(kilowei) 또는 펨토이더(femtoether) |
+| 1,000,000                         | 10^6^    | 러브레이스(Lovelace) | 메가웨이(megawei) 또는 피코이더(picoether)  |
+| 1,000,000,000                     | 10^9^    | 섀넌(Shannon)     | 기가웨이(gigawei) 또는 나노이더(nanoether)  |
+| 1,000,000,000,000                 | 10^12^   | 사보(Szabo)       | 마이크로이더(microether) 또는 마이크로(micro) |
+| 1,000,000,000,000,000             | 10^15^   | 피니(Finney)      | 밀리이더(milliether) 또는 밀리(milli)     |
+| *1,000,000,000,000,000,000*       | *10^18^* | *이더(Ether)*     | *이더(Ether)*                       |
+| 1,000,000,000,000,000,000,000     | 10^21^   | 그랜드(Grand)      | 킬로이더(kiloether)                   |
+| 1,000,000,000,000,000,000,000,000 | 10^24^   |                 | 메가이더(megaether)                   |
 
-## Choosing an Ethereum Wallet
+## 이더리움 지갑 선택하기
 
-The term *wallet* has come to mean many things, although the definitions are all related, and on a day-to-day basis, they all boil down to pretty much the same thing. We will use the term *wallet* to refer to a software application that helps you manage your Ethereum account. In short, an Ethereum wallet is your gateway to the Ethereum system. It holds your keys and can create and broadcast transactions on your behalf. Choosing an Ethereum wallet can be difficult because there are many options with different features and designs. Some are more suitable for beginners, and some are more suitable for experts. The Ethereum platform itself is still being improved, and the "best" wallets are often the ones that adapt to the changes that come with the platform upgrades.
+*지갑(wallet)* 이라는 말은 여러 의미가 있지만, 여기서는 이더리움 계정을 관리해주는 소프트웨어 앱을 의미할게요. 간단히 말해, 이더리움 지갑은 이더리움 세계로 들어가는 입구입니다. 내 키를 저장해주고, 트랜잭션도 만들고, 전송까지 도와줘요.
+지갑 종류가 워낙 많아서 처음에는 뭘 써야 할지 헷갈릴 수 있는데, 각자 장단점이 있어요. 초보자용도 있고, 고급 사용자용도 있어요. 이더리움도 계속 발전 중이라서, "최고의 지갑"도 상황에 따라 바뀔 수 있죠.
 
-But don't worry! If you choose a wallet and don't like how it works—or if you like it at first but later want to try something else—you can change wallets quite easily. All you have to do is make a transaction that sends your funds from the old wallet to the new wallet or export your private keys and import them into the new one.
+하지만 걱정하지 마세요!
+처음에 골랐다가 마음에 안 들면 언제든 다른 지갑으로 갈아탈 수 있어요.
+간단하게 옛날 지갑에서 새 지갑으로 이더를 보내거나, 개인키를 내보내서 새 지갑에 가져오면 됩니다.
 
-Remember that for a wallet application to work, it must have access to your private keys, so it is vital that you only download and use wallet applications from sources you trust. Fortunately, in general, the more popular a wallet application is, the more trustworthy it is likely to be. Nevertheless, it is good practice to avoid "putting all your eggs in one basket" and have your Ethereum accounts spread across a couple of wallets and seed phrases.
+지갑 앱을 쓸 때는 **꼭 신뢰할 수 있는 곳**에서만 다운로드해야 해요.
+지갑 앱이 내 개인키를 다루기 때문이죠.
+대체로 많이 쓰는 앱일수록 믿을 만하긴 하지만, 한 곳에만 모든 자산을 몰아두지 말고, 여러 지갑이나 시드 구절로 분산해두는 게 좋아요.
 
-The following are some good starter wallets; the selection of these wallets is not an endorsement of their quality or security. They are simply a good starting place for demonstrations and testing. All of the following wallets are both browser-extension wallets and mobile wallets:
+여기 소개하는 지갑들은 입문용으로 괜찮은 것들이에요.
+(특정 지갑을 추천한다는 의미는 아니고, 그냥 시작용으로 쓰기 좋은 앱들이라 소개하는 거예요!)
+아래 지갑들은 브라우저 확장 프로그램이면서 모바일 앱으로도 쓸 수 있어요.
 
-**MetaMask**
+**MetaMask(메타마스크)**
 
-MetaMask is easy to use and convenient for testing as it is able to connect to a variety of Ethereum nodes and test blockchains.
+MetaMask는 여러 이더리움 노드나 테스트 블록체인과 쉽게 연결할 수 있어서 테스트에 매우 편리해요.
 
-**Rabby Wallet**
+**Rabby Wallet(래비 월렛)**
 
-Rabby is often a good choice for new users as it is designed for simplicity and ease of use. It has a lot of security features built in.
+Rabby는 간단하고 사용하기 편하게 디자인되어서, 이더리움 초보자에게 추천할 만해요. 보안 기능도 많아요.
 
-**Phantom**
+**Phantom(팬텀)**
 
-Phantom is a wallet that can connect only to Ethereum, among other non-EVM chains.
+Phantom은 이더리움(그리고 이더리움 호환이 아닌 다른 블록체인)만 연결 가능한 지갑이에요.
 
-## Control and Responsibility
+## 내 자산은 내가 직접! (관리와 책임)
 
-Open blockchains like Ethereum are important because they operate as a *decentralized* system. That means lots of things, but one crucial aspect is that each user of Ethereum can—and should—control their own *private keys*, which control access to funds and smart contracts. We sometimes call the combination of access to funds and smart contracts an *account* or *wallet*. These terms can get quite complex in their functionality, so we will go into this in more detail later. As a fundamental principle, however, it is as easy as one private key equals one "account." Some users choose to give up control over their private keys by using a third-party custodian, such as an online centralized exchange. In this book, we will teach you how to take control and manage your own private keys.
+이더리움 같은 오픈 블록체인은 **탈중앙화** 시스템이에요. 이 말은 여러 가지가 있지만, 제일 중요한 건 바로 **내 자산의 개인키를 내가 직접 관리할 수 있다**는 거예요.
+개인키가 내 자산(이더, NFT, 스마트컨트랙트 등)에 대한 실제 권한이에요.
+이 책에서는, 직접 내 개인키를 관리하는 방법을 알려드릴 거예요.
 
-With control comes a big responsibility. If you lose your private keys, you lose access to your funds and contracts. No one can help you regain access—your funds will be locked forever. Here are a few tips to help you manage this responsibility:
+개인키를 내가 가진다는 건 책임도 따라온다는 뜻!
+개인키를 잃어버리면, 내 자산도 영원히 잃어버리게 돼요.
+누구도 찾아줄 수 없습니다.
+아래 꿀팁들을 꼭 기억하세요!
 
-- Do not improvise security. Use tried-and-tested standard approaches.
+* 즉흥적으로 보안 대책 만들지 말고, 이미 검증된 표준 방법을 쓰세요.
+* 계좌에 담긴 돈이 클수록, 보안에 더 신경 써야 해요.
+* 최고 수준의 보안은 하드웨어 지갑이지만, 모든 계정에 다 필요하진 않아요.
+* 개인키를 평문(특히 디지털 파일)으로 절대 저장하지 마세요. 대부분의 지갑 앱은 개인키를 그냥 보여주지도 않아요.
+* 시드 구절(니모닉 단어 12~24개)을 백업하라는 안내가 나오면, 꼭 종이에 적어두세요! ‘나중에’ 미루면 정말 잊어버립니다. 이 백업만 있으면, 컴퓨터를 잃어버리거나 비밀번호를 까먹어도 자산을 복구할 수 있어요.
+  단, 이 백업도 남이 보면 내 자산을 훔칠 수 있으니, 종이로만 적어서 안전한 장소(예: 금고, 서랍)에 보관하세요.
+* 큰 금액을 옮길 땐, 먼저 아주 소액(1달러 이하)으로 테스트 전송을 해보고, 제대로 도착했는지 확인하세요.
+* 새 계정 만들었을 때도 마찬가지! 일단 소액만 보내서 테스트해보고, 정상적으로 송금/수신되는지 체크하세요. 테스트넷을 쓰면 더 안전하게 테스트할 수도 있어요.
+* 블록 익스플로러(예: 이더스캔)는 내 트랜잭션이 제대로 네트워크에 올라갔는지 쉽게 확인할 수 있는 사이트예요.
+  다만, 이 주소들이 내 것임을 블록 익스플로러에 노출시키는 거라, 사생활에는 불리할 수도 있어요.
+* 익스플로러는 대체로 신뢰할 만하지만, 100% 믿진 마세요.
+* 책에 나온 주소에는 절대 돈 보내지 마세요! 개인키가 책에 공개되어 있어, 누군가 바로 가져가버릴 수 있습니다.
 
-- The more important the account (e.g., the higher the value of the funds controlled compared to your total net worth), the higher the security measures that should be taken.
+이제 기본적인 보안 습관을 익혔으니, 메타마스크부터 써볼까요?
 
-- One of the highest security levels is gained from a hardware wallet device, but this level is not required for every account.
+## 메타마스크 시작하기
 
-- Never store your private key in plain form, especially digitally. Fortunately, most user interfaces today won't even let you see the raw private key without throwing multiple warnings.
+Google Chrome 브라우저를 열고 [확장 프로그램 페이지](https://oreil.ly/0rOvX)로 들어가세요. "MetaMask"를 검색한 다음, 여우 아이콘을 클릭합니다. 아래 그림처럼 보일 거예요.
 
-- When you are prompted to back up a key as a mnemonic word sequence, use pen and paper to make a physical backup. Do not leave that task "for later"; you will forget. These backups can be used to rebuild your private key in case you lose all the data saved on your system or if you forget or lose your password. However, they can also be used by attackers to get your private keys, so never store them digitally and keep at least one physical copy stored securely.
+![메타마스크 크롬 확장 프로그램 상세 페이지](images/ch2/maet_0201.png)
 
-- Before transferring any large amounts (especially to new addresses), first do a small test transaction (e.g., less than $1 value) and wait for confirmation of receipt.
+그림 2-1. 메타마스크 크롬 확장 프로그램 상세 페이지
 
-- When you create a new account, start by sending only a small test transaction to the new address. Once you receive the test transaction, try sending it back again from that account. There are lots of reasons account creation can go wrong, and if it has gone wrong, it is better to find out with a small loss. If the tests work, all is well (also a testnet could be used to avoid any kind of loss).
+진짜 MetaMask 확장 프로그램이 맞는지 꼭 확인해야 해요. 가끔 악성 확장 프로그램이 구글 심사를 피해 올라오기도 하거든요.
+진짜 MetaMask의 특징은 이래요:
 
-- Public block explorers are an easy way to independently see whether a transaction has been accepted by the network; while this information is already public on the blockchain, block explorers make it incredibly easy to access. However, this convenience has a negative impact on your privacy because you reveal your addresses to block explorers, which can track you.
+* 주소창에 `nkbihfbeogaeaoehlefnkodbefgpgknn`라는 ID가 보입니다.
+* 제공처가 [*https://metamask.io*](https://metamask.io) 입니다.
+* 리뷰가 5,400개 이상 있어요.
+* 1,500만 명 이상이 사용하고 있습니다.
 
-- Public block explorers are usually reliable, but not all the time—do not trust them blindly.
+이 조건이 맞다면 "Chrome에 추가"를 클릭해서 설치하세요.
 
-- Do not send money to any of the addresses shown in this book. The private keys are listed in the book, and someone could immediately take that money.
+### 지갑 만들기
 
-Now that we've covered some basic best practices for key management and security, let's get to work using MetaMask!
+MetaMask가 설치되면, 브라우저 도구 모음에 여우 머리 아이콘이 새로 뜰 거예요.
+클릭해서 시작하세요.
+약관에 동의하고, 비밀번호를 입력해서 새 이더리움 지갑을 만듭니다. (아래 그림 참고)
 
-## Getting Started with MetaMask
+![메타마스크 비밀번호 입력 화면](images/ch2/maet_0202.png)
 
-Open the Google Chrome browser and navigate to [Extensions](https://oreil.ly/0rOvX). Search for "MetaMask" and click on the logo of a fox. You should see something similar to Figure 2-1.
+그림 2-2. 메타마스크 비밀번호 입력 화면
 
-![The detail page of the MetaMask Chrome extension](images/ch2/maet_0201.png)
-
-Figure 2-1. The detail page of the MetaMask Chrome extension
-
-It's important to verify that you are downloading the real MetaMask extension because sometimes people are able to sneak malicious extensions past Google's filters. The real one does the following:
-
-- Shows the ID `nkbihfbeogaeaoehlefnkodbefgpgknn` in the address bar
-
-- Is offered by [*https://metamask.io*](https://metamask.io)
-
-- Has more than 5,400 reviews
-
-- Has more than 15 million users
-
-Once you confirm that you are looking at the correct extension, click "Add to Chrome" to install it.
-
-### Creating a Wallet
-
-Once MetaMask is installed, you should see a new icon (the head of a fox) in your browser's toolbar. Click it to get started. You will be asked to accept the terms and conditions and then to create your new Ethereum wallet by entering a password (see Figure 2-2).
-
-![The password page of the MetaMask Chrome extension](images/ch2/maet_0202.png)
-
-Figure 2-2. The password page of the MetaMask Chrome extension
-
-> **Tip**  
+> **팁**
 >
-> The password controls access to MetaMask so that it can't be used by anyone with access to your browser. This password is only for your local device; if an attacker gains access to the private key or seed phrase, they will be able to access the funds in your addresses. The password is not needed if the attacker has the private key or seed phrase.
+> 이 비밀번호는 MetaMask가 내 브라우저에서 무단 사용되는 걸 막아줍니다.
+> 이 비밀번호는 내 기기에서만 쓰여요. 누군가 내 개인키나 시드 구절(12단어)을 알면, 비밀번호 없이도 내 자산에 접근할 수 있습니다.
 
-Once you've set a password, MetaMask will generate a wallet for you and show you a *mnemonic backup* consisting of 12 English words (see Figure 2-3). These words can be used in any compatible wallet to recover access to your funds should something happen to MetaMask or your computer. You do not need the password for this recovery; the 12 words are sufficient.
+비밀번호를 설정하면, MetaMask가 자동으로 지갑을 만들어주고, *백업용 시드 구절* (영어 단어 12개)을 보여줍니다. (아래 그림 참고)
+이 단어들은 MetaMask나 컴퓨터에 문제가 생겼을 때, 자산 복구용으로 쓸 수 있어요.
+비밀번호 없이도 이 12단어만 있으면 복구 가능합니다.
 
-![The mnemonic backup of your wallet created by MetaMask](images/ch2/maet_0203.png)
+![메타마스크에서 생성한 지갑의 백업용 시드 구절](images/ch2/maet_0203.png)
 
-Figure 2-3. The mnemonic backup of your wallet created by MetaMask
+그림 2-3. 메타마스크에서 생성한 지갑의 백업용 시드 구절
 
-> **Tip**  
+> **팁**
 >
-> Back up your mnemonic (12 words) on paper, twice. Store the two paper backups in two separate secure locations, such as a fire-resistant safe, a locked drawer, or a safe deposit box. Treat the paper backups like cash of equivalent value to what you store in your Ethereum wallet. Anyone with access to these words can gain access to and steal your money. We will go into much more detail on how to keep your seed phrase safe in Chapter 5.
+> 시드 구절(12개 단어)을 종이에 두 번 적어 백업하세요.
+> 각각 다른 안전한 장소(예: 방화 금고, 잠긴 서랍, 금고 등)에 보관하면 좋아요.
+> 이 종이 백업은 내 이더리움 자산과 동등한 가치로 소중히 다뤄야 해요.
+> 누구든 이 단어들을 알면 내 돈을 가져갈 수 있으니까요!
+> 시드 구절을 안전하게 보관하는 법은 5장에서 더 자세히 알려드릴게요.
 
-Once you have confirmed that you have stored the mnemonic securely, you'll be able to see the details of your Ethereum account, as shown in Figure 2-4.
+시드 구절을 안전하게 보관했다고 확인하면, 내 이더리움 계정 정보를 볼 수 있어요.
 
-![Your Ethereum account in MetaMask](images/ch2/maet_0204.png)
+![MetaMask에 표시된 내 이더리움 계정](images/ch2/maet_0204.png)
 
-Figure 2-4. Your Ethereum account in MetaMask
+그림 2-4. MetaMask에 표시된 내 이더리움 계정
 
-> **Note**  
+> **참고**
 >
-> Do not send any assets to the addresses shown in this book. The seed phrase is public for educational purposes, and every asset sent to these addresses will probably be lost.
+> 이 책에 나온 주소로는 절대 자산을 보내지 마세요.
+> 시드 구절이 공개되어 있어서, 그 주소로 보낸 자산은 거의 바로 누군가가 가져갈 거예요.
 
-Your account page shows the name of your account ("Account 1" by default), an Ethereum address (`0xaa529…f17f` in the example), and a colorful icon to help you visually distinguish this account from other accounts. At the top of the account page, you can see which Ethereum network you are currently working on ("Main Network" in the example).
+계정 페이지에는 기본 계정 이름(기본값: "Account 1"), 이더리움 주소(`0xaa529…f17f` 예시), 그리고 계정을 구분하기 쉬운 컬러풀한 아이콘이 보여요.
+상단에는 지금 어떤 이더리움 네트워크에 연결되어 있는지도 표시됩니다(예시: "메인 네트워크").
 
-Congratulations! You have set up your first Ethereum wallet.
+축하해요!
+이제 첫 이더리움 지갑을 완성했어요.
 
-### Switching Networks
+### 네트워크 바꾸기
 
-As you can see on the MetaMask account page, you can choose among multiple Ethereum networks. By default, MetaMask will try to connect to the main network. The other choices are public testnets, any Ethereum node of your choice, or nodes running private blockchains on your own computer (localhost):
+MetaMask 계정 페이지를 보면 여러 이더리움 네트워크 중에서 선택할 수 있어요.
+기본값은 메인넷이지만, 테스트넷이나 내 PC에 띄운 로컬 노드 등 다른 네트워크도 연결할 수 있어요.
 
-**Main Ethereum Network**
+**메인 이더리움 네트워크**
 
-The main public Ethereum blockchain. Real ETH, real value, and real consequences.
+실제 이더(ETH)와 진짜 가치를 다루는 진짜 이더리움 블록체인입니다.
 
-**Sepolia Test Network**
+**Sepolia 테스트 네트워크**
 
-Launched in October 2021 as a proof-of-authority network by Ethereum's core developers, Sepolia has since transitioned to a PoS consensus, mirroring Ethereum's mainnet environment.
+2021년 10월, 이더리움 개발자들이 만든 테스트넷이에요. 처음엔 PoA였지만, 지금은 메인넷과 비슷하게 PoS로 운영돼요.
 
-**Holesky Test Network**
+**Holesky 테스트 네트워크**
 
-The Holesky Testnet is Ethereum's advanced testing ground for staking, infrastructure, and protocol development.
+스테이킹, 인프라, 프로토콜 개발을 위한 고급 이더리움 테스트넷이에요.
 
-**Localhost 8545**
+**로컬호스트 8545**
 
-Connects to a node running on the same computer as the browser. The node can be part of any public blockchain (main or testnet) or a private testnet.
+내 컴퓨터에서 직접 구동 중인 이더리움 노드에 연결합니다.
+메인넷/테스트넷/개인 테스트넷, 무엇이든 연결 가능해요.
 
 **Custom RPC**
 
-Allows you to connect MetaMask to any node with a Geth-compatible remote procedure call (RPC) interface. The node can be part of any public or private blockchain.
+Geth 호환 RPC 인터페이스를 가진 아무 이더리움 노드에 연결할 수 있어요.
+메인/테스트/개인, 어떤 블록체인이라도 OK!
 
-> **Note**  
+> **참고**
 >
-> Your MetaMask wallet uses the same private key and Ethereum address on all the networks it connects to. However, your Ethereum address balance on each Ethereum network will be different. For instance, if you use your keys to send ether on the Sepolia testnet, your balances on other networks will remain unaffected.
+> MetaMask는 어떤 네트워크에 연결하든 같은 개인키와 주소를 사용해요.
+> 하지만 네트워크마다 내 주소의 잔고는 다릅니다!
+> 예를 들어 Sepolia 테스트넷에서 이더를 써도, 다른 네트워크 잔고는 변하지 않아요.
 
-### Getting Some Test Ether
+### 테스트 이더 받기
 
-Your first task is to get your wallet funded. You won't be doing that on the main network because real ether costs money and handling it requires a bit more experience. For now, you'll load your wallet with some testnet ether.
+지갑을 만들었으니, 이제 이더를 받아야죠.
+근데, 아직 메인넷에서 실제 이더를 다루기엔 위험하고 돈도 들죠?
+먼저 테스트넷 이더를 받아 연습부터 할 거예요.
 
-Switch MetaMask to the Sepolia Test Network by clicking the Ethereum icon on the top left; toggle the option "Show test networks" and click Sepolia, as shown in Figure 2-5.
+MetaMask를 Sepolia 테스트넷으로 바꿔주세요.
+왼쪽 상단 이더리움 아이콘을 누르고, "Show test networks"를 켠 뒤, Sepolia를 클릭하면 돼요.
 
-![MetaMask networks](images/ch2/maet_0205.png)
+![MetaMask 네트워크 선택](images/ch2/maet_0205.png)
 
-Figure 2-5. MetaMask networks
+그림 2-5. MetaMask 네트워크 선택
 
-Click Buy, then navigate to one of the faucets in [this list](https://oreil.ly/VE0t0). Once you have decided which faucet you want to use—they are all pretty much equivalent—you can request ethers on the test network, as shown in Figure 2-6.
+이제 "구매(Buy)"를 누른 후, [이 리스트](https://oreil.ly/VE0t0) 중 아무 팟(faucet)으로 가세요.
+어느 팟이든 다 비슷해요.
+원하는 팟에서 Sepolia 테스트 이더를 요청하면 됩니다.
 
-![MetaMask Sepolia test faucet](images/ch2/maet_0206.png)
+![MetaMask Sepolia 테스트넷 팟](images/ch2/maet_0206.png)
 
-Figure 2-6. MetaMask Sepolia test faucet
+그림 2-6. MetaMask Sepolia 테스트넷 팟
 
-The transaction ID for the request of testnet ether looks like this:
+테스트넷 이더 요청 트랜잭션의 ID는 이렇게 생겼어요:
 
-    0x471273d9417e98e7f1adaae61e53a353b2d2313de2e71fc4b6184bf5a63fa0ae
+```
+0x471273d9417e98e7f1adaae61e53a353b2d2313de2e71fc4b6184bf5a63fa0ae
+```
 
-In a few seconds, the new transaction will be processed by the Sepolia network, and your MetaMask wallet will show a balance of 0.05 ETH (this depends on how much ether the faucet is willing to send). Now, click to the first transaction in your browser extension and click "View on block explorer," as shown in Figure 2-7. This will navigate to a *block explorer*, which is a website that allows you to visualize and explore blocks, addresses, and transactions.
+잠시 기다리면, Sepolia 네트워크에서 트랜잭션이 처리되고, 내 MetaMask 지갑에 0.05 ETH(팟에서 얼마를 보내주는지에 따라 다름) 정도가 들어와 있을 거예요.
+첫 번째 트랜잭션을 클릭한 뒤 "블록 익스플로러에서 보기(View on block explorer)"를 누르면, 아래처럼 블록 익스플로러에서 상세 내역을 볼 수 있습니다.
 
-![Transaction viewed from MetaMask](images/ch2/maet_0207.png)
+![MetaMask에서 트랜잭션 확인](images/ch2/maet_0207.png)
 
-Figure 2-7. Transaction viewed from MetaMask
+그림 2-7. MetaMask에서 트랜잭션 확인
 
-MetaMask uses the [Etherscan block explorer](https://etherscan.io), one of the more popular Ethereum block explorers. The transaction containing the payment from the Sepolia test faucet is shown in Figure 2-8.
+MetaMask는 [Etherscan 블록 익스플로러](https://etherscan.io)를 사용해요.
+아래 그림처럼, Sepolia 팟에서 받은 이더 트랜잭션을 확인할 수 있습니다.
 
-![Etherscan Sepolia block explorer](images/ch2/maet_0208.png)
+![Etherscan Sepolia 블록 익스플로러](images/ch2/maet_0208.png)
 
-Figure 2-8. Etherscan Sepolia block explorer
+그림 2-8. Etherscan Sepolia 블록 익스플로러
 
-The transaction has been recorded on the Sepolia blockchain and can be viewed at any time by anyone, simply by searching for the transaction ID. Try entering the transaction hash into the [*sepolia.etherscan.io* website](http://sepolia.etherscan.io) to see it for yourself:
+이 트랜잭션은 Sepolia 블록체인에 기록되었기 때문에, 언제든 누구나 트랜잭션 ID로 확인할 수 있어요.
+아래 해시 값을 [*sepolia.etherscan.io* 웹사이트](http://sepolia.etherscan.io)에 입력해서 직접 확인해 보세요:
 
-    0x471273d9417e98e7f1adaae61e53a353b2d2313de2e71fc4b6184bf5a63fa0ae
+```
+0x471273d9417e98e7f1adaae61e53a353b2d2313de2e71fc4b6184bf5a63
+```
 
-### Sending Ether from MetaMask
+### 메타마스크에서 이더(Ether) 보내기
 
-Once you've received your first test ether from the Sepolia test faucet, you can experiment with sending ether by trying to send some back to the faucet or to any other address. In this example, we will be trying to send some testnet ether to Vitalik Buterin, as shown in Figure 2-9.
+Sepolia 테스트 파우셋에서 처음으로 테스트 이더를 받았다면, 이제 이더를 보내는 실습을 해볼 수 있어요. 예를 들어, 파우셋으로 다시 이더를 보내거나, 다른 주소로 보내볼 수 있죠. 여기선 비탈릭 부테린에게 테스트넷 이더를 보내는 예시를 보여줄게요. 아래 그림을 참고하세요!
 
-![Sending 0.05 ether to an address](images/ch2/maet_0209.png)
+![주소로 0.05 이더 보내기](images/ch2/maet_0209.png)
 
-Figure 2-9. Sending 0.05 ether to an address
+그림 2-9. 주소로 0.05 이더 보내기
 
-Oops! You probably noticed that you can't complete the transaction—MetaMask says you have an insufficient balance. At first glance, this may seem confusing: you have 0.05 ETH, you want to send 0.05 ETH, so why is MetaMask saying you have insufficient funds?
+앗! 보내려다보면 트랜잭션을 완료할 수 없다는 메시지가 뜰 거예요—메타마스크가 잔액이 부족하다고 알려주거든요. 분명히 0.05 ETH가 있는데, 왜 0.05 ETH를 보내지 못하는 걸까요?
 
-The answer is because of the cost of gas. Every Ethereum transaction requires payment of a fee, which is collected by the network to validate the transaction. The fees in Ethereum are charged in a virtual currency called *gas*. You pay for the gas with ether, as part of the transaction.
+이유는 바로 **가스비(gas fee)** 때문이에요! 이더리움에서 트랜잭션을 할 때는 네트워크 수수료, 즉 가스비가 들어가는데, 이 가스비는 이더로 지불합니다. 트랜잭션을 보낼 때, 이더와 함께 가스비도 내야 해서, 가지고 있는 전체 금액을 다 보낼 수 없는 거예요.
 
-> **Note**  
+> **참고**
 >
-> Fees are required on the test networks, too. Without fees, a test network would behave differently from the main network, making it an inadequate testing platform. Fees also protect the test networks from DoS attacks and poorly constructed contracts (e.g., infinite loops), much like they protect the main network.
+> 테스트넷에서도 실제 네트워크와 똑같이 가스비를 내야 해요. 만약 가스비가 없다면, 테스트넷과 메인넷이 다르게 동작할 수 있겠죠. 또, 수수료가 없다면 테스트넷이 스팸이나 악의적인 공격에 취약해지기도 하니까, 꼭 필요하답니다!
 
-When you send the transaction, MetaMask will calculate the average gas price of recent successful transactions—for example, at 3 gwei, which stands for gigawei. Wei is the smallest subdivision of the ether currency, as we discussed in "Ether Currency Units". The gas limit is set at the cost of sending a basic transaction: 21,000 gas units, which is the smallest amount of gas that can be used to send a transaction. Therefore, the maximum amount of ETH you will spend is 3 × 21,000 gwei = 63,000 gwei = 0.000063 ETH. (Be advised that average gas prices can fluctuate. We will see in a later chapter how you can increase or decrease your gas limit to ensure that your transaction takes precedence if need be.)
+트랜잭션을 보낼 때, 메타마스크는 최근 성공한 트랜잭션의 평균 가스 가격을 참고해서 가스비를 계산해요. 예를 들어, 3 gwei(기가웨이, ether의 최소 단위)일 때, 간단한 트랜잭션을 보내는 데는 21,000 가스가 필요합니다. 그럼 총 비용은 3 × 21,000 gwei = 63,000 gwei = 0.000063 ETH 정도예요. (가스비는 상황에 따라 달라질 수 있어요. 이후에 가스 한도를 조정하는 방법도 배울 거예요.)
 
-All this is to say that making a 0.05 ETH transaction costs 0.050063 ETH. Click Reject to cancel this transaction. Let's try again, this time by sending 0.01 ETH.
+즉, 0.05 ETH를 보내려면 실제로는 0.050063 ETH가 필요하다는 뜻이죠. 트랜잭션을 취소하려면 **Reject**(거절) 버튼을 눌러주세요. 그럼 0.01 ETH처럼, 좀 더 적은 금액을 다시 보내보세요.
 
-### Exploring the Transaction History of an Address
+---
 
-By now, you have become an expert in using MetaMask to send and receive test ether. Your wallet has received and sent payments. You can view all these transactions using the [*sepolia.etherscan.io* block explorer](http://sepolia.etherscan.io). You can either copy your wallet address and paste it into the block explorer's search box or have MetaMask open the page for you. Next to your account icon in MetaMask, you will see a button showing three dots. Click it to show a menu of account-related options (see Figure 2-10).
+### 주소의 트랜잭션 기록 살펴보기
 
-![MetaMask account context menu](images/ch2/maet_0210.png)
+이제 메타마스크로 이더를 보내고 받는 것에 익숙해졌을 거예요. 내가 주고받은 내역들은 [*sepolia.etherscan.io* 블록 탐색기](http://sepolia.etherscan.io)에서 확인할 수 있어요. 지갑 주소를 복사해서 탐색기 검색창에 붙여 넣거나, 메타마스크에서 바로 해당 페이지로 이동할 수도 있습니다.
 
-Figure 2-10. MetaMask account context menu
+메타마스크 계정 아이콘 옆의 점 세 개 버튼(⋮)을 눌러서 메뉴를 열면 다양한 계정 옵션이 보여요(아래 그림 참고).
 
-> **Tip**  
+![메타마스크 계정 컨텍스트 메뉴](images/ch2/maet_0210.png)
+
+그림 2-10. 메타마스크 계정 컨텍스트 메뉴
+
+> **팁**
 >
-> The default settings of MetaMask are not very privacy centric. It is advisable to carefully analyze the settings found in Settings → Security and Privacy. Once you are familiar with how MetaMask works, it is also advisable to change the Ethereum mainnet network from the default one to one that uses an RPC with privacy settings that suit your needs. The most private solution would be to have your own node with an RPC to which you can connect; we will see how to do that in Chapter 3.
+> 메타마스크 기본 설정은 프라이버시 중심이 아니에요. `설정 → 보안 및 프라이버시`에서 옵션을 꼼꼼히 확인해보는 걸 추천해요. 메타마스크 사용에 익숙해지면, 기본 메인넷 대신 내 프라이버시에 맞는 RPC 네트워크로 변경하는 것도 고려해볼 수 있어요. 가장 안전한 방법은 직접 노드를 운영하고 그 노드의 RPC에 연결하는 거예요. (이 방법은 3장에서 다룰 거예요!)
 
-Select "View account on Etherscan" to open a web page in the block explorer showing your account's transaction history, as shown in Figure 2-11.
+"**Etherscan에서 계정 보기**"를 선택하면, 블록 탐색기에서 내 계정의 트랜잭션 내역을 볼 수 있는 웹페이지가 열려요. 아래 그림처럼요.
 
-![Address transaction history on Etherscan](images/ch2/maet_0211.png)
+![Etherscan에서 주소 트랜잭션 내역 보기](images/ch2/maet_0211.png)
 
-Figure 2-11. Address transaction history on Etherscan
+그림 2-11. Etherscan에서 주소 트랜잭션 내역 보기
 
-Here you can see the entire transaction history of your Ethereum address. It shows all the transactions recorded on the Sepolia blockchain where your address is the sender or recipient. Click on a few of these transactions to see more details.
+여기서 내 이더리움 주소로 입금/출금된 모든 트랜잭션 기록을 볼 수 있어요. Sepolia 블록체인에서 내 주소가 송/수신자로 포함된 모든 내역이 쭉 나옵니다. 트랜잭션을 클릭하면 더 자세한 정보도 볼 수 있어요.
 
-> **Warning**  
+> **경고**
 >
-> Beware, there is a known attack, called *address poisoning*, that can display transactions with spoofed addresses on the block explorer. The block explorer should be used for a quick check, but the information shown might not be accurate.
+> *주소 중독(주소 포이즈닝, address poisoning)*이라는 공격이 있어요. 블록 탐색기에 가짜 주소가 섞여 보일 수 있습니다. 블록 탐색기는 빠른 확인용으로만 사용하고, 보여지는 정보가 100% 정확하지 않을 수 있다는 점 꼭 기억하세요!
 
-You can explore the transaction history of any address. Take a look at the transaction history of the Sepolia test faucet address (hint: it is the "sender" address listed in the oldest payment to your address). You can see all the test ether sent from the faucet to you and to other addresses. Every transaction you see can lead you to more addresses and more transactions. Before long, you will be lost in the maze of interconnected data. Public blockchains contain an enormous wealth of information, all of which can be explored programmatically, as we will see in future examples.
+다른 주소의 트랜잭션 내역도 조회해볼 수 있어요. Sepolia 테스트 파우셋 주소(힌트: 내게 첫번째로 이더를 보낸 "보낸 사람" 주소예요)를 찾아서, 파우셋에서 이더가 어떻게 배포되고 있는지 살펴보세요. 하나하나의 트랜잭션을 따라가다 보면 수많은 주소와 트랜잭션이 이어진 데이터의 세계를 경험할 수 있어요. 공개 블록체인은 방대한 정보를 담고 있고, 이 정보들은 프로그래밍으로도 자유롭게 탐색할 수 있답니다!
 
-## Introducing the World Computer
+---
 
-You've now created a wallet and sent and received ether. So far, we've treated Ethereum as a cryptocurrency. But Ethereum is much, much more. In fact, the cryptocurrency function is subservient to Ethereum's function as a decentralized world computer. Ether is meant to be used to pay for running *smart contracts*, which are computer programs that run on an emulated computer called the *EVM*.
+## 월드 컴퓨터의 등장
 
-The EVM is a global singleton, meaning that it operates as if it were a global single-instance computer, running everywhere. Each node on the Ethereum network runs a local copy of the EVM to validate contract execution, while the Ethereum blockchain records the changing *state* of this world computer as it processes transactions and smart contracts. We'll discuss this in much greater detail in Chapter 14.
+지갑도 만들었고, 이더도 주고받아봤죠. 지금까지는 이더리움을 그냥 암호화폐로만 다뤘지만, 사실 이더리움은 **훨씬 더 많은 것**을 할 수 있어요. 이더리움의 진짜 강점은 바로 **분산된 월드 컴퓨터**라는 점이에요!
 
-## Externally Owned Accounts and Contracts
+이더는 **스마트 컨트랙트**(blockchain 위에서 실행되는 프로그램)를 돌리기 위해서도 쓰여요. 스마트 컨트랙트는 *EVM*이라는 가상 컴퓨터 위에서 돌아가죠.
 
-The type of account you created in the MetaMask wallet is called an *externally owned account* (EOA). EOAs are those that have a private key; having the private key means control over access to funds or contracts.
+EVM(이더리움 가상 머신)은 전 세계 어디서든 같은 방식으로 작동하는 단 하나의 컴퓨터처럼 동작해요. 이더리움 네트워크에 있는 모든 노드가 EVM을 실행하며, 이더리움 블록체인은 이 월드 컴퓨터의 상태 변화를 계속 기록합니다. 이 내용은 14장에서 더 깊게 다룰 거예요!
 
-You're probably guessing that there is another type of account. That other type of account is a *contract account*. A contract account has smart contract code, which a simple EOA can't have. Furthermore, a contract account does not have a private key. Instead, it is owned (and controlled) by the logic of its smart contract code: the software program recorded on the Ethereum blockchain at the contract account's creation and executed by the EVM.
+---
 
-Contracts have addresses, just like EOAs. Contracts can also send and receive ether, just like EOAs. However, when a transaction destination is a contract address, it causes that contract to *run* in the EVM, using the transaction—and the transaction's data—as its input. In addition to ether, transactions can contain *data* indicating which specific function in the contract to run and what parameters to pass to that function. In this way, transactions can *call* functions within contracts.
+## 외부 소유 계정과 컨트랙트
 
-Note that because a contract account does not have a private key, it cannot *initiate* a transaction. Only EOAs can initiate transactions, but contracts can *react* to transactions by calling other contracts, building complex execution paths.
+내가 메타마스크에서 만든 지갑 주소는 **외부 소유 계정(Externally Owned Account, EOA)**이라고 해요. EOA는 비밀키를 가진 계정이라, 그 키로 자금이나 컨트랙트에 접근할 수 있어요.
 
-In the next few sections, we will write our first contract. You will then learn how to create, fund, and use that contract with your MetaMask wallet and test ether on the Sepolia test network.
+"혹시 다른 종류의 계정도 있나?"라고 생각했다면, 맞아요! 그건 바로 **컨트랙트 계정(Contract Account)**입니다. 컨트랙트 계정은 스마트 컨트랙트 코드가 담겨있는 계정이에요. EOA와 달리 비밀키는 없고, 이더리움 블록체인에 등록된 코드의 논리가 곧 주인입니다.
 
-## A Simple Contract: A Test Ether Faucet
+컨트랙트도 EOA처럼 주소가 있고, 이더를 주고받을 수도 있어요. 단, 컨트랙트 주소로 트랜잭션을 보내면, 그 트랜잭션이 컨트랙트를 **실행**하게 됩니다. 또 트랜잭션에는 이더뿐만 아니라, 특정 함수 실행과 파라미터를 담을 수도 있죠. 그래서 트랜잭션으로 컨트랙트의 함수 호출도 할 수 있어요.
 
-Ethereum has a few different high-level languages, all of which can be used to write a contract and produce EVM bytecode. You can read about the most prominent and interesting ones in Chapter 7. One high-level language is by far the dominant choice for smart contract programming: Solidity. Solidity was created by Gavin Wood and has become the most widely used language in Ethereum (and beyond). We'll use Solidity to write our first contract.
+중요한 점! 컨트랙트 계정은 비밀키가 없기 때문에 **직접 트랜잭션을 시작할 수는 없고**, 오직 EOA만 트랜잭션을 시작할 수 있어요. 대신, 컨트랙트는 받은 트랜잭션에 반응해서 다른 컨트랙트를 호출할 수 있고, 이를 통해 복잡한 동작도 만들 수 있습니다.
 
-For our first example (Example 2-1), we will write a contract that controls a faucet. You've already used a faucet to get test ether on the Sepolia test network. A *faucet* is a relatively simple thing: it gives out ether to any address that asks and can be refilled.
+이제 직접 컨트랙트를 만들어보고, 메타마스크와 Sepolia 테스트넷 이더를 써서 사용해볼 거예요!
 
-##### Example 2-1. *Faucet.sol*: a Solidity contract implementing a faucet
+---
+
+## 아주 간단한 컨트랙트: 테스트 이더 파우셋
+
+이더리움에는 여러 고급 언어가 있지만, 그중 **Solidity**가 가장 많이 쓰여요. 이 예제에서도 솔리디티를 써서 첫 컨트랙트를 만들어볼게요.
+
+예제 2-1은 **파우셋**(faucet)을 만드는 컨트랙트예요. 앞에서 써봤던 테스트넷 파우셋처럼, 이더를 요청하는 아무 주소에나 일정량을 보내주고, 필요하면 충전할 수도 있어요.
+
+##### 예제 2-1. *Faucet.sol*: 솔리디티로 만든 파우셋 컨트랙트
 
 ```solidity
 pragma solidity 0.8.26;
@@ -297,243 +341,306 @@ contract Faucet {
 }
 ```
 
-This is a very simple contract, about as simple as we can make it. It is also a *flawed* contract, demonstrating a number of bad practices and security vulnerabilities. We will learn by examining many of its flaws in later sections. But for now, let's look at what this contract does and how it works, line by line. You will quickly notice that many elements of Solidity are similar to existing programming languages, such as JavaScript, Java, or C++.
+이 컨트랙트는 굉장히 간단하지만, 여러 보안 이슈와 개선할 점이 있어요. 일단은 동작 방식과 코드를 한 줄씩 같이 살펴볼게요. 솔리디티는 자바스크립트, 자바, C++ 같은 기존 언어와 문법이 꽤 비슷하답니다!
 
-The first line is the `pragma` statement:
+가장 먼저 나오는 `pragma`는 이 파일이 어떤 버전의 컴파일러를 써야 하는지 명시해줘요.
 
-    pragma solidity 0.8.26;
+```
+pragma solidity 0.8.26;
+```
 
-By including this line at the top of a Solidity source file, you ensure that the code is compiled with version 0.8.26 of the Solidity compiler, ensuring compatibility and avoiding potential issues that might arise from using a different compiler version.
+이렇게 파일 맨 위에 적어주면, 0.8.26 버전 솔리디티 컴파일러로만 컴파일할 수 있어서, 다른 버전에서 생길 수 있는 문제를 막아줘요.
 
-Next is a comment indicating that the smart contract is licensed under the GPL-3.0 license:
+그 다음은 라이선스 관련 주석이에요:
 
-    // SPDX-License-Identifier: GPL-3.0
+```
+// SPDX-License-Identifier: GPL-3.0
+```
 
-This is important for legal and compliance reasons because it informs users and developers about their rights and obligations concerning the use and distribution of the code.
+이런 정보는 개발자나 사용자들이 코드 사용/배포 시 준수해야 할 권리와 의무를 알 수 있도록 도와줍니다.
 
-Comments are for humans to read and are not included in the executable EVM bytecode. We usually put them on the line before the code we are trying to explain, or sometimes on the same line. Comments start with two forward slashes: `//`. Everything from the first slash until the end of that line is treated the same as a blank line and ignored.
+주석은 코드 실행에 포함되지 않고, 읽는 사람을 위한 설명이에요. `//`로 시작해서 그 줄 끝까지는 무시됩니다.
 
-This is also a comment:
+그다음, 실제 컨트랙트가 시작돼요:
 
-    // Our first contract is a faucet!
+```
+contract Faucet {
+```
 
-The next line is where our actual contract starts:
+여기서부터 중괄호 `{}` 안이 컨트랙트의 영역이죠. 객체지향 언어에서 클래스 선언하는 것과 비슷합니다.
 
-    contract Faucet {
+첫 번째 함수는 `withdraw`예요:
 
-This line declares a `contract` object, similar to a `class` declaration in other object-oriented languages. The contract definition includes all the lines between the curly braces (`{}`), which define a *scope*, much like how curly braces are used in many other programming languages.
+```
+function withdraw(uint256 _withdrawAmount, address payable _to) public {
+```
 
-Next, we declare the first function of the `Faucet` contract:
+이 함수는 누가, 얼마를 요청하는지 받아서, 요청한 주소로 이더를 보내주는 역할이에요.
 
-    function withdraw(uint256 _withdrawAmount, address payable _to) public {
+처음엔 출금 금액에 제한을 둡니다:
 
-The function is named `withdraw`, and it takes one unsigned integer (`uint256`) named `_withdrawAmount` and an `address payable` named `_to`. It is declared as a public function, meaning it can be called by other contracts. The function definition follows, between curly braces. The first part of the `withdraw` function sets a limit on withdrawals:
+```
+require(_withdrawAmount <= 1000000000000);
+```
 
-    require(_withdrawAmount <= 1000000000000);
+이 조건이 맞지 않으면(=너무 많이 요청하면), 함수 실행이 멈추고 트랜잭션이 실패해요. 솔리디티의 모든 문장은 세미콜론으로 끝나야 합니다.
 
-It uses the built-in Solidity function `require` to test a precondition: that the `_withdrawAmount` is less than or equal to 1,000,000,000,000 wei, which is the base unit of ether (see Table 2-1) and equivalent to 0.000001 ether. If the `withdraw` function is called with a `withdraw_amount` greater than that amount, the `require` function here will cause contract execution to stop and fail with an *exception*. Note that statements need to be terminated with a semicolon in Solidity.
+실제 이더를 보내는 부분은 이거예요:
 
-This part of the contract is the main logic of our faucet. It controls the flow of funds out of the contract by placing a limit on withdrawals. It's a very simple control but can give you a glimpse of the power of a programmable blockchain: decentralized software controlling money.
+```
+_to.transfer(_withdrawAmount);
+```
 
-Here we have the first design flaw of the contract. It is not a security flaw, but it would be better to always add an error message to the `require` statement. This way, when a user's transaction fails due to a `require` statement, the reason is clear.
+`transfer` 함수는 현재 컨트랙트에서 지정한 주소로 이더를 보내줍니다. 여기서 `_to`가 `payable`이어야만 이 함수가 동작해요.
 
-The corrected `require` statement is:
+참고로, 이 코드는 더 개선할 여지가 많아요. 예를 들어, `require` 조건에 실패 사유 메시지를 추가하는 게 좋아요. 예를 들어:
 
-    require(_withdrawAmount <= 1000000000000, "The requested amount is too much, try a smaller amount!");
+```
+require(_withdrawAmount <= 1000000000000, "The requested amount is too much, try a smaller amount!");
+```
 
-Next comes the actual withdrawal:
+또, `transfer` 함수는 여러 컨트랙트가 연속 호출될 때 문제가 생길 수 있어요. 나중에 더 안전하게 `call`을 쓰는 방법도 배울 거예요.
 
-    _to.transfer(_withdrawAmount);
+마지막으로, 두 개의 특별한 함수가 선언돼요:
 
-A couple of interesting things are happening here. The function `transfer` is a built-in function that transfers ether from the current contract to another specified address—in this case, the `_to` address. The `transfer` function takes an amount as its only argument. We pass the `_withdrawAmount` value that was the parameter to the `withdraw` function declared a few lines earlier.
+```
+receive() external payable {}
+fallback() external payable {}
+```
 
-This is possible because the `_to` address was defined as payable. The built-in functions `transfer` and `send` can be called only on payable addresses. Here is the second flaw in the code: while `transfer` is perfectly fine if an EOA calls the `withdraw` function, it becomes problematic if another contract triggers this function. In that case, the transaction might fail because the `transfer` function can utilize only up to 2,300 gas, and multiple contract calls will likely exceed this limit. To fix this issue, you can use the built-in `call` function instead of `transfer` and `send`. However, this built-in function needs to be handled properly to avoid security flaws. For now, we will leave the built-in `transfer` function as is.
+이 함수들은 컨트랙트로 이더가 들어올 때 자동으로 실행되는 함수들이에요. `receive`는 데이터가 없을 때, `fallback`은 데이터가 있을 때 호출됩니다.
 
-The very next line is the closing curly brace, indicating the end of the definition of our `withdraw` function.
+이렇게 하면 아주 기본적인 파우셋 컨트랙트가 완성된 거예요!
 
-Next, we declare two more functions:
+---
 
-    receive() external payable {}
-    fallback() external payable {}
+## 파우셋 컨트랙트 컴파일하기
 
-These functions are the `fallback` and `receive` functions, which are called if the transaction that triggered the contract didn't name any of the declared functions in the contract, or any function at all, or didn't contain data. Contracts can have these functions and are usually the ones that receive ether. When *msg.data* is empty, the `receive` function will be triggered; when *msg.data* is not empty, the `fallback` function will be triggered.
+이제 첫 번째 컨트랙트를 만들었으니, 이 코드를 실제로 블록체인에서 돌아갈 수 있는 **EVM 바이트코드**로 변환(컴파일)해야 해요.
 
-Right below our `fallback` function is the final closing curly brace, which closes the definition of the contract `Faucet`. That's it!
+솔리디티 컴파일러는 별도의 실행파일, 프레임워크, 그리고 여러 개발툴에 포함되어 있지만, 여기선 **Remix**라는 웹 기반 IDE를 쓸 거예요.
 
-## Compiling the Faucet Contract
+크롬 브라우저(메타마스크 설치된 상태)에서 [Remix IDE](https://remix.ethereum.org)로 이동하세요.
 
-Now that we have our first example contract, we need to use a Solidity compiler to convert the Solidity code into EVM bytecode so that it can be executed by the EVM on the blockchain itself.
+Remix를 처음 열면 기본 예제 *Storage.sol*이 열려있을 거예요. 이건 필요 없으니, 탭 오른쪽의 `x`를 눌러 닫아주세요.
 
-The Solidity compiler comes as a standalone executable, as part of various frameworks, and bundled in IDEs. To keep things simple, we will use one of the more popular IDEs: Remix.
+![기본 예제 탭 닫기](images/ch2/maet_0212.png)
 
-Use your Chrome browser (with the MetaMask wallet you installed earlier) to navigate to the [Remix IDE](https://remix.ethereum.org).
+그림 2-12. 기본 예제 탭 닫기
 
-When you first load Remix, it will start with a sample contract called *Storage.sol*. We don't need that, so close it by clicking the `x` on the corner of the tab, as seen in Figure 2-12.
+이제 새 파일을 만들고, 이름을 *Faucet.sol*로 지어주세요.
 
-![Closing the default example tab](images/ch2/maet_0212.png)
+![새 컨트랙트 만들기](images/ch2/maet_0213.png)
 
-Figure 2-12. Closing the default example tab
+그림 2-13. 새 컨트랙트 만들기
 
-Now, create a new file, as shown in Figure 2-13. Name the new file *Faucet.sol*.
+새 탭이 열리면 위에서 보여준 *Faucet.sol* 코드를 복사해서 붙여넣으세요.
 
-![Creating a new contract](images/ch2/maet_0213.png)
+![Faucet 예제 코드 복사하기](images/ch2/maet_0214.png)
 
-Figure 2-13. Creating a new contract
+그림 2-14. Faucet 예제 코드 복사하기
 
-Once you have the new tab open, copy and paste the code from our example *Faucet.sol*, as shown in Figure 2-14.
+이제 Remix에서 *Faucet.sol*을 열었으니, 컴파일 메뉴로 가서 **Compile Faucet.sol** 버튼을 클릭하세요. 잘 되면 녹색 박스가 뜹니다!
 
-![Copying the Faucet example code into the new contract](images/ch2/maet_0214.png)
+![Remix에서 Faucet.sol 컴파일 성공](images/ch2/maet_0215.png)
 
-Figure 2-14. Copying the Faucet example code into the new contract
+그림 2-15. Remix에서 Faucet.sol 컴파일 성공
 
-Once you have loaded the *Faucet.sol* contract into the Remix IDE, navigate to the compile section of Remix and click Compile *Faucet.sol*. If all goes well, you will see a green box (see Figure 2-15).
+만약 에러가 난다면, 아마도 Remix에서 사용 중인 솔리디티 버전이 0.8.26이 아니라서 그럴 수 있어요. 이럴 땐 컴파일러 탭에서 버전을 맞춰주고 다시 시도해보세요.
 
-![Remix successfully compiles the Faucet.sol contract](images/ch2/maet_0215.png)
+이제 *Faucet.sol*이 EVM 바이트코드로 컴파일됐어요! 바이트코드는 아래처럼 생겼어요(이 부분은 참고로만 보세요):
 
-Figure 2-15. Remix successfully compiles the *Faucet.sol* contract
+```
+6080604052348015600e575f80fd5b506101af8061001c5f395ff3fe608060405260043610610020575f3560
+... (생략)
+```
 
-If something goes wrong, the most likely problem is that the Remix IDE is using a version of the Solidity compiler that is different from 0.8.26. In that case, our `pragma` directive will prevent *Faucet.sol* from compiling. To change the compiler version, go to the Compiler tab, set the version to 0.8.26, and try again.
+이렇게 복잡한 바이트코드를 직접 다룰 필요 없이, 고수준 언어인 솔리디티 덕분에 훨씬 편하게 개발할 수 있죠!
 
-The Solidity compiler has now compiled our *Faucet.sol* into EVM bytecode. If you are curious, the bytecode looks like this:
+---
 
-    6080604052348015600e575f80fd5b506101af8061001c5f395ff3fe608060405260043610610020575f3560
-    e01c8062f714ce1461002957610027565b3661002757005b005b348015610034575f80fd5b5061004f600480
-    360381019061004a919061013b565b610051565b005b64e8d4a51000821115610062575f80fd5b8073ffffff
-    ffffffffffffffffffffffffffffffffff166108fc8390811502906040515f60405180830381858888f19350
-    5050501580156100a5573d5f803e3d5ffd5b505050565b5f80fd5b5f819050919050565b6100c0816100ae56
-    5b81146100ca575f80fd5b50565b5f813590506100db816100b7565b92915050565b5f73ffffffffffffffff
-    ffffffffffffffffffffffff82169050919050565b5f61010a826100e1565b9050919050565b61011a816101
-    00565b8114610124575f80fd5b50565b5f8135905061013581610111565b92915050565b5f80604083850312
-    15610151576101506100aa565b5b5f61015e858286016100cd565b925050602061016f85828601610127565b
-    915050925092905056fea26469706673582212207de2f4d88c747c9332dceef5dcd739f3380ec8a8c2167a29
-    2ba64ee24fa32a8a64736f6c634300081a0033
+## 컨트랙트 블록체인에 배포하기
 
-Aren't you glad you are using a high-level language like Solidity instead of programming directly in EVM bytecode? Us too!
+컨트랙트도 만들었고, 컴파일까지 했으니 이제 이 컨트랙트를 **이더리움 블록체인에 등록(배포)** 해야 해요. 우리는 Sepolia 테스트넷에서 실습할 거예요.
 
-## Creating the Contract on the Blockchain
+컨트랙트를 배포하려면, **to** 필드가 비어 있는 특별한 트랜잭션을 보내야 해요. 이건 "새 컨트랙트를 만들겠다"는 신호예요. 트랜잭션의 **data** 필드에는 아까 컴파일한 바이트코드가 들어가고요. Remix가 이 과정을 다 알아서 해줍니다!
 
-So, we have a contract. We've compiled it into bytecode. Now, we need to "register" the contract on the Ethereum blockchain. We will be using the Sepolia testnet to test our contract, so that's the blockchain we want to submit it to.
+먼저, **Run** 탭에서 Environment 드롭다운 메뉴를 "Injected Web3"로 바꿔주세요. 이러면 Remix가 메타마스크와 연결되고, Sepolia 테스트넷에도 접속할 수 있어요. Sepolia 네트워크가 잘 선택됐는지, 그리고 Account 부분에 내 지갑 주소가 보이는지 확인해보세요(아래 그림 참고).
 
-Registering a contract on the blockchain involves creating a special transaction whose `to` field is left empty (null). This empty destination signals to the Ethereum blockchain that you want to deploy a new contract rather than send a transaction to an existing address. The transaction's `data` field contains the compiled contract bytecode. Fortunately, the Remix IDE will handle all of that for you and send the transaction to MetaMask.
+![Remix IDE Run 탭에서 Injected Web3 환경 선택](images/ch2/maet_0216.png)
 
-First, switch to the Run tab and select Injected Web3 in the Environment drop-down selection box. This connects the Remix IDE to the MetaMask wallet and, through MetaMask, to the Sepolia test network. Once you do that, you can see Sepolia under Environment. Also, the Account selection box shows the address of your wallet (see Figure 2-16).
+그림 2-16. Remix IDE Run 탭에서 Injected Web3 환경 선택
 
-![Remix IDE Run tab with Injected Web3 environment selected](images/ch2/maet_0216.png)
+Run 설정을 방금 확인했으면, 바로 아래에 `Faucet` 컨트랙트가 생성 준비된 상태로 있어요. 그림 2-16처럼 **Deploy** 버튼을 눌러주세요.
 
-Figure 2-16. Remix IDE Run tab with Injected Web3 environment selected
+Remix가 특별한 "생성" 트랜잭션을 만들고, MetaMask가 승인 요청을 띄울 거예요(그림 2-17 참고). 컨트랙트 생성 트랜잭션에는 이더가 들어가지 않지만, 컴파일된 컨트랙트 바이트코드가 데이터로 들어가고 가스(gwei)가 소모됩니다. **Submit** 버튼을 눌러 승인해 주세요.
 
-Right below the Run settings you just confirmed is the `Faucet` contract, ready to be created. Click the Deploy button shown in Figure 2-16.
+![MetaMask에서 컨트랙트 생성 트랜잭션 승인 화면](images/ch2/maet_0217.png)
 
-Remix will construct the special "creation" transaction, and MetaMask will ask you to approve it, as shown in Figure 2-17. You'll notice that the contract-creation transaction has no ether in it, but it has some bytes of data (the compiled contract) and will consume some gwei in gas. Click Submit to approve it.
+그림 2-17. MetaMask에서 컨트랙트 생성 트랜잭션 승인 화면
 
-![MetaMask showing the contract creation transaction](images/ch2/maet_0217.png)
+이제 잠깐 기다려야 해요. Sepolia 네트워크에 컨트랙트가 등록되려면 약 15~30초 정도 걸립니다. Remix 화면에는 별 변화가 없어 보일 수 있지만, 잠시만 참을성 있게 기다려 주세요.
 
-Figure 2-17. MetaMask showing the contract creation transaction
+컨트랙트가 성공적으로 생성되면, Run 탭 맨 아래쪽에 표시됩니다(그림 2-18 참고).
 
-Now you have to wait. It will take about 15–30 seconds for the contract to be processed on Sepolia. Remix won't appear to be doing much, but be patient.
+![Faucet 컨트랙트가 활성화된 모습](images/ch2/maet_0218.png)
 
-Once the contract is created, it appears at the bottom of the Run tab (see Figure 2-18).
+그림 2-18. Faucet 컨트랙트가 활성화된 모습
 
-![The Faucet contract is alive!](images/ch2/maet_0218.png)
+이제 `Faucet` 컨트랙트도 고유한 주소를 가지게 되었어요. Remix에는 "Faucet at 0x4E7…6EA46"처럼 표시되는데, 여기 나오는 주소(알파벳+숫자 조합)는 여러분마다 다를 수 있습니다.
 
-Figure 2-18. The Faucet contract is alive!
+---
 
-Notice that the `Faucet` contract now has an address of its own: Remix shows it as "Faucet at 0x4E7…6EA46" (although your address—the random letters and numbers—will be different).
+## 컨트랙트와 상호작용하기
 
-## Interacting with the Contract
+지금까지 배운 내용을 잠깐 정리해 볼게요.
+이더리움 컨트랙트는 돈을 제어하는 프로그램이고, EVM(이더리움 가상머신)에서 동작해요. 컨트랙트는 바이트코드를 블록체인에 기록하는 특별한 트랜잭션으로 생성됩니다. 블록체인에 등록된 컨트랙트는 지갑처럼 이더리움 주소를 갖게 되고, 누군가 이 주소로 트랜잭션을 보내면 EVM에서 컨트랙트가 실행돼요. 컨트랙트 주소로 보내는 트랜잭션에는 이더(ether), 데이터, 또는 둘 다 포함될 수 있습니다. 이더가 있으면 컨트랙트에 입금되고, 데이터가 있으면 컨트랙트 내 특정 함수를 호출할 수 있어요.
 
-Let's recap what we've learned so far. Ethereum contracts are programs that control money, which run inside a virtual machine called the EVM. They are created by a special transaction that submits their bytecodes to be recorded on the blockchain. Once they are created on the blockchain, they have an Ethereum address, just like wallets. Anytime someone sends a transaction to a contract address, it causes the contract to run in the EVM, with the transaction as its input. Transactions sent to contract addresses may have ether or data or both. If they contain ether, it is "deposited" to the contract balance. If they contain data, the data can specify a named function in the contract and call it, passing arguments to the function.
+---
 
-### Viewing the Contract Address in a Block Explorer
+### 컨트랙트 주소를 블록 익스플로러에서 확인하기
 
-We now have a contract recorded on the blockchain, and we can see it has an Ethereum address. Let's check it out in the [*sepolia.etherscan.io* block explorer](http://sepolia.etherscan.io) and see what a contract looks like. In the Remix IDE, copy the address of the contract by clicking the icon next to its name (see Figure 2-19).
+이제 컨트랙트가 블록체인에 등록됐고, 이더리움 주소도 생겼어요.
+[*sepolia.etherscan.io* 블록 익스플로러](http://sepolia.etherscan.io)에서 이 컨트랙트가 어떻게 보이는지 한번 살펴볼까요?
+Remix IDE에서 컨트랙트 이름 옆에 있는 아이콘을 클릭해서 주소를 복사하세요(그림 2-19 참고).
 
-![Copying the contract address from Remix](images/ch2/maet_0219.png)
+![Remix에서 컨트랙트 주소 복사하기](images/ch2/maet_0219.png)
 
-Figure 2-19. Copying the contract address from Remix
+그림 2-19. Remix에서 컨트랙트 주소 복사하기
 
-Keep Remix open; we'll come back to it later. Now, navigate your browser to [*sepolia.etherscan.io*](http://sepolia.etherscan.io) and paste the address into the search box. You should see the contract's Ethereum address history, as shown in Figure 2-20.
+Remix는 그대로 열어두고, 웹 브라우저에서 [*sepolia.etherscan.io*](http://sepolia.etherscan.io)로 이동한 뒤 복사한 주소를 검색창에 붙여넣기 해보세요.
+그럼 그림 2-20처럼 컨트랙트의 이더리움 주소 내역을 확인할 수 있습니다.
 
-![Viewing the Faucet contract address in the Etherscan block explorer](images/ch2/maet_0220.png)
+![Etherscan에서 Faucet 컨트랙트 주소 조회](images/ch2/maet_0220.png)
 
-Figure 2-20. Viewing the Faucet contract address in the Etherscan block explorer
+그림 2-20. Etherscan에서 Faucet 컨트랙트 주소 조회
 
-### Funding the Contract
+---
 
-For now, the contract has only one transaction in its history: the contract-creation transaction. As you can see, the contract also has no ether (zero balance). That's because we didn't send any ether to the contract in the creation transaction, even though we could have.
+### 컨트랙트에 자금 보내기
 
-Our faucet needs funds! Our first project will be to use MetaMask to send ether to the contract. You should still have the address of the contract in your clipboard (if not, copy it again from Remix). Open MetaMask and send 0.01 ether to it, exactly as you would to any other Ethereum address (see Figure 2-21).
+지금은 컨트랙트 히스토리에 트랜잭션이 하나만 있을 거예요.
+즉, 생성 트랜잭션뿐이고, 아직 이더(잔고)는 0입니다.
+컨트랙트 생성할 때 이더를 보낼 수도 있지만, 이번엔 안 보냈기 때문이죠.
 
-![Sending 0.01 ether to the contract address](images/ch2/maet_0221.png)
+우리 faucet에 자금을 넣어볼 차례예요!
+MetaMask를 사용해 컨트랙트에 이더를 보내볼 거예요.
+컨트랙트 주소는 방금 복사했으니, MetaMask를 열고 0.01 이더를 보내주세요.
+일반 이더리움 주소에 보내듯이 하면 됩니다(그림 2-21 참고).
 
-Figure 2-21. Sending 0.01 ether to the contract address
+![컨트랙트 주소로 0.01 이더 보내기](images/ch2/maet_0221.png)
 
-In a minute, if you reload the Etherscan block explorer, it will show another transaction to the contract address and an updated balance of 0.01 ether.
+그림 2-21. 컨트랙트 주소로 0.01 이더 보내기
 
-Remember the `receive` function in our *Faucet.sol* code? It looked like this:
+잠시 후, Etherscan 블록 익스플로러에서 새로고침하면
+컨트랙트 주소로 추가 트랜잭션과 0.01 이더 잔고가 업데이트된 걸 볼 수 있어요.
 
-    receive() external payable {}
+`Faucet.sol` 코드에 있던 `receive` 함수 기억나시죠? 이런 식이었어요:
 
-When you send the transaction to the contract address, with no data specifying which function to call, it calls this `receive` function. Your transaction caused the contract to run in the EVM, updating its balance. You have funded your faucet!
+```solidity
+receive() external payable {}
+```
 
-### Withdrawing from Our Contract
+컨트랙트 주소로 아무 데이터 없이 이더만 보내면 이 `receive` 함수가 호출됩니다.
+즉, 우리가 이더를 보내면 EVM에서 컨트랙트가 실행되어 잔고가 늘어나는 거죠!
+이제 faucet에 자금이 들어간 셈입니다.
 
-Next, let's withdraw some funds from the faucet. To withdraw, we have to construct a transaction that calls the `withdraw` function and passes a `_withdrawAmount` and a `_to` argument to it. To keep things simple for now, Remix will construct that transaction for us, and MetaMask will present it for our approval.
+---
 
-Return to the Remix tab and look at the contract on the Run tab. You should see a red box labeled "withdraw" with a field entry labeled "uint256 \_withdrawAmount, address \_to" (see Figure 2-22).
+### 컨트랙트에서 출금하기
 
-![The withdraw function of Faucet.sol in Remix](images/ch2/maet_0222.png)
+이제 faucet에서 이더를 한번 꺼내볼까요?
+출금하려면 `withdraw` 함수에 `_withdrawAmount`(출금액)과 `_to`(받을 주소)를 넘기는 트랜잭션을 만들어야 해요.
+지금은 Remix가 그 트랜잭션을 자동으로 만들어주고, MetaMask에서 승인하면 돼요.
 
-Figure 2-22. The withdraw function of *Faucet.sol* in Remix
+Remix 탭으로 돌아가서 Run 탭 아래쪽의 컨트랙트를 봅니다.
+빨간색 박스로 "withdraw"라고 되어 있고, "uint256 _withdrawAmount, address _to" 입력란이 보일 거예요(그림 2-22 참고).
 
-This is the Remix interface to the contract. It allows us to construct transactions that call the functions defined in the contract. We will enter a `_withdrawAmount` and a `_to` address and click the withdraw button to generate the transaction.
+![Remix에서 Faucet.sol의 withdraw 함수 화면](images/ch2/maet_0222.png)
 
-First, let's figure out the `_withdrawAmount`. We want to try to withdraw 0.000001 ether, which is the maximum amount allowed by our contract. Remember that all currency values in Ethereum are denominated in wei internally, and our `withdraw` function expects the `_withdrawAmount` to be denominated in wei, too. The amount we want is 0.000001 ether, which is 1,000,000,000,000 wei (a 1 followed by 12 zeros).
+그림 2-22. Remix에서 Faucet.sol의 withdraw 함수 화면
 
-For the `_to` address we will just use our Account 1 in MetaMask.
+이렇게 Remix에서는 컨트랙트에 정의된 함수를 호출하는 트랜잭션을 만들 수 있어요.
+여기서 `_withdrawAmount`와 `_to` 주소를 입력하고 **withdraw** 버튼을 누르면 트랜잭션이 생성됩니다.
 
-> **Tip**  
+이제 `_withdrawAmount`를 정해야겠죠?
+우리는 0.000001 이더를 출금해볼 거예요(컨트랙트에서 허용한 최대 출금액).
+이더리움의 모든 단위는 내부적으로 wei로 처리되는데, 0.000001 이더는 1,000,000,000,000 wei(1 뒤에 0이 12개)입니다.
+
+`_to` 주소는 그냥 내 MetaMask의 Account 1을 쓰면 돼요.
+
+> **팁**
 >
-> Due to a limitation in JavaScript, a number as large as 10^17^ cannot be processed by Remix. Instead, we enclose it in quotation marks to allow Remix to receive it as a string and manipulate it as a `BigNumber`. If we don't enclose it in quotes, the Remix IDE will fail to process it and display "Error encoding arguments: Error: Assertion failed."
+> 자바스크립트의 한계 때문에 10^17 같은 큰 숫자는 Remix에서 제대로 처리되지 않아요.
+> 숫자를 그냥 입력하면 Remix IDE가 인코딩 오류를 내기 때문에,
+> 반드시 따옴표(")로 감싸서 문자열로 입력해 주세요!
+>
+> 예시: `"1000000000000"`
 
-Type `"1000000000000"` (with the quotes) into the `_withdrawAmount` box, copy-paste your Account 1 address from MetaMask, and click the transact button. (You might see it as the withdraw button. Figure 2-23 shows an expanded view of the function; if your view is not expanded, then the button will be called "withdraw.")
+따라서 `_withdrawAmount` 입력칸에는 `"1000000000000"` (따옴표 포함)을 입력하고,
+`_to` 칸에는 내 Account 1 주소를 복사-붙여넣기 한 뒤 **transact**(또는 **withdraw**) 버튼을 누르세요.
+(그림 2-23처럼 보일 수 있습니다. 만약 화면이 덜 펼쳐져 있다면 그냥 withdraw 버튼일 거예요.)
 
-![Click transact in Remix to create a withdrawal transaction](images/ch2/maet_0223.png)
+![Remix에서 withdraw 트랜잭션 생성 버튼 클릭](images/ch2/maet_0223.png)
 
-Figure 2-23. Click transact in Remix to create a withdrawal transaction
+그림 2-23. Remix에서 withdraw 트랜잭션 생성 버튼 클릭
 
-MetaMask will pop up a transaction window for you to approve. Click Submit to send your withdrawal call to the contract (see Figure 2-24).
+MetaMask에서 승인 창이 또 뜹니다. **Submit**을 눌러서 출금 요청을 보내세요(그림 2-24 참고).
 
-![MetaMask transaction to call the withdraw function](images/ch2/maet_0224.png)
+![MetaMask에서 withdraw 함수 호출 트랜잭션 승인 화면](images/ch2/maet_0224.png)
 
-Figure 2-24. MetaMask transaction to call the withdraw function
+그림 2-24. MetaMask에서 withdraw 함수 호출 트랜잭션 승인 화면
 
-Wait a minute and then reload the Etherscan block explorer to see the transaction reflected in the `Faucet` contract address history (see Figure 2-25).
+1분 정도 뒤에 Etherscan 블록 익스플로러에서 새로고침 해보면,
+`Faucet` 컨트랙트 주소의 히스토리에도 트랜잭션이 반영되어 있는 걸 볼 수 있어요(그림 2-25 참고).
 
-![Etherscan shows the transaction calling the withdraw function](images/ch2/maet_0225.png)
+![Etherscan에서 withdraw 함수 호출 트랜잭션 확인](images/ch2/maet_0225.png)
 
-Figure 2-25. Etherscan shows the transaction calling the withdraw function
+그림 2-25. Etherscan에서 withdraw 함수 호출 트랜잭션 확인
 
-We now see a new transaction with the contract address as the destination and a value of 0 ether. The contract balance has changed and is now 0.009999 ether because it sent us 0.000001 ether as requested.
+이번에 보면, 컨트랙트 주소를 대상으로 한 값이 0인(0 이더) 새 트랜잭션이 생겼죠?
+컨트랙트 잔고는 0.009999 이더로 바뀌었어요. 우리가 요청한 0.000001 이더만큼 빠진 겁니다.
 
-But we don't see an "OUT" transaction in the contract address history. Where's the outgoing withdrawal? A new tab named Internal Transactions has appeared on the contract's address history page. Because the 0.000001 ether transfer originated from the contract code, it is an internal transaction (also called a *message*). Click that tab to see it (see Figure 2-26).
+그런데, 컨트랙트 주소 히스토리에는 "OUT" 트랜잭션이 안 보이네요?
+출금이 어디로 나간 걸까요?
+이번엔 주소 히스토리 페이지에 **Internal Transactions**(내부 트랜잭션) 탭이 새로 생겼을 거예요.
+컨트랙트 코드에서 발생한 이더 전송은 내부 트랜잭션(또는 message)으로 표시됩니다.
+그 탭을 클릭해서 확인해보세요(그림 2-26 참고).
 
-This "internal transaction" was sent by the contract in this line of code (from the `withdraw` function in *Faucet.sol*):
+이 내부 트랜잭션은 *Faucet.sol*의 `withdraw` 함수에서
+아래 코드가 실행되면서 발생한 겁니다:
 
-    _to.transfer(_withdrawAmount);
+```solidity
+_to.transfer(_withdrawAmount);
+```
 
-![Etherscan shows the internal transaction transferring ether out from the contract](images/ch2/maet_0226.png)
+![Etherscan에서 컨트랙트의 내부 트랜잭션(이더 출금) 확인](images/ch2/maet_0226.png)
 
-Figure 2-26. Etherscan shows the internal transaction transferring ether out from the contract
+그림 2-26. Etherscan에서 컨트랙트의 내부 트랜잭션(이더 출금) 확인
 
-To recap: you sent a transaction from your MetaMask wallet that contained data instructions to call the `withdraw` function with a `_withdrawAmount` argument of 0.000001 ether and an address. That transaction caused the contract to run inside the EVM. As the EVM ran the `Faucet` contract's `withdraw` function, it first called the `require` function and validated that the requested amount was less than or equal to the maximum allowed withdrawal of 0.000001 ether. Then, it called the `transfer` function to send you the ether. Running the `transfer` function generated an internal transaction that deposited 0.000001 ether into your wallet address from the contract's balance. That's the one shown on the Internal Transactions tab in Etherscan.
+정리하면,
+MetaMask 지갑에서 `withdraw` 함수 호출 데이터와 출금액(0.000001 이더), 주소를 담은 트랜잭션을 보냈고,
+이 트랜잭션이 EVM에서 `Faucet` 컨트랙트의 `withdraw` 함수를 실행시켰어요.
+이 함수는 먼저 `require`로 출금액이 최대 한도를 넘지 않았는지 확인하고,
+그다음 `transfer`로 내 지갑으로 이더를 전송했습니다.
+이때 컨트랙트에서 내 지갑으로 발생한 이더 전송이 **내부 트랜잭션**으로 기록돼요.
+Etherscan의 Internal Transactions 탭에서 이 내역을 볼 수 있죠!
 
-## Conclusion
+---
 
-In this chapter, you set up a wallet using MetaMask and funded it using a faucet on the Sepolia test network. You received ether into your wallet's Ethereum address, and then you sent ether to another address.
+## 마무리
 
-Next, you wrote a `Faucet` contract in Solidity. You used the Remix IDE to compile the contract into EVM bytecode, then used Remix to form a transaction and created the `Faucet` contract on the Sepolia blockchain. Once created, the `Faucet` contract had an Ethereum address, and you sent it some ether. Finally, you constructed a transaction to call the `withdraw` function and successfully asked for 0.000001 ether. The contract checked the request and sent you 0.000001 ether with an internal transaction.
+이번 장에서는 MetaMask 지갑을 만들고 Sepolia 테스트 네트워크에서 faucet으로 이더를 받아봤어요.
+그 이더를 내 지갑 주소로 받고, 다른 주소(컨트랙트)로도 보내봤죠.
 
-It may not seem like much, but you've just successfully interacted with software that controls money on a decentralized world computer.
+그 다음, Solidity로 직접 `Faucet` 컨트랙트를 작성해서
+Remix IDE에서 컴파일한 뒤, 트랜잭션을 만들어 Sepolia 블록체인에 컨트랙트를 배포했어요.
+생성된 컨트랙트에 이더를 보내서 자금을 넣고,
+`withdraw` 함수를 호출해서 0.000001 이더 출금에도 성공했습니다.
+컨트랙트는 요청을 확인해서, 내부 트랜잭션을 통해 이더를 내 지갑으로 보내줬어요.
 
-We will do a lot more Solidity smart contract programming in Chapter 7 and learn about best practices and security considerations in Chapter 9.
+아주 작은 단계 같아 보일 수도 있지만,
+**지금 여러분은 전 세계 어디서나 실행되는 탈중앙화 소프트웨어와 실제로 상호작용한 거예요!**
+
+7장에서 더 다양한 Solidity 스마트 컨트랙트 프로그래밍을 해보고,
+9장에서는 베스트 프랙티스와 보안 팁도 다룰 예정이니 기대해 주세요. 🚀
