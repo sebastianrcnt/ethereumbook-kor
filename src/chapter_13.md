@@ -1,273 +1,264 @@
-# Chapter 13. Decentralized Finance
+# 13장. 분산형 금융
 
-Ethereum's smart contracts have opened up a world of possibilities beyond simple cryptocurrency transactions. *Decentralized finance* (DeFi) takes this to the next level by creating a complete financial ecosystem that operates entirely on the blockchain. Imagine traditional financial services like lending, borrowing, trading, and investing but without the need for banks, brokers, or any centralized authority. Instead, smart contracts on the Ethereum blockchain handle everything, bringing about a new era of financial autonomy and innovation.
+이더리움의 스마트 컨트랙트가 단순한 암호화폐 거래를 넘어선 무궁무진한 가능성을 열어주었어요. *분산형 금융* (DeFi)은 이걸 한 단계 끌어올려서 블록체인 위에서 완전히 운영되는 종합적인 금융 생태계를 만드는 거예요. 은행, 중개인, 혹은 중앙 권위 없이 대출, 차입, 거래, 투자 같은 전통적 금융 서비스를 상상해 보세요. 대신 이더리움 스마트 컨트랙트가 모든 것을 처리하면서 새로운 재정 자율성과 혁신의 시대를 열어줍니다.
 
-This decentralized approach democratizes access to financial services and introduces a level of transparency and security that is often missing in traditional finance. Every transaction on the blockchain is publicly recorded and immutable, allowing anyone to verify the authenticity and integrity of the data. This level of transparency reduces the risk of fraud and corruption, creating a more trustworthy financial environment.
+이 분산형 접근 방식은 금융 서비스에 대한 접근성을 민주화하고, 전통 금융에서 흔히 부족했던 투명성 및 보안 수준을 제공합니다. 블록체인상의 모든 거래는 공개적으로 기록되고 변경 불가능하기 때문에 누구나 데이터의 진위와 무결성을 검증할 수 있어요. 이러한 투명성은 사기와 부패 위험을 줄여 더 신뢰할 수 있는 금융 환경을 만들어 줍니다.
 
-DeFi also opens opportunities for financial inclusion on a global scale. In regions where traditional banking infrastructure is underdeveloped or inaccessible, DeFi provides a viable alternative. People can participate in the global economy using just a smartphone and an internet connection. This capability can potentially uplift millions by providing access to credit, savings accounts, and investment opportunities that were previously out of reach. The programmability of Ethereum's smart contracts allows for the creation of complex financial instruments and services that are difficult or impossible to implement in the traditional financial system.
+DeFi는 또한 전 세계적 규모에서 금융 포용 기회를 열어줍니다. 전통적인 은행 인프라가 미비하거나 접근이 어려운 지역에서도 DeFi는 실현 가능한 대안을 제공합니다. 사람들은 스마트폰과 인터넷 연결만으로 글로벌 경제에 참여할 수 있어요. 이 기능은 신용, 저축 계좌, 투자 기회 등 이전에는 불가능했던 것들에 접근함으로써 수백만 명을 끌어올릴 잠재력이 있습니다. 이더리움 스마트 컨트랙트의 프로그래머블 특성 덕분에 전통 금융 시스템에서는 구현하기 어려운 복잡한 금융 도구와 서비스를 만들 수 있어요.
 
-Currently, the primary users of DeFi are probably not the underbanked or unbanked populations of developing countries, but rather individuals from first-world nations looking to capitalize on the highly speculative nature of cryptocurrencies. While there will always be room for speculation, it's important to ensure that inclusive financial products are accessible to everyone worldwide.
+현재 DeFi의 주요 사용자는 개발도상국의 언밴크드(은행이 없거나 은행을 이용할 수 없는) 인구가 아니라, 암호화폐의 고도로 투기적인 성격에 이익을 보고자 하는 선진국 출신 개인일 가능성이 높습니다. 투기는 항상 존재하지만, 전 세계 누구에게나 포용적 금융 상품이 접근 가능하도록 보장하는 것이 중요합니다.
 
-## DeFi Versus Traditional Finance
+## DeFi vs 전통 금융
 
-DeFi is the cryptopunk response to the traditional financial (TradFi) system, representing a field that is still evolving but has already found its niche of dedicated users and innovative builders. The distinction between DeFi and TradFi is complex. However, the most significant differences lie in the mediums of exchange and the inherent properties of the blockchain, such as openness and transparency. DeFi primarily uses cryptocurrencies, which are often decentralized to varying degrees, while TradFi relies on fiat currencies, which are always centralized to the maximum degree.
+DeFi는 전통 금융(TradFi)에 대한 암호펑크 반응이며, 아직 진화 중인 분야지만 이미 헌신적인 사용자와 혁신적인 빌더들의 틈새를 찾았습니다. DeFi와 TradFi의 차이는 복잡하지만 가장 큰 차이점은 교환 매체와 블록체인의 고유 특성(개방성과 투명성)입니다. DeFi는 주로 암호화폐를 사용하며, 이는 다양한 정도로 분산되어 있는 반면 TradFi는 항상 중앙집중식인 법정 화폐에 의존합니다.
 
-TradFi systems often have high barriers to entry. Opening a bank account, obtaining a loan, or investing in financial markets typically requires significant documentation and compliance with various regulatory requirements. This process can exclude large segments of the global population, particularly those in underbanked regions. This can be seen in Figure 13-1.
+TradFi 시스템은 진입 장벽이 높습니다. 은행 계좌 개설, 대출 신청, 금융 시장 투자 등은 상당한 서류와 규제 준수가 필요해요. 이 과정은 특히 언밴크드 지역의 인구를 제외시킬 수 있습니다. 이는 그림 13-1에서 볼 수 있죠.
 
-![Traditional finance versus DeFi loan requirements](images/ch13/maet_1301.png)
+![전통 금융 vs DeFi 대출 요구사항](images/ch13/maet_1301.png)
 
-Figure 13-1. Traditional finance versus DeFi loan requirements
+**그림 13-1. 전통 금융 vs DeFi 대출 요구사항**
 
-A regular user needs many prerequisites to open a loan application, such as an ID, a provable physical address, a Social Security number, a bank account, signed documents, and a good credit score. Even with all these, the request might still be denied, and if it is approved, that will probably take a long time to happen.
+일반 사용자는 ID, 물리적 주소 증명, 사회보장번호, 은행 계좌, 서명된 문서, 좋은 신용 점수 등 많은 선행 조건이 필요합니다. 이 모든 것을 갖추어도 요청이 거절될 수 있고, 승인되더라도 시간이 오래 걸립니다.
 
-In DeFi, only three prerequisites are needed: a phone, an internet connection, and enough assets to overcollateralize the loan. Once these are in place, the loan is instant, decentralized, and permissionless.
+DeFi에서는 전화, 인터넷 연결, 대출을 초과 담보할 만큼의 자산만 있으면 됩니다. 이 세 가지가 준비되면 대출은 즉시, 분산형이며 허가 없이 진행됩니다.
 
-DeFi, by design, is more accessible. Anyone with an internet connection can interact with DeFi protocols, which opens financial services to billions of people who are excluded from the traditional system. The high accessibility of DeFi makes it difficult or impossible to apply TradFi's mechanisms for assessing creditworthiness and resolving fraud, which some view as a drawback and others as an improvement.
+DeFi는 설계상 더 접근성이 높습니다. 인터넷 연결이 있는 누구나 DeFi 프로토콜과 상호작용할 수 있어요. 이는 전통 시스템에서 제외된 수십억 명에게 금융 서비스를 열어줍니다. 높은 접근성은 TradFi의 신용 평가 및 사기 해결 메커니즘을 적용하기 어렵게 만들며, 일부는 이를 단점으로 보지만 다른 이들은 개선점으로 봅니다.
 
-Another fascinating aspect of DeFi is its ability to create new financial instruments that are impossible within the traditional financial system. For example, flash loans allow users to borrow funds without collateral as long as the loan is repaid within the same transaction. This capability, which is unique to DeFi, opens a range of possibilities for arbitrage, collateral swaps, and other complex financial maneuvers that simply cannot be replicated in TradFi.
+DeFi의 또 다른 매력적인 측면은 전통 금융 시스템에서는 불가능한 새로운 금융 도구를 만드는 능력입니다. 예를 들어, 플래시 대출은 담보 없이도 같은 거래 내에서 상환될 때까지 자금을 빌릴 수 있게 해줍니다. 이 독특한 기능은 차익거래, 담보 교환 및 기타 복잡한 재무 조작을 가능하게 하여 TradFi에서는 복제할 수 없는 기회를 열어 줍니다.
 
-## DeFi Primitives
+## DeFi 기본 개념
 
-While cryptocurrencies like Bitcoin aim to improve and decentralize the concept of money, DeFi projects build on this foundation to decentralize and improve financial services. To fully grasp the financial services offered by DeFi, it is essential to understand several key concepts.
+비트코인 같은 암호화폐가 돈의 개념을 개선하고 분산화하려는 반면, DeFi 프로젝트들은 이를 기반으로 금융 서비스를 분산화하고 향상시킵니다. DeFi에서 제공되는 금융 서비스의 본질을 완전히 이해하려면 몇 가지 핵심 개념을 파악해야 합니다.
 
-### Acceptability of Tokens in DeFi
+### 토큰 수용성
 
-In Ethereum's DeFi ecosystem, each token operates as a distinct contract. This can cause confusion for beginners since there may be tokens with similar names and functions that are, in reality, entirely different forms of money.
+이더리움 DeFi 생태계에서는 각 토큰이 별도의 계약으로 동작합니다. 이는 초보자에게 혼란스러울 수 있는데, 이름과 기능이 비슷하지만 실제로는 전혀 다른 형태의 돈일 수 있기 때문입니다.
 
-Take, for instance, the Arbitrum rollup on Ethereum, where two tokens, USDC.e and USDC, appear almost identical but differ significantly in terms of risk and acceptability. Both USDC.e and USDC aim to maintain a value pegged to one dollar. However, USDC is natively issued on the Arbitrum chain, while USDC.e is a bridged version of USDC, representing tokens that have been transferred from another chain to Arbitrum.
+예를 들어, 이더리움 Arbitrum 롤업에서 USDC.e와 USDC가 거의 동일해 보이지만 위험 및 수용성 측면에서 크게 다릅니다. 두 토큰 모두 1달러에 고정되도록 설계됐지만, USDC는 Arbitrum 체인에서 원생산되고 USDC.e는 다른 체인에서 전송된 브리징 버전입니다.
 
-The risk profiles of these two tokens are markedly different. USDC.e carries all the inherent risks of USDC but adds the additional risk associated with the bridging process, such as the potential for smart contract vulnerabilities. Acceptability, defined by how widely a coin or token is accepted across various DeFi financial services, also varies between the two. Some protocols may only support USDC.e, others may exclusively support USDC, and some may accept both.
+USDC.e는 USDC의 모든 위험을 포함하면서 브리징 과정(스마트 컨트랙트 취약점 가능성 등)과 관련된 추가 위험을 가집니다. 수용성은 DeFi 금융 서비스에서 얼마나 널리 받아들여지는지를 정의하며, 두 토큰 간에 차이가 있습니다. 일부 프로토콜은 USDC.e만 지원하고, 다른 것은 USDC만, 또 어떤 경우는 둘 다를 허용합니다.
 
-### Decentralized Exchanges
+### 분산형 거래소 (DEX)
 
-A *decentralized exchange* (DEX) is a platform where you can trade cryptocurrencies directly with other users without needing a central authority or intermediary. Instead of relying on a company to facilitate the trades, DEXs use smart contracts to manage transactions automatically. This allows you to maintain control of your funds.
+*분산형 거래소*(DEX)는 중앙 권한이나 중개인 없이 사용자가 직접 암호화폐를 서로 교환할 수 있는 플랫폼입니다. DEX는 스마트 컨트랙트를 이용해 자동으로 거래를 관리하므로 자금의 통제권을 유지할 수 있어요.
 
-#### The Evolution of DEXs
+#### DEX 진화
 
-If you have ever traded on a centralized exchange, you are familiar with the order book model. In this model, buy and sell orders are listed with the prices users are willing to pay or accept. When a buy order matches a sell order, the trade is executed. The order book shows all pending orders, allowing traders to see market depth and liquidity.
+중앙형 거래소에서 주문서 모델에 익숙한 분이라면, DEX가 어떻게 다른지 이해하기 쉽습니다. 이 모델은 매수와 매도 주문이 가격과 함께 나열되고, 매수 주문이 매도 주문과 일치하면 거래가 실행됩니다. 주문서는 모든 보류 중인 주문을 보여주어 시장 깊이와 유동성을 시각화합니다.
 
-On chain, this model never really caught on because blockchains are much slower and more expensive to use than traditional websites. The latency in trading on the order book and the need to pay for the transaction of every order made the user experience terrible. In 2017–2018, EtherDelta attempted to implement an on-chain order book, and a few other pure order book models were tried afterward, but they didn't gain much traction.
+체인 상에서는 이 모델이 거의 채택되지 않았습니다. 블록체인은 전통 웹보다 훨씬 느리고 비용이 많이 들기 때문입니다. 주문서 거래의 지연과 매번 주문마다 수수료를 내야 하는 사용자 경험은 끔찍했죠. 2017–2018년 EtherDelta는 체인 상 주문서를 구현하려 했지만, 이후 몇몇 순수 주문서 모델도 시도되었으나 큰 인기를 얻지 못했습니다.
 
-Bancor was the first to pioneer the *automated market maker* (AMM) model. Unlike the order book model, AMMs don't rely on buyers and sellers placing orders. Instead, they use liquidity pools, where users provide pairs of tokens.[^1] The prices are determined by a formula based on the ratio of tokens in the pool. This model allows for continuous liquidity and trading.
+Bancor가 최초로 *자동 유동성 공급자* (AMM) 모델을 선보였습니다. 주문서와 달리 AMM은 매수자와 매도자가 주문을 넣는 대신, 유동성 풀에 토큰 쌍을 제공하는 사용자에게 의존합니다.[^1] 가격은 풀 내 토큰 비율에 따라 결정됩니다. 이 모델은 지속적인 유동성과 거래를 가능하게 합니다.
 
-Uniswap significantly improved and popularized the AMM model with its simple yet effective *x × y = k* formula, where the product of the quantities of the two tokens remains constant. In this formula, *x* and *y* represent the quantities of the two tokens in the pool, and *k* is a constant value. When a trade is made, the quantities of the tokens change, but the product of the two quantities remains the same, ensuring that the pool always provides liquidity. This innovation made trading more accessible and efficient on decentralized exchanges.
+Uniswap은 간단하면서도 효과적인 *x × y = k* 공식을 통해 AMM 모델을 크게 개선하고 대중화했습니다. 두 토큰의 양(x, y)의 곱이 일정(k)인 공식으로, 거래가 일어나면 토큰 양이 변하지만 곱은 그대로 유지됩니다. 이 혁신 덕분에 DEX에서 거래가 더 접근 가능하고 효율적이 되었습니다.
 
-[^1]: The tokens might not always be in pairs because some liquidity pools can have three or more tokens, but the most common and simplest arrangement is in pairs.
+[^1]: 토큰 쌍이 아닌 경우도 있지만 가장 흔한 구조는 쌍입니다.
 
-A DEX enables anyone to become a market maker by providing liquidity and earning fees for their contributions. As long as there is sufficient liquidity, trades can occur quickly and without the need for permission from a central authority, as can be seen in Figure 13-2.[^2]
+DEX는 누구나 유동성을 제공해 시장 메이커가 되고 수수료를 벌 수 있게 해줍니다. 충분한 유동성이 있다면 거래는 중앙 권한의 허가 없이 빠르게 진행됩니다(그림 13-2 참조).[^2]
 
-[^2]: From Figure 13-2, it may appear that BTC is natively exchangeable on DEXs. However, this is not the case. BTC on DEXs is often represented by derivative contracts like Wrapped Bitcoin (WBTC), which are assets pegged to the price of BTC but carrying significantly more risk than native BTC on the BTC blockchain. Native assets are typically only available on their respective native chains. In this example, the BTC used in the pool is not native BTC but a derivative, similar to how stablecoins represent fiat money.
+[^2]: 그림 13-2에서 BTC가 DEX에서 원생산적으로 교환되는 것처럼 보일 수 있지만 사실은 Wrapped Bitcoin(WBTC) 같은 파생 계약으로 표시됩니다. 이는 BTC와 동일한 가격을 가리키지만, 실제 BTC 블록체인에 있는 원생산 토큰보다 위험이 큽니다.
 
-![Decentralized exchange liquidity pool](images/ch13/maet_1302.png)
+![분산형 거래소 유동성 풀](images/ch13/maet_1302.png)
 
-Figure 13-2. Decentralized exchange liquidity pool
+**그림 13-2. 분산형 거래소 유동성 풀**
 
-#### Impermanent Loss
+#### 비영구 손실
 
-Providing liquidity on a DEX is not risk free. Beyond smart contract hacks, there's a more subtle risk called *impermanent loss*. To understand impermanent loss, we first need to grasp the basic Uniswap V2 pool model.
+DEX에 유동성을 제공하는 것은 무위험이 아닙니다. 스마트 컨트랙트 해킹 외에도 *비영구 손실*이라는 미묘한 위험이 존재합니다. 이를 이해하려면 Uniswap V2의 기본 모델을 먼저 파악해야 합니다.
 
-Many popular DEXs, like Uniswap V2, use the constant product formula *x × y = k*, where *x* and *y* are the quantities of two tokens in a liquidity pool and *k* is a constant. The price of a token is determined by the ratio of the tokens in the pool. For example, if a pool contains 100 USDC and 10 ETH, the price of 1 ETH is 100 ÷ 10 = 10 USDC. If the pool changes to 200 USDC and 10 ETH (due to trades), the price of 1 ETH becomes 200 ÷ 10 = 20 USDC.
+많은 인기 DEX(예: Uniswap V2)는 상수 곱 공식 *x × y = k*를 사용합니다. 여기서 x와 y는 유동성 풀에 있는 두 토큰의 양이며, k는 일정값입니다. 예를 들어 풀에 100 USDC와 10 ETH가 있다면, 1 ETH 가격은 100 ÷ 10 = 10 USDC입니다. 거래로 인해 풀이 200 USDC와 10 ETH(변경)으로 바뀌면 1 ETH 가격은 200 ÷ 10 = 20 USDC가 됩니다.
 
-This formula is a simplified way to understand how pools work. By providing liquidity, you act as a market maker. When users buy ETH from the pool, you sell ETH and receive USDC; when they sell ETH, you buy ETH and give USDC. In return, you earn trading fees. However, this process exposes you to impermanent loss, which occurs when the price of the tokens in the pool changes compared to when you deposited them. If the price of ETH rises or falls significantly, the value of your pool holdings may be less than if you had simply held the original tokens, even though you collect fees.
+유동성을 제공하면 시장 메이커 역할을 하게 되며, 사용자가 ETH를 구매하면 ETH를 팔아 USDC를 받고, 반대로 ETH를 판매하면 ETH를 사서 USDC를 줍니다. 이 과정에서 수수료를 벌지만, 토큰 가격 변동으로 인해 비영구 손실이 발생할 수 있습니다. ETH 가격이 크게 상승하거나 하락하면 풀 보유 가치가 원래 토큰을 단순히 보유한 것보다 낮아질 수 있죠.
 
-This openness also presents a significant challenge for DEXs. Since anyone can create a blockchain and launch a DEX, there are now more than one hundred DEXs (likely many more) across various blockchains. This abundance fragments liquidity, making swaps—where users exchange one cryptocurrency for another—less efficient than they would be on platforms with consolidated liquidity. This fragmentation can lead to higher *slippage*, which is the difference between the expected price of a trade and the actual price at which the trade is executed. High slippage occurs when there is insufficient liquidity, causing trades to be executed at less favorable prices than anticipated.
+이 개방성은 DEX에 큰 도전 과제를 안겨줍니다. 누구든지 블록체인을 만들고 DEX를 출시할 수 있기 때문에 현재는 여러 체인에서 100개가 넘는(아마도 더 많은) DEX가 존재합니다. 이로 인해 유동성이 분산되어 스왑이 통합된 플랫폼보다 덜 효율적이며, 이는 *슬리피지* 증가로 이어집니다. 슬리피지는 예상 가격과 실제 거래 가격 간의 차이를 말하며, 유동성이 부족하면 거래가 불리한 가격에 실행됩니다.
 
-> **Note**  
+> **참고**  
 >
-> Uniswap, which is arguably one of the most significant projects in the current DeFi landscape, was inspired by a 2016 Reddit post by Vitalik Buterin. Hayden Adams, who reportedly had no prior coding experience, took a year to develop Uniswap V1 using the Vyper programming language.
+> Uniswap은 2016년 Reddit 게시물에서 영감을 받아 개발되었습니다. 코딩 경험이 전혀 없던 Hayden Adams는 Vyper 언어로 Uniswap V1을 한 해 동안 개발했습니다.
 
-### Lending Markets
+### 대출 시장
 
-A *lending market* or *money market* is a decentralized platform that facilitates the lending and borrowing of cryptocurrencies, using smart contracts to automate and secure the entire process. Unlike traditional financial systems, lending markets operate without intermediaries like banks, providing a more transparent and efficient way to handle loans.
+*대출 시장* 또는 *머니 마켓*은 암호화폐를 빌리고 빌려주는 분산형 플랫폼으로, 스마트 컨트랙트를 통해 전체 과정을 자동화하고 보안합니다. 전통 금융 시스템과 달리 은행 같은 중개자가 없으므로 대출을 더 투명하고 효율적으로 처리할 수 있어요.
 
-In a lending market, users who want to earn interest on their crypto assets can deposit their funds into a lending pool. These deposits contribute to the overall liquidity of the platform. Lenders earn interest on their deposits, with rates often determined algorithmically based on the supply and demand within the pool. The more demand there is for borrowing, the higher the interest rates are, incentivizing more lenders to contribute their assets to the pool.
+대출 시장에서는 이자를 벌고자 하는 사용자가 자금을 대출 풀에 예치하면, 그 예금은 플랫폼의 유동성을 높입니다. 대출자는 예금에 대해 이자를 받으며, 이자율은 풀 내 공급과 수요를 기반으로 알고리즘적으로 결정됩니다. 대출 수요가 많을수록 이자율이 상승해 더 많은 사용자가 자금을 제공하도록 유도합니다.
 
-Borrowers, on the other hand, can access these funds by providing collateral, which is typically worth more than the amount they wish to borrow. This overcollateralization is critical in lending to mitigate the risk of default, primarily because most crypto assets are very volatile and could leave the lending market with bad debt[^3] if the loan were not overcollateralized. The collateral is locked in a smart contract, ensuring that if the borrower fails to repay the loan, the collateral can be liquidated to cover the outstanding amount.
+반대로 차입자는 담보를 제공해야 합니다. 담보는 일반적으로 빌리고 싶은 금액보다 가치가 높아야 하며, 이는 대부분의 암호화폐가 변동성이 크기 때문에 대출 시장에서 부채 위험을 완화하기 위해 필요합니다. 담보는 스마트 컨트랙트에 잠겨 있어 차입자가 상환하지 못하면 담보를 청산해 빚을 갚습니다.
 
-[^3]: Bad debt occurs when a borrower defaults on a loan and the remaining collateral is insufficient to cover the owed amount. This can happen because of sudden market volatility or improper collateral valuation. Unlike liquidation, where collateral is sold to cover the debt, bad debt remains uncollectible, causing a loss to the lending protocol and its users.
+이 시스템은 대출자 보호와 대출 풀의 건전성을 보장합니다. 간단한 예시가 그림 13-3에서 보여집니다: 대출자는 유동성을 제공하고, 차입자는 연간 이자를 지불하며, 차입자는 제공된 유동성을 인출합니다.
 
-This system protects lenders and ensures that the lending pool remains solvent. A simplified version of this can be seen in Figure 13-3: the lender provides liquidity and collects annual interest paid by the borrower, who withdraws the provided liquidity.
+![대출 시장 기본 흐름](images/ch13/maet_1303.png)
 
-![Lending market basic flow](images/ch13/maet_1303.png)
+**그림 13-3. 대출 시장 기본 흐름**
 
-Figure 13-3. Lending market basic flow
+대출 시장의 이자율은 동적이며 시장 상황에 따라 변동합니다. 플랫폼 알고리즘이 지속적으로 이자율을 조정해 자금 공급과 대출 수요를 균형시킵니다. 이는 대출자와 차입자가 공정한 시장 기반 금리를 누릴 수 있는 효율적인 금융 생태계를 만듭니다.
 
-The interest rates in lending markets are dynamic, fluctuating based on market conditions. The platform's algorithms continuously adjust rates to balance the supply of available funds and the demand for loans. This creates an efficient and responsive financial ecosystem where both lenders and borrowers can benefit from fair market-driven rates.
+담보 비율은 또 다른 중요한 요소입니다. 이 비율은 대출을 확보하기 위해 필요한 담보량을 결정합니다. 예를 들어, 150%의 담보 비율이 일반적이라면 $100 가치의 암호화폐를 빌리려면 최소 $150 가치를 담보로 넣어야 합니다(그림 13-4 참조). 이는 가격 변동으로 인한 잠재적 손실을 흡수할 버퍼를 제공합니다.
 
-Collateralization ratios are another important aspect of lending markets. These ratios determine the amount of collateral needed to secure a loan. For instance, a common collateralization ratio might be 150%, meaning that to borrow $100 worth of cryptocurrency, a borrower would need to deposit at least $150 worth of collateral, as shown in Figure 13-4. This ensures that there is a buffer to absorb potential losses from price volatility.
+![대출 시장 담보 비율](images/ch13/maet_1304.png)
 
-![Lending market collateralization](images/ch13/maet_1304.png)
+**그림 13-4. 대출 시장 담보 비율**
 
-Figure 13-4. Lending market collateralization
+담보 가치가 특정 임계값 아래로 떨어지면, 스마트 컨트랙트는 청산 프로세스를 시작합니다. 이는 담보를 매각해 대출을 상환하고, 대출자에게 잠재적 손실을 방지합니다. 청산 메커니즘은 대출 풀의 안정성과 건전성을 유지하는 데 필수입니다.
 
-If the value of the collateral falls below a certain threshold, the platform's smart contracts initiate a liquidation process. This involves selling the collateral to repay the loan, thus protecting the lenders from potential losses. Liquidation mechanisms are essential for maintaining the stability and solvency of the lending pool.
+#### DeFi에서의 인센티브
 
-#### Incentives in DeFi
+DeFi 대부분은 개방형이며 효과적으로 작동하려면 적절한 인센티브가 필요합니다. 예를 들어, 대다수 대출 시장에서 청산 프로세스는 사용자가 지속적으로 청산 가능한 대출을 모니터링하도록 의존합니다. 이러한 작업을 수행하면 사용자에게 청산된 금액의 일부를 보상으로 받게 됩니다.
 
-Most aspects of DeFi are open and rely heavily on proper incentives to function effectively. For instance, the liquidation process in most lending markets depends on users continuously monitoring for loans that can be liquidated. When they identify such loans, they proceed to liquidate them. To motivate users to perform these tasks, they receive a portion of the liquidated amount as a reward.
+이 인센티브 개념은 블록체인과 DeFi의 핵심 원리입니다. 많은 메커니즘은 게임 이론 원칙에 따라 설계되어 참여자가 네트워크 기능 및 보안을 유지하고 개선하도록 유도합니다. 인센티브는 사용자 행동을 프로토콜 목표와 일치시켜 자급자족형 생태계를 만듭니다.
 
-This concept of incentivization is a fundamental part of blockchain and DeFi. Many mechanisms within these systems are designed around game theory principles to ensure that participants act in ways that maintain and improve the network's functionality and security. Incentives align user actions with the overall goals of the protocol, creating a self-sustaining ecosystem.
+DeFi의 조합 가능성은 핵심입니다. 대출 시장 자체만으로는 크게 눈에 띄지 않을 수 있지만, 다른 DeFi 기본 요소와 결합하면 강력한 집계가 만들어집니다. 예를 들어 *숏 포지션*이라는 금융 도구를 재현하려면 대출 시장과 DEX를 조합합니다. 숏은 자산 가격이 하락할 것으로 예상될 때 사용되는 전략입니다. 기본적으로 자산을 빌려 현재 가격에 매도하고, 나중에 더 낮은 가격에 다시 사서 빌린 자산을 상환하고 차익을 챙깁니다.
 
-As with most things in DeFi, composability is key. On their own, lending markets may not seem particularly impressive, especially since most require overcollateralization to request a loan. However, when you combine the ability to request a loan with other DeFi primitives, you unlock a powerful aggregation that can achieve a variety of outcomes.
+DeFi에서 숏 포지션을 구현하는 방법:
 
-For example, you can re-create a financial instrument called *shorting* by combining a lending market with a DEX. Shorting is a strategy used when you expect the price of an asset to drop. Essentially, you borrow the asset and sell it at the current price, hoping to buy it back later at a lower price, return the borrowed asset, and pocket the difference.
+1. **자산 A를 담보화**: 대출 시장에 자산 A를 담보로 예치합니다.
+2. **자산 B를 빌림**: 숏하려는 자산 B를 빌립니다.
+3. **DEX에서 자산 B 매도**: DEX에서 빌린 자산 B를 판매합니다.
 
-Here's how you can achieve a short in DeFi:
+이렇게 하면 1배 레버리지(1x)로 자산 B를 숏할 수 있습니다.[^4] 가격이 하락하면 낮은 가격에 다시 사서 대출을 상환하고 차익을 남깁니다. 그림 13-5에서 과정을 확인하세요.
 
-1. **Collateralize Asset A**: deposit Asset A as collateral in a lending market.
+[^4]: 숏 포지션 규모는 빌린 금액과 직접적으로 관련됩니다.
 
-2. **Take a loan for Asset B**: borrow Asset B, which you want to short.
+![DeFi를 이용한 숏 전략](images/ch13/maet_1305.png)
 
-3. **Sell Asset B on a DEX**: sell the borrowed Asset B on a decentralized exchange.
+**그림 13-5. DeFi를 이용한 숏 전략**
 
-By doing this, you effectively short Asset B with a leverage of 1x.[^4] If the price of Asset B drops, you can buy it back at the lower price, repay the loan, and keep the difference, as shown in Figure 13-5. This demonstrates how the composability of DeFi protocols can re-create traditional financial strategies in a decentralized environment.
+대출 시장의 활용 가능성은 광범위하며 즉시 눈에 띄지 않을 수 있습니다. 왜 담보가 있는 대출을 받아야 할까요? 단순히 자신의 자금을 사용하는 대신, 대출 시장과 DEX를 결합하면 금융 도구를 재현하고 "롱" 포지션도 만들 수 있습니다. 또 다른 장점은 세금 이벤트를 피할 수 있다는 점입니다. 많은 관할 구역에서 자산을 빌리는 행위는 과세 대상이 아니지만, 자산을 매각하는 것은 과세 대상이 될 수 있습니다.
 
-[^4]: The short position's size is directly related to the borrowed amount.
+대출 시장의 잠재적 활용 범위는 방대하며 이 책 범위를 넘어섭니다. 하지만 대출 시장은 자본 효율성을 높이고 다른 프로토콜과 결합하면 사용자에게 상당한 유연성을 제공합니다. 현재 담보가 필요 없는 대출 시장도 있지만, 아직 큰 인기를 얻지 못하고 있습니다.
 
-![Shorting strategy using DeFi](images/ch13/maet_1305.png)
+### 오라클
 
-Figure 13-5. Shorting strategy using DeFi
+이더리움용 오라클(Chapter 11에서 자세히 다룬 것)은 외부 세계 데이터를 블록체인으로 가져와 스마트 컨트랙트가 외부 정보를 활용할 수 있게 해주는 서비스입니다. 예를 들어, 암호화폐 가격, 날씨, 스포츠 점수 등을 제공해 스마트 컨트랙트가 이를 기반으로 실행될 수 있도록 합니다.
 
-The applications for a lending market are extensive and may not be immediately apparent. You may wonder: why take an overcollateralized loan when you have the money? Why not just use your own funds? In some scenarios, that would be true. However, lending markets combined with DEXs can re-create financial instruments and even allow for "longing" an asset instead of shorting it. Another benefit of lending markets is the ability to avoid taxable events. In many jurisdictions, borrowing an asset is not considered a taxable event, whereas selling an asset is.
+오라클은 대출 시장의 보안 등 DeFi 여러 측면에 필수적입니다. 이들 시장에서는 토큰 가격을 DEX에서 가져올 수 있습니다. 하지만 오직 DEX만 의존하면 플래시 대출 공격에 취약해집니다. 공격자는 대량 자금을 빌려 토큰/토큰 가격을 조작하고, 그 변동으로 이익을 얻습니다.
 
-The potential uses of lending markets are vast and go beyond the scope of this book. However, lending markets improve capital efficiency and, when combined with other protocols, provide users with significant flexibility. There are also lending markets that do not require overcollateralization, although they currently lack significant traction.
+또한 오라클은 블록체인에서 난수 생성을 가능하게 합니다. 이더리움은 결정론적이기 때문에 모든 계산은 동일한 결과를 만들어야 하며, 이는 노드가 일관된 블록과 트랜잭션을 검증하도록 돕습니다. 하지만 결정론적 특성 때문에 진정한 무작위는 존재하지 않습니다. 예컨대 카지노 플랫폼을 만들 때 난수 생성이 필수인데, 블록 타임스탬프, 해시, 트랜잭션 수 등을 이용해 가짜 난수를 만들면 공격자가 이를 예측하거나 조작할 수 있습니다.
 
-### Oracles
+오라클은 이더리움 블록체인이 외부 데이터를 활용하도록 하여 다양한 애플리케이션 가능성을 열어줍니다.
 
-An oracle for Ethereum, which we discussed in detail in Chapter 11, is a service that brings real-world data onto the blockchain, allowing smart contracts to interact with external information. For example, it can provide price data for cryptocurrencies, weather conditions, or sports scores, enabling smart contracts to execute based on this external data.
-
-Oracles are essential for many aspects of DeFi, including the security of lending markets. In these markets, the price of a token can be sourced from DEXs. However, relying solely on these exchanges can make the lending market vulnerable to flash-loan attacks. In such an attack, an attacker borrows a large sum of money, manipulates the price of a coin or token on a DEX, and exploits this price change for profit.
-
-Another vital function of oracles is their ability to bring pseudorandom numbers on chain. Since Ethereum is deterministic, every computation must produce the same result every time, enabling nodes to validate every block and transaction consistently. However, this deterministic nature means that true randomness cannot exist within Ethereum's components. For instance, if you were building a casino platform, generating random numbers would be essential. Using block timestamps, hashes, or transaction counts to create pseudorandom numbers is one method, but this approach is vulnerable to attacks since block proposers could predict or manipulate these properties in advance to exploit the casino.
-
-Oracles let the Ethereum blockchain use external data, opening up a lot more possibilities for different applications.
-
-> **Tip**  
+> **팁**  
 >
-> From this description, it may seem that oracles are a central entity, making DeFi, which is supposed to be decentralized, dependent on them. However, while some aspects of DeFi do rely on oracles, the oracles themselves are often highly decentralized and do not have a single point of failure.
+> 오라클이 중앙집중화된 엔티티처럼 보일 수 있지만, 실제로는 대부분 분산형이며 단일 실패 지점이 없습니다. 일부 DeFi 기능은 오라클에 의존하지만, 오라클 자체가 높은 수준의 탈중앙화를 유지합니다.
 
-### Stablecoins
+### 스테이블코인
 
-*Stablecoins* are a type of cryptocurrency designed to maintain a stable value, typically pegged to a reserve asset like the US dollar, the euro, or a basket of goods. They aim to combine the benefits of cryptocurrencies, such as security and decentralization, with the stability of traditional fiat currencies.
+*스테이블코인*은 일반적으로 미국 달러, 유로 또는 상품 바스켓 같은 기초 자산에 고정된 가치를 유지하도록 설계된 암호화폐입니다. 암호화폐의 보안과 탈중앙화 장점과 전통 화폐의 안정성을 결합하려는 목표를 갖고 있습니다.
 
-Stablecoins achieve their stability via different mechanisms. *Fiat-collateralized stablecoins* are backed by reserves of fiat currency held in banks or other trusted custodians. For instance, each USDC or USDT token is usually backed by an equivalent amount in US dollars (USD).
+스테이블코인의 안정성은 다양한 메커니즘을 통해 달성됩니다.
 
-*Cryptocollateralized stablecoins* take a different approach by being backed by other cryptocurrencies. Given the volatile nature of crypto assets, these stablecoins are often overcollateralized to ensure that they can maintain their peg. A well-known example is MakerDAO's DAI,[^5] where users lock up Ethereum or other cryptocurrencies as collateral to mint DAI. The overcollateralization provides a buffer against the volatility of the underlying assets.
+- **법정 자산 담보 스테이블코인**: 은행이나 신뢰할 수 있는 보관소에 보유된 법정 화폐 잔액으로 뒷받침됩니다. 예를 들어, USDC나 USDT는 일반적으로 미국 달러와 1:1 비율로 지원됩니다.
+- **암호 자산 담보 스테이블코인**: 다른 암호화폐에 의해 뒷받침됩니다. 암호자산의 변동성이 크기 때문에 대부분 과도 담보를 요구해 펀드가 고정값을 유지하도록 합니다. MakerDAO의 DAI가 대표적입니다.[^5] 사용자는 이더리움이나 다른 암호화폐를 담보로 잠그고 DAI를 발행합니다. 과도 담보는 기초 자산 변동성에 대한 버퍼 역할을 합니다.
+- **알고리즘 스테이블코인**: 담보 없이 알고리즘과 스마트 컨트랙트를 통해 공급량을 조절해 가치를 유지합니다. TerraUSD(UST)가 예시지만, 큰 문제로 인해 붕괴했습니다.
 
-[^5]: MakerDAO is now Sky, and DAI is now USDS.
+현재 성공적이고 충분히 자본화된 알고리즘 스테이블코인은 없으며, 모든 시도는 파국적으로 실패하거나 시장 적합성을 찾지 못했습니다.
 
-Then there are *algorithmic stablecoins*, which do not rely on collateral but instead use algorithms and smart contracts to manage the supply of the stablecoin to keep its value stable. These stablecoins adjust the supply based on market demand, expanding or contracting to maintain the target price. TerraUSD (UST) was a notable example of an algorithmic stablecoin, although it faced significant issues, which led to its collapse.
+스테이블코인은 DEX 유동성에도 크게 기여합니다. 안정적이며 예측 가능한 자산을 제공해 거래가 원활하고 시장 효율성이 향상됩니다. 트레이더는 가격 변동에 대한 걱정 없이 포지션을 쉽게 열고 닫을 수 있습니다.
 
-There has not been a successful and well-capitalized algorithmic stablecoin; every attempt at building one either failed catastrophically or did not find product-market fit.
+#### 법정 자산 담보 스테이블코인의 한계
 
-Stablecoins also contribute significantly to liquidity in DEXs. By providing a stable and predictable asset, they facilitate smoother trading and better market efficiency. Traders can easily move in and out of positions without worrying about price fluctuations, which is important for efficient market operations.
+USDC나 USDT 같은 스테이블코인은 Coinbase, Bitfinex 등에서 달러로 교환할 수 있지만, 시장 규모(시가총액) 성장에 제한이 있습니다. *시장 시가총액*은 코인 가격과 총 공급량을 곱해 계산됩니다.
 
-#### Limitations of Fiat-Collateralized Stablecoins
+한 블록체인에서 스테이블코인의 전체 가치가 해당 체인을 공격하는 비용보다 높아지면 악의적 행위자가 공격을 시도할 강력한 인센티브를 얻게 됩니다. 이는 보안 위험이 현실적이며 정량화 가능한 문제입니다.
 
-An interesting concept is that stablecoins like USDC or USDT, which can be redeemed for dollars on platforms like Coinbase and Bitfinex, respectively, have a limited potential for growth in terms of market cap size. *Market cap*, or market capitalization, is the total value of all the coins in circulation, calculated by multiplying the current price of the coin by the total supply.
+다행히 Ethereum과 같은 견고하고 안전한 블록체인에 대한 공격은 쉽지도 않고 비용도 많이 듭니다. 높은 비용과 복잡성은 강력한 억제 효과를 제공합니다. 하지만 스테이블코인의 확장성과 보안을 고려할 때 항상 이 개념을 염두에 두는 것이 중요합니다.
 
-The reason for this limitation is that if the total value of the stablecoin on a particular blockchain exceeds the cost of attacking that blockchain, it creates significant incentives for malicious actors to attempt an attack. This is because the potential rewards of compromising the blockchain could outweigh the costs, making it a real and quantifiable risk.
+### 리퀴드 스테이킹
 
-Fortunately, attacking a robust and secure blockchain like Ethereum is neither easy nor cheap. The high cost and the complexity of such an attack provide strong deterrents. However, it's important to always keep this concept in mind when considering the scalability and security of stablecoins on any blockchain.
+*리퀴드 스테이킹*은 PoS 네트워크에서 암호화폐를 스테이크하면서도 그 자산의 유동성을 유지하도록 해주는 메커니즘입니다. 일반적으로 토큰을 스테이크하면 잠겨서 일정 기간 동안 접근하거나 거래할 수 없지만, 리퀴드 스테이킹은 스테이크된 자산을 대표하는 파생 토큰을 발행해 줍니다. 이 파생 토큰은 자유롭게 거래하거나 다른 DeFi 프로토콜에서 활용될 수 있어, 사용자는 보상을 받으면서도 유동성을 잃지 않습니다.
 
-### Liquid Staking
+예를 들어 ETH를 리퀴드 스테이킹 플랫폼에 스테이크하면 stETH 같은 파생 토큰을 받을 수 있습니다. ETH는 계속해서 스테이크되고 보상을 받지만, stETH 토큰은 자유롭게 거래하거나 다른 DeFi 활동에 사용할 수 있어 스테이크의 이점을 유지하면서도 자금 접근성을 잃지 않습니다.
 
-*Liquid staking* is a mechanism that allows users to stake their cryptocurrency assets in a PoS network while retaining the liquidity of those assets. Typically, when tokens are staked, they are locked up and cannot be accessed or traded until the staking period is over. Liquid staking solves this problem by issuing a derivative token that represents the staked assets. This derivative token can be traded, transferred, or used in other DeFi protocols, enabling users to maintain liquidity while still earning staking rewards.
-
-For example, if you stake ETH on a liquid staking platform, you might receive a derivative token like stETH. While your ETH remains staked and continues to earn rewards, the stETH token can be freely traded or used in other DeFi activities, providing the benefits of staking without losing access to your funds.
-
-> **Note**  
+> **참고**  
 >
-> A new type of derivative is emerging that is similar to liquid staking, known as *liquid restaking*. With protocols like EigenLayer, tokens are not only staked for the Ethereum chain but are also used to secure other services in a process called restaking. This new development has raised concerns about potentially overloading the Ethereum consensus mechanism.
+> 리퀴드 재스테이킹이라는 새로운 파생 유형이 등장했는데, EigenLayer 같은 프로토콜에서 ETH 체인뿐 아니라 다른 서비스 보안에도 사용됩니다. 이는 Ethereum 합의 메커니즘을 과부하시킬 가능성에 대한 우려를 불러일으켰습니다.
 
-The token received, such as stETH issued by Lido, acts like a stablecoin pegged to the price of ETH. This means it carries not only the typical risks associated with stablecoins, such as those pegged to the dollar, but additional risks related to slashing. Liquid staking protocols take the ETH deposited by users, create validator nodes, and earn staking rewards, which are then redistributed to the holders of the derivative token. This process introduces the risk of slashing, where part of the staked ETH could be lost if the validator nodes fail to operate correctly.
+리퀴드 스테이킹으로 받은 토큰(stETH 등)은 ETH 가격에 고정된 스테이블코인처럼 동작합니다. 따라서 달러에 고정된 스테이블코인과 같은 일반적인 위험뿐 아니라 슬래싱(validator 노드가 제대로 작동하지 않을 경우 일부 staked ETH가 손실될 수 있음)과 관련된 추가 위험이 있습니다.
 
-Beyond these risks, liquid staking might create systemic risks for the blockchain itself. For example, at the time of writing, Lido has 29% of all staked ETH. If this percentage increases to 33% or higher, that could pose significant problems.[^6] In June 2022, there was a vote in the Lido DAO to limit Lido's staking power and prevent it from surpassing the 33% mark to avoid potential systemic risk for Ethereum. Unfortunately, the vote did not pass.
+리퀴드 스테이킹은 블록체인 자체에도 시스템적 위험을 초래할 수 있습니다. 예컨대, Lido가 현재 전체 스테이크된 ETH의 29%를 보유하고 있는데, 이 비율이 33% 이상으로 증가하면 Ethereum에 심각한 문제가 발생할 수 있습니다.[^6] 2022년 6월에는 Lido DAO에서 33% 한도를 초과하지 않도록 Lido의 스테이크 파워를 제한하라는 투표가 있었으나, 실패했습니다.
 
-[^6]: If any staker has more than 33% of the staked ETH, they could in theory attack the chain and stop the finalization process.
+[^6]: 스테이커가 전체 스테이크된 ETH의 33% 이상을 보유하면 이론적으로 체인을 공격해 최종화 과정을 중단시킬 수 있습니다.
 
-> **Note**  
+> **참고**  
 >
-> There was also controversy surrounding the vote since most of the opposition came from just a few wallets.
+> 이 투표에 대한 논란은 대부분 몇 개의 지갑에서 반대했기 때문에 발생했습니다.
 
-### Real-World Assets
+### 실물 자산
 
-In the context of DeFi, *real-world assets* (RWAs) refer to tangible or traditional financial assets that are tokenized and brought onto the blockchain. These can include anything from real estate and commodities to stocks, bonds, and even fine art. The tokenization of these assets involves converting their value into digital tokens that can be traded, lent, or borrowed on blockchain platforms.
+DeFi 맥락에서 *실물 자산* (RWAs)은 토큰화되어 블록체인으로 옮겨진 물리적 또는 전통 금융 자산을 말합니다. 부동산, 원자재, 주식, 채권, 심지어 예술품까지 다양합니다. 이 자산을 디지털 토큰으로 변환해 거래, 대출, 차입이 가능하도록 합니다.
 
-RWAs are somewhat controversial because they often require a custodian, which contradicts the trustless principle of blockchains. This sector is one of the last in DeFi to truly emerge, and so far, there haven't been any major issues with RWA protocols. Despite going against the core ethos of crypto, RWAs unlock numerous new possibilities.
+RWAs는 논란이 있을 수 있는데, 이는 보통 custodian(보호자)이 필요하기 때문입니다. 이는 블록체인의 무신뢰 원칙과 충돌합니다. 이 분야는 DeFi에서 가장 늦게 등장했으며 지금까지 RWA 프로토콜에 큰 문제가 없었습니다. 비록 암호화폐의 핵심 정신에 반하지만, RWAs는 수많은 새로운 가능성을 열어 줍니다.
 
-One significant application of RWAs has been bringing bonds on chain, allowing users to access the relative risk-free rate. This has enabled non-US citizens to access the 5% interest rates that were available in the United States in 2023–2024. Another valuable use for RWAs is the fractionalization of tokenized assets, such as owning a fraction of real estate.
+RWAs의 한 가지 중요한 적용 사례는 채권을 체인 상으로 가져와 상대적 무위험 금리를 활용하는 것입니다. 이는 2023–2024년 미국에서 제공되던 5% 이자율에 비미국 시민도 접근할 수 있게 했습니다. 또 다른 유용한 사용은 토큰화된 자산의 분할 소유(예: 부동산 일부를 소유)입니다.
 
-Given that this sector is still in its infancy, we have yet to uncover all its potential. However, the risks associated with custodianship are real and concerning.
+이 분야는 아직 초기 단계라 잠재력을 완전히 파악하지 못했습니다. custodian 위험은 현실적이며 우려됩니다.
 
-### Bridges and Omnichain Protocols
+### 브릿지와 옴니체인 프로토콜
 
-As the blockchain ecosystem evolves, a wide variety of networks with unique features and benefits has developed. However, these networks often operate in isolation, which limits the seamless transfer of assets and data between them. Bridges and omnichain protocols aim to solve this problem by facilitating cross-chain interactions, ultimately creating a more interconnected blockchain ecosystem.
+블록체인 생태계가 진화함에 따라 독특한 기능과 이점을 가진 다양한 네트워크가 등장했습니다. 하지만 이러한 네트워크는 종종 격리되어 자산과 데이터를 원활하게 전송할 수 없습니다. 브릿지와 옴니체인 프로토콜은 이 문제를 해결하려고 하며, 궁극적으로 더 상호 연결된 블록체인 생태계를 만들려 합니다.
 
-> **Note**  
+> **참고**  
 >
-> Bridges are often very centralized because most blockchains are agnostic about the state of other chains. When transferring funds from chain A to chain B, there is typically a central authority that approves the bridging operation and unlocks the liquidity on chain B. This centralization is one of the reasons why bridges are among the most frequently hacked protocols in DeFi.
+> 브릿지는 대부분 중앙 집중화되어 있습니다. 왜냐하면 대부분의 블록체인은 다른 체인의 상태에 대해 무관하기 때문입니다. 체인 A에서 B로 자금을 이체할 때, 일반적으로 중앙 권한이 브리징 작업을 승인하고 체인 B에서 유동성을 잠금 해제합니다. 이러한 중앙 집중화는 브릿지가 DeFi에서 가장 빈번하게 해킹되는 프로토콜 중 하나가 되는 이유입니다.
 
-*Bridges* are specialized protocols that facilitate the transfer of assets and data between different blockchains, as shown in Figure 13-6. They act as connectors, allowing tokens and other digital assets to move from one chain to another. For instance, if you want to transfer your tokens from Ethereum to Binance Smart Chain (BSC), you would use a bridge.
+**브릿지**는 다른 블록체인 간에 자산과 데이터를 전송하는 특수한 프로토콜로, 그림 13-6에서 보여집니다. 이들은 연결 고리 역할을 하여 토큰 및 기타 디지털 자산이 한 체인에서 다른 체인으로 이동할 수 있게 합니다. 예를 들어 Ethereum에서 Binance Smart Chain(BSC)으로 토큰을 전송하려면 브릿지를 사용합니다.
 
-![Bridge connecting two blockchains](images/ch13/maet_1306.png)
+![두 블록체인을 연결하는 브릿지](images/ch13/maet_1306.png)
 
-Figure 13-6. Bridge connecting two blockchains
+**그림 13-6. 두 블록체인을 연결하는 브릿지**
 
-There are many different models for bridging tokens from one chain to another. Every bridge uses a specific model. The most common are as follows:
+토큰을 한 체인에서 다른 체인으로 옮기는 다양한 모델이 있습니다. 모든 브릿지는 특정 모델을 사용합니다. 가장 흔한 것은 다음과 같습니다:
 
-**Wrapped-token bridges (lock and mint)**
+**1) 래핑 토큰 브릿지 (락 & 마인트)**  
+이 모델에서는 체인 A에서 토큰을 받아 스마트 컨트랙트에 락하고, 체인 B에서 래핑(또는 “소유자”) 토큰을 발행합니다. 래핑 토큰은 락된 토큰을 나타내는 영수증 역할을 합니다. 원본 토큰을 회수하려면 체인 B에서 래핑 토큰을 소각하고, 체인 A에서 토큰이 잠금 해제됩니다.
 
-In this model, a bridge receives tokens on chain A, locks them in a smart contract, and mints a wrapped (or "proprietary") token on chain B. The wrapped token acts as a receipt representing the locked tokens. To retrieve the original tokens, the wrapped token is burned on chain B, unlocking the tokens on chain A.
+예를 들어 “Mastering Bridge”를 사용해 Ethereum에서 BSC로 ETH를 전송한다고 가정하면, Ethereum의 스마트 컨트랙트에 ETH를 보내고, 브릿지는 BSC에서 “MasteringETH” 같은 래핑 토큰을 발행합니다. Ethereum으로 돌아가려면 BSC에서 MasteringETH를 소각하고, 브릿지가 원본 ETH를 해제합니다. 이 래핑 토큰은 보통 DEX에서 스왑해 체인 B의 네이티브 토큰을 얻어야 합니다.
 
-For example, suppose you use the "Mastering Bridge" to transfer ETH from Ethereum to BSC. You send ETH to the bridge's smart contract on Ethereum, and the bridge mints a wrapped token, such as "MasteringETH," on BSC. To return to Ethereum, you burn MasteringETH on BSC, and the bridge releases the original ETH. These wrapped tokens often need to be swapped on a DEX to obtain the native token on chain B.
+**2) 마인트 & 번**  
+프로젝트가 자체 토큰 발행·소각 기능을 제어하는 경우에 사용됩니다. 토큰을 락하지 않고, 체인 A에서 토큰을 소각(공급 감소)하고, 같은 양을 체인 B에서 발행합니다. 이는 프로젝트가 토큰 스마트 컨트랙트를 통제할 수 있을 때 가능합니다.
 
-**Mint and burn**
+**3) 유동성 브릿지**  
+가장 흔한 유형으로, 여러 체인에 걸쳐 토큰 풀을 보유합니다. 토큰을 브리징하면 브릿지는 그 풀에서 대상 체인의 동일한 양의 토큰을 전송합니다(수수료 포함). 래핑 토큰 브릿지와 달리 새로운 토큰이 발행되지 않으며, 브릿지가 이미 두 체인에 토큰을 보유하고 있습니다.
 
-This model is commonly used by projects that control their token's minting and burning functions. Instead of locking tokens, the bridge burns tokens on chain A (reducing the supply) and mints an equivalent amount on chain B. This requires the project to have authority over the token's smart contract. For example, a project could burn ETH-based tokens on Ethereum and mint the same token on BSC, maintaining the total supply across chains.
+예를 들어 Ethereum에서 BSC로 ETH를 브리징하면, Ethereum의 브릿지에 ETH를 보내고, 브릿지는 BSC 유동성 풀에서 ETH를 해제합니다. 브릿지가 발행 기능을 제어하지 않으면 BSC에 충분한 유동성을 유지해야 합니다. 이 모델은 단순하지만 브릿지가 유동성을 안전하게 관리할 수 있는지 여부에 달려 있습니다.
 
-**Liquidity bridges**
+**옴니체인 프로토콜**은 Chapter 11에서 다룬 크로스 체인 메시징 프로토콜을 확장해 여러 블록체인 간 원활한 통신과 상호 운용성을 가능케 합니다. 이는 서로 다른 체인이 마찰 없이 상호작용할 수 있는 통합 레이어를 만들려는 목표입니다. 그림 13-7은 Ethereum에서 스왑을 시작하고 BSC에서 완료해 자금을 받는 간단한 옴니체인 메시징 프로토콜 예시를 보여줍니다.
 
-The most common type, liquidity bridges rely on pools of tokens on multiple chains. When you bridge a token, the bridge uses its liquidity to send you the equivalent token on the destination chain, typically for a fee. Unlike wrapped-token bridges, no new tokens are minted; the bridge already holds tokens on both chains.
+![옴니체인 프로토콜 예시](images/ch13/maet_1307.png)
 
-Following the earlier example, if you bridge ETH from Ethereum to BSC, you send ETH to the bridge on Ethereum. The bridge then releases ETH from its liquidity pool on BSC. If the bridge doesn't control minting, it must maintain sufficient liquidity on BSC to facilitate transfers. This model is popular because of its simplicity but depends on the bridge's ability to manage liquidity securely.
-
-*Omnichain protocols*, discussed in Chapter 11 as cross-chain messaging protocols, extend the concept of cross-chain interactions by enabling seamless communication and interoperability across multiple blockchains simultaneously. These protocols aim to create a unified layer where different blockchains can interact without friction, allowing the transfer of assets, data, and even smart contract functionalities across chains. Figure 13-7 demonstrates a simple omnichain messaging protocol that allows users to initiate a swap on Ethereum and complete the swap, receiving the funds, on BSC.
-
-![Omnichain protocol example](images/ch13/maet_1307.png)
-
-Figure 13-7. Omnichain protocol example
+**그림 13-7. 옴니체인 프로토콜 예시**
 
 ## (De)centralized Finance
 
-Decentralization is always difficult to define, and more often than not, it's more of a way to express a desired outcome than to describe a reality. Most DeFi protocols are not truly decentralized; they often rely on addresses with significant privileges or decisions made by a core development team, creating a centralization of power within a supposedly decentralized system.
+탈중앙화는 정의하기 어려우며, 대부분은 원하는 결과를 표현하는 방식일 뿐 실제 현실을 묘사하지 않습니다. 대부분의 DeFi 프로토콜은 진정한 탈중앙화가 아니며, 권한이 큰 주소나 핵심 개발팀의 결정에 의존해 가짜로 중앙집중된 시스템을 만들기도 합니다.
 
-DeFi is still in its early stages, and it's up to early adopters to shape its future and steer it in the right direction. While decentralization is the objective, it's important to recognize that it is not always the current reality. Emerging markets like DeFi can benefit from some degree of centralization to make decisions and implement changes quickly. This centralized decision making can provide the agility needed to adapt and grow in a rapidly evolving environment.
+DeFi는 아직 초기 단계이며, 초기에 참여하는 사람들의 선택이 미래를 형성하고 올바른 방향으로 이끌어야 합니다. 탈중앙화가 목표지만 현재 현실은 아닙니다. DeFi와 같은 신흥 시장은 효율성과 빠른 의사결정을 위해 어느 정도 중앙집중화를 필요로 할 수 있습니다. 이는 급변하는 환경에서 적응하고 성장하기 위한 민첩성을 제공합니다.
 
-As DeFi continues to mature, the objective should be to progressively reduce centralization and shift toward a more decentralized model. Early adopters are very significant in this transition, balancing the current need for efficiency and rapid decision making with the ultimate vision of decentralization. By understanding and addressing the inherent trade-offs, the DeFi community can guide the system's evolution to better align with its foundational principles of openness, transparency, and inclusivity.
+DeFi가 성숙해지면서 목표는 점진적으로 중앙집중화
 
-## Risks and Challenges in DeFi
+를 줄이고 더 탈중앙화된 모델로 전환하는 것입니다. 초기 참여자들은 효율성과 빠른 의사결정의 필요와 궁극적 비전인 탈중앙화를 균형 있게 조절해야 합니다. 내재된 트레이드오프를 이해하고 해결함으로써 DeFi 커뮤니티는 시스템 진화가 원칙에 부합하도록 이끌 수 있습니다.
 
-DeFi comes with its own set of risks and challenges, which are often misunderstood by users, including experts. Every DeFi protocol carries specific economic risks and general smart contract risks. Additionally, depending on the degree of decentralization, there can be custodian risks or centralization problems.
+## DeFi의 위험과 도전
 
-Smart contract risks are easier to generalize: smart contracts can be hacked, and custodians can act maliciously or make mistakes. Economic risks are more complex and specific to each DeFi primitive or protocol. For example, the risk in a lending market is liquidation, which can sometimes occur wrongfully if the market does not use a proper oracle. The risk in providing liquidity to a DEX is impermanent loss. For stablecoins or liquid staking, the primary risk is the loss of the peg.
+DeFi에는 사용자(전문가 포함)가 종종 오해하는 자체적인 위험과 도전이 존재합니다. 각 DeFi 프로토콜은 특정 경제적 위험과 일반 스마트 컨트랙트 위험을 가집니다. 또한 탈중앙화 정도에 따라 custodian 위험이나 중앙집중화 문제가 발생할 수 있습니다.
 
-Understanding all the risks involved with a DeFi protocol before using it is crucial. Beyond risks, DeFi faces significant challenges. Many protocols are forks of existing ones, attempting to "vampire attack" incumbents without offering real innovation. This not only fragments liquidity and users but also dilutes the overall effectiveness of the ecosystem.
+스마트 컨트랙트 위험은 비교적 단순히 정리하면 “해킹 가능”이며, custodian이 악의적으로 행동하거나 실수를 할 수 있다는 점입니다. 경제적 위험은 더 복잡하며 각 DeFi 기본 요소나 프로토콜에 따라 다릅니다. 예를 들어 대출 시장의 위험은 청산(시장 오라클 부정확 시 잘못된 청산)이며, DEX 유동성 제공의 위험은 비영구 손실입니다. 스테이블코인이나 리퀴드 스테이킹에서는 주로 페그 유지가 핵심 위험입니다.
 
-Liquidity is essential for most protocols. While they may function well in a booming market, they often degrade significantly during downturns. Most DeFi protocols are not self-sufficient and tend to work only when usage is incentivized, either because users are not genuinely interested in the product or because the costs outweigh the gains.
+DeFi 프로토콜을 사용하기 전에 모든 위험을 이해하는 것이 중요합니다. 그 외에도 DeFi는 몇 가지 큰 도전을 마주하고 있습니다. 많은 프로토콜은 기존 프로토콜의 포크이며, 실제 혁신 없이 incumbents를 “흡혈”하려고 합니다. 이는 유동성과 사용자 기반을 분산시키며 생태계 전체 효율성을 희석합니다.
 
-While DeFi shows some product-market fit, its future remains uncertain. It could evolve into a compelling piece of global infrastructure, which is the most likely outcome, or remain a niche market for a select group of users.
+유동성은 대부분 프로토콜에 필수입니다. 호황 시에는 잘 동작하지만 하락세에서는 크게 악화됩니다. 대부분의 DeFi 프로토콜은 자체적으로 지속 가능하지 않으며, 사용자가 실제로 제품에 관심이 없거나 비용이 이득보다 크면 운영이 어려워집니다.
 
-One significant challenge for DeFi is regulation. The regulatory environment varies greatly across countries and regulatory bodies, with most regulators opposing a fully decentralized system. While regulators cannot directly stop such systems—if a smart contract is immutable and deployed on chain, regulators cannot intervene directly—they can target developers and users, making it difficult for them to use these smart contracts.
+DeFi는 어느 정도 시장 적합성을 보였지만 미래는 불확실합니다. 전 세계 인프라가 될 수도 있고, 특정 사용자 그룹만을 위한 틈새 시장으로 남아 있을 수 있습니다.
 
-A case in point is Tornado Cash, whose developer, Alexey Pertsev, was jailed for 64 months in the Netherlands. He was arrested in August 2022 on charges of money laundering, following the US Department of the Treasury's blocklisting of Tornado Cash for its alleged use by the North Korean hacking group Lazarus to launder illicit funds. The Tornado Cash protocol remains available, but its liquidity has significantly decreased, leading to a poorer user experience. Additionally, addresses using Tornado Cash are flagged on centralized exchanges, complicating its use.
+규제는 DeFi에게 큰 도전입니다. 각국 및 규제 기관마다 환경이 크게 다르며 대부분은 완전히 탈중앙화된 시스템에 반대합니다. 스마트 컨트랙트가 불변하고 체인에 배포되면 직접적으로 규제가 개입하기 어렵지만, 개발자와 사용자를 대상으로 조치를 취해 활용을 어렵게 만들 수 있습니다.
 
-Similar situations are occurring in other ecosystems. For example, developers of the Samourai Wallet have also faced legal actions. This pattern illustrates that while regulators cannot attack the blockchain itself, they can target its users and developers.
+예를 들어 Tornado Cash의 개발자인 Alexey Pertsev는 네덜란드에서 64개월 동안 구금되었습니다. 그는 2022년 8월 미국 재무부가 Tornado Cash를 북한 해킹 그룹 Lazarus가 불법 자금을 세탁하는 데 사용했다고 주장해 블록리스트에 올린 뒤 체포됐습니다. Tornado Cash 프로토콜은 여전히 존재하지만 유동성이 크게 감소해 사용자 경험이 나빠졌고, 중앙형 거래소에서 Tornado Cash 주소가 표시돼 활용이 복잡해졌습니다.
 
-> **Note**  
+다른 생태계에서도 비슷한 상황이 발생하고 있습니다. 예를 들어 Samourai Wallet 개발자도 법적 조치를 받았습니다. 이는 규제 기관이 블록체인을 직접 공격할 수 없지만, 사용자와 개발자를 대상으로 할 수 있다는 패턴을 보여줍니다.
+
+> **참고**  
 >
-> Although the authors of this book may not have the legal expertise to fully understand the cases involving Samourai Wallet or Tornado Cash and other similar instances, we do not support legal actions taken against individuals for writing decentralized code. Code should remain free, and the creator of a tool should not be punished for its misuse by others. Hopefully, no more developers will have to face such unjust consequences.
+> 이 책 저자는 Samourai Wallet이나 Tornado Cash 등과 같은 사례를 완전히 이해할 법적 전문성을 갖추지 못했으나, 분산형 코드를 작성한 개인에 대한 법적 조치를 지지하지 않습니다. 코드는 자유여야 하며, 도구 제작자가 다른 사람의 부당 사용으로 인해 처벌받아서는 안 됩니다. 앞으로 더 많은 개발자들이 불공정한 결과를 겪지 않길 바랍니다.
 
-## Conclusion
+## 결론
 
-DeFi enables users to be more flexible with their money, creating new opportunities and innovative financial primitives, such as flash loans. As an emerging market within the crypto space, DeFi is rapidly developing but has yet to find a proper market fit beyond token exchanges, stablecoins, and derivative creation.
+DeFi는 사용자에게 자금에 대한 유연성을 제공하며, 플래시 대출 같은 새로운 기회와 혁신적인 금융 기본 요소를 창출합니다. 암호화폐 공간에서 떠오르는 시장으로서 DeFi는 빠르게 발전하고 있지만, 토큰 교환, 스테이블코인, 파생상품 생성 외에는 아직 완전한 시장 적합성을 찾지 못했습니다.
