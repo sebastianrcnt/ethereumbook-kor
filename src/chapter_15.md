@@ -1,676 +1,617 @@
-# Chapter 15. Consensus
+# Chapter 15. 합의
 
-Throughout this book we have talked about *consensus rules*—the rules that everyone must agree to for the system to operate in a decentralized yet deterministic manner. In computer science, the term *consensus* predates blockchains and is related to the broader problem of synchronizing state in distributed systems, such that different participants in a distributed system all (eventually) agree on a single system-wide state. This is called *reaching consensus*.
+이 책 전체에서 우리는 **합의 규칙**에 대해 이야기했어요—시스템이 탈중앙화되면서도 결정론적으로 작동하려면 모두가 동의해야 하는 규칙이죠. 컴퓨터 과학에서는 *합의*라는 용어가 블록체인보다 훨씬 오래됐고, 분산 시스템에서 상태를 동기화하는 더 넓은 문제와 관련돼 있어요. 서로 다른 참여자들이 결국 같은 전역 상태에 동의하도록 만드는 것이 **합의 도달**이라고 부릅니다.
 
-When it comes to the core functions of decentralized record keeping and verification, it can become problematic to rely on trust alone to ensure that information derived from state updates is correct. This rather general challenge is particularly pronounced in decentralized networks because there is no central entity to decide what is true. The lack of a central decision-making entity is one of the main attractions of blockchain platforms because of the resulting capacity to resist censorship and the lack of dependence on authority for permission to access information. However, these benefits come at a cost: without a trusted arbitrator, any disagreements, deceptions, or differences need to be reconciled using other means. Consensus algorithms are the mechanism used to reconcile security and decentralization.
+분산 기록 보관과 검증의 핵심 기능을 다룰 때, 신뢰만으로 정보가 정확하다고 보장하기는 어려워져요. 이 일반적인 문제는 탈중앙화 네트워크에서 특히 두드러집니다—진실을 결정할 중앙 기관이 없으니까요. 중앙 의사결정자가 없다는 점은 블록체인 플랫폼의 주요 매력 중 하나이며, 검열 저항성과 권한 없이 정보를 접근할 수 있는 능력을 제공합니다. 하지만 이 장점에는 비용이 따릅니다: 신뢰할 만한 중재자가 없다면, 불일치나 사기, 차이를 다른 방법으로 조정해야 해요. 합의 알고리즘은 보안과 탈중앙화를 조화시키는 메커니즘입니다.
 
-In blockchains, consensus is a critical property of the system. Simply put, there is money at stake! So in the context of blockchains, consensus is about being able to arrive at a common state while maintaining decentralization. In other words, consensus is intended to produce a system of strict rules without rulers. There is no one person, organization, or group "in charge"; rather, power and control are diffused across a broad network of participants whose self-interest is served by following the rules and behaving honestly.
+블록체인에서 합의는 핵심 속성이에요. 간단히 말해, 돈이 걸려있거든요! 그래서 블록체인의 맥락에서는 합의가 탈중앙화를 유지하면서 공통 상태에 도달하는 것과 관련돼 있어요. 다시 말하면, 합의는 통치자가 없는 엄격한 규칙 체계를 만들려고 해요. 한 사람도, 조직도, 그룹도 “책임자”가 없고, 대신 권력과 통제는 참여자의 광범위한 네트워크에 분산돼서, 그들의 이익이 규칙을 따르고 정직하게 행동하도록 돕습니다.
 
-The ability to come to consensus across a distributed network, under adversarial conditions, without centralizing control is the core principle of all open, public blockchains. To address this challenge and maintain the valued property of decentralization, the community continues to experiment with different models of consensus. This chapter explores these consensus models and their expected impact on smart contract blockchains such as Ethereum.
+**분산 네트워크에서 적대적 상황에서도 중앙 집중화 없이 합의에 도달하는 능력**은 모든 공개 블록체인의 핵심 원리예요. 이 과제를 해결하고 탈중앙화라는 소중한 속성을 유지하기 위해, 커뮤니티는 계속해서 다양한 합의 모델을 실험하고 있어요. 이번 장에서는 이러한 합의 모델과 그들이 이더리움 같은 스마트 계약 블록체인에 미칠 기대 효과를 살펴볼 거예요.
 
-> **Note**  
->
-> While consensus algorithms are an important part of how blockchains work, they operate at a foundational layer, far below the abstraction of smart contracts. In other words, most of the details of consensus are hidden from the writers of smart contracts. You don't need to know how they work to use Ethereum, any more than you need to know how routing works to use the internet.
+> **참고**  
+> 
+> 합의 알고리즘은 블록체인이 어떻게 동작하는지 이해하는 데 중요한 부분이지만, 스마트 계약 추상화 아래 아주 낮은 수준에서 작동해요. 즉, 대부분의 세부 사항은 스마트 계약 작성자에게 숨겨져 있어요. 이더리움을 사용하려면 합의가 어떻게 되는지 알 필요 없어요—인터넷을 사용하려면 라우팅이 어떻게 되는지 알 필요 없는 것과 마찬가지죠.
 
-## Principles of Consensus
+## 합의 원칙
 
-In blockchain technology, particularly within Ethereum, understanding the principles of consensus helps us make sense of how the network maintains its integrity and operates effectively. To get a clearer picture of how it all works, let's walk through the core ideas.
+블록체인 기술, 특히 이더리움에서 **합의 원칙**을 이해하면 네트워크가 무결성을 유지하고 효과적으로 작동하는 방식을 파악할 수 있어요. 전체 그림을 명확히 하기 위해 핵심 아이디어를 함께 살펴볼게요.
 
-### Safety
+### 안전성 (Safety)
 
-In the context of consensus mechanisms, *safety* is about ensuring that the network consistently agrees on the blockchain's current state without error. This means avoiding problems like double-spending and transaction conflicts, maintaining consistency across the network. In a safe system, every node has an identical view of the history of the chain, effectively behaving like a centralized implementation that executes operations atomically one at a time.
+합의 메커니즘에서 **안전성**은 네트워크가 블록체인의 현재 상태에 일관되게 동의하도록 보장하는 것과 관련돼 있어요. 이는 이중 지불이나 트랜잭션 충돌 같은 문제를 피하고, 네트워크 전반에 걸쳐 일관성을 유지한다는 의미예요. 안전한 시스템에서는 모든 노드가 체인의 역사에 대해 동일한 시각을 갖고, 마치 중앙집중식 구현이 원자적으로 한 번에 하나씩 작업을 실행하는 것처럼 행동해요.
 
-### Finality
+### 최종성 (Finality)
 
-*Finality* is one of the most important safety features in Ethereum's consensus mechanism. It marks the point at which transactions are considered complete and irreversible, ensuring that once a transaction has been added to the blockchain, it cannot be altered or removed. This irreversible nature of transactions instills a high level of trust in the system, providing certainty to users that their transactions are permanently recorded.
+**최종성**은 이더리움 합의 메커니즘에서 가장 중요한 안전 기능 중 하나예요. 이는 트랜잭션이 블록체인에 추가되면 더 이상 변경하거나 제거할 수 없다는 시점을 표시해요. 즉, 한 번 최종화된 트랜잭션은 영구적으로 기록돼서 사용자에게 높은 신뢰를 제공해요.
 
-Basically, finality puts the idea of safety into action, turning it from just a concept into something practical. It ensures that even though different parts of the network might have their own local views, there exists a point of irrevocable agreement that makes the chain's history fixed and unchangeable.
+간단히 말하면, 최종성은 안전성을 실천으로 옮기는 것이에요—개념이 아니라 실제로 적용되는 것이죠. 네트워크의 다른 부분이 각각 독자적인 로컬 시각을 가질 수 있어도, **불가역적 합의**라는 포인트가 존재해 체인의 역사와 상태를 고정시켜줘요.
 
-### Liveness
+### 생존성 (Liveness)
 
-While safety ensures that nothing bad happens on the network, *liveness* guarantees that something good always happens, eventually. In other words, the Ethereum network will continue to process transactions and add new blocks, come what may.
+안전성이 네트워크에서 나쁜 일이 일어나지 않도록 보장한다면, **생존성**은 좋은 일이 항상 일어나도록 보장해요. 다시 말하면, 이더리움 네트워크는 트랜잭션을 계속 처리하고 새로운 블록을 추가할 거예요.
 
-From another perspective, liveness can also be understood in terms of availability. In practical terms, this means that whenever we submit a valid transaction to a node that is acting honestly within the network, we can expect the transaction to be included in a forthcoming block that contributes to the extension of the blockchain. This expectation of transaction inclusion and processing is necessary to achieve user trust and the overall efficacy of the Ethereum platform.
+다른 관점에서 보면 생존성은 가용성과도 연결돼 있어요. 실질적으로, 우리는 정직하게 행동하는 노드에 유효한 트랜잭션을 제출하면, 그 트랜잭션이 앞으로 올 블록에 포함되어 체인을 확장할 것이라고 기대할 수 있죠. 이 기대는 사용자 신뢰와 이더리움 플랫폼의 전반적인 효율성을 달성하기 위해 필요해요.
 
-### Block Trees and Forking
+### 블록 트리와 포크 (Block Trees and Forking)
 
-Designing a consensus protocol that is both safe and live under all circumstances is not possible—you have to favor one of the two. While the Ethereum consensus protocol offers both safety and liveness under good network conditions, it prioritizes liveness when things get chaotic. It does so through the concept of forking.
+모든 상황에서 안전하고 생존성이 있는 합의 프로토콜을 설계하는 것은 불가능해요—둘 중 하나를 우선시해야 해요. 이더리움 합의 프로토콜은 좋은 네트워크 조건에서는 안전성과 생존성을 모두 제공하지만, 혼란스러운 상황이 발생하면 **포크** 개념을 통해 생존성을 우선시해요.
 
-In a blockchain, every block (except for the special Genesis block) builds on and points to a parent block. Thus, we end up with a chain of blocks: a blockchain. On chains implementing forking consensus protocols, this linear condition is often not the case in practice: in real-world conditions, we can end up with something more like a block tree—as you can see in Figure 15-1—than a blockchain, and the goal of the consensus protocol is for all nodes on the network to agree on the same linear sequence of blocks.
+블록체인에서 모든 블록(특수 Genesis 블록 제외)은 부모 블록을 가리키며 연결돼요. 그래서 우리는 블록 체인을 얻게 되죠. 포킹 합의 프로토콜이 구현된 체인에서는 이 선형 조건이 실제로는 항상 성립하지 않아요—실제 상황에서는 **블록 트리** 같은 구조가 나타나고, 목표는 네트워크 상의 모든 노드가 동일한 선형 블록 순서에 동의하도록 하는 거예요.
 
 ![Block tree structure](images/ch15/maet_1501.png)
 
-Figure 15-1. Block tree structure
+*그림 15-1. 블록 트리 구조*
 
-The various branches in the block tree are called *forks*. Forks happen naturally as a consequence of network and processing delays or client faults and malicious client behavior.
+블록 트리에서 각 가지를 **포크**라고 부르죠. 포크는 네트워크 지연, 처리 지연, 클라이언트 결함 및 악의적 행동으로 자연스럽게 발생해요.
 
-If we were to consult nodes that are following different forks, they would give us different answers regarding the state of the system. Here lies the resilience of forking consensus protocols: instead of stopping entirely under unfavorable conditions, they fork. Eventually, we want every correct node on the network to agree on an identical linear view of history and hence a common view of the state of the system. It is the role of the protocol's *fork choice rule* to bring about this agreement: given a block tree and some decision criteria, the fork choice rule is designed to select, from all the available branches, the one that is most likely to eventually end up in the final linear, canonical chain. The downside of a forking protocol is that nodes following branches that don't end up in the canonical chain will eventually have to rewind their view of reality, reversing any recent transactions they have processed, in order to get onto the correct branch. This is called a *reorg* or *reversion* and is disruptive, so protocols aim to minimize it as much as possible.
+다른 포크를 따르는 노드들을 조회하면 시스템 상태에 대해 서로 다른 답을 줄 거예요. 여기서 **포킹 합의 프로토콜**이 보여주는 회복력은 불리한 상황에서도 완전히 멈추지 않고 포크한다는 점이에요. 결국 우리는 네트워크 상의 모든 올바른 노드가 동일한 선형 역사와 시스템 상태에 대한 공통 시각을 갖도록 하고 싶어요. 프로토콜의 **포크 선택 규칙**이 이 합의를 가져오는 역할을 해요: 블록 트리와 일부 결정 기준이 주어지면, 포크 선택 규칙은 모든 가용 가지 중에서 결국 최종 선형 체인에 포함될 가능성이 가장 높은 것을 선택하도록 설계돼 있어요. 포킹 프로토콜의 단점은 **포크를 따르는 노드가 최종 체인에 포함되지 않는 분기를 따라야 할 때, 그들은 현실을 재조정하고 최근 처리한 트랜잭션을 되돌려야 한다는 거예요**—이를 *reorg* 또는 *reversion*이라고 부르며 방해가 되기 때문에 프로토콜은 이를 최소화하려고 해요.
 
-Now we can understand the power of finality in Ethereum consensus protocol: forking is a powerful means to liveness, but for the network to be usable, this flexibility must be balanced by some safety guarantees.
+이제 우리는 이더리움 합의 프로토콜에서 최종성의 힘을 이해할 수 있어요: 포크는 생존성을 위한 강력한 수단이지만, 네트워크를 사용 가능하게 만들려면 그 유연성이 일부 안전 보장을 통해 균형을 맞춰야 해요.
 
-## Consensus via Proof of Work
+## Proof of Work (PoW) 를 통한 합의
 
-The creator of the original blockchain, Bitcoin, invented a consensus algorithm based on *proof of work* (PoW). Arguably, PoW is the most important invention underpinning Bitcoin. The colloquial term for PoW is *mining*, which creates a misunderstanding about the primary purpose of consensus. Often, people assume that the purpose of mining is to create new currency since the purpose of real-world mining is to extract precious metals or other resources. Rather, the real purpose of mining (and all other consensus models) is to secure the blockchain while keeping control over the system decentralized and diffused across as many participants as possible. The reward of newly minted currency is an incentive to those who contribute to the security of the system: a means to an end. In that sense, the reward is the means, and decentralized security is the end.
+원래 블록체인인 비트코인의 창시자는 **Proof of Work**(PoW)를 기반으로 한 합의 알고리즘을 발명했어요. PoW는 비트코인을 뒷받침하는 가장 중요한 발명이라고 할 수 있어요. PoW에 대한 구어적 용어는 *채굴*이지만, 이는 합의의 주요 목적을 오해하게 만들 수 있어요. 사람들은 채굴이 새로운 화폐를 만드는 것이라 생각하지만, 실제로 채굴(및 다른 모든 합의 모델)의 주된 목적은 블록체인을 보호하면서 시스템 제어를 가능한 한 많은 참여자에게 분산시키는 것이에요. 새로 발행된 화폐 보상은 보안에 기여한 사람들에게 인센티브를 제공하는 수단일 뿐이에요—수단이 아니라 목표가 바로 **탈중앙화된 보안**이에요.
 
-In PoW consensus, there is also a corresponding "punishment," which is the cost of energy required to participate in mining. This significant energy consumption isn't a flaw; it's key to a deliberate security and incentive design. If participants do not follow the rules and earn the reward, they risk the funds they have already spent on electricity to mine. Thus, PoW consensus is a careful balance of risk and reward that drives participants to behave honestly out of self-interest.
+PoW 합의에서는 "벌"도 존재해요—마이닝에 참여하기 위해 필요한 에너지 비용이죠. 이 큰 에너지 소비는 결함이 아니에요; 오히려 의도적인 보안 및 인센티브 설계의 핵심이에요. 참가자가 규칙을 따르지 못하고 보상을 얻지 못하면, 이미 전기료로 쓴 돈을 잃게 되거든요. 따라서 PoW 합의는 위험과 보상의 균형이 잘 맞춰져 있어 참여자들이 이익에 따라 정직하게 행동하도록 유도해요.
 
-Ethereum started as a PoW blockchain following Bitcoin's example, in that it used a PoW algorithm with the same basic incentive system for the same basic goal: securing the blockchain while decentralizing control. Ethereum's PoW algorithm was slightly different from Bitcoin's and was called *Ethash*.
+이더리움은 비트코인의 예를 따르며 **PoW 블록체인**으로 시작했어요—같은 기본 인센티브 시스템을 사용하면서 블록체인을 보호하고 제어를 분산시키는 동일한 목표를 갖고 있었죠. 이더리움의 PoW 알고리즘은 비트코인과 약간 다르고 **Ethash**라고 불렸어요.
 
-### Ethash: Ethereum's PoW Algorithm
+### Ethash: 이더리움의 PoW 알고리즘
 
-Before Ethereum transitioned to PoS, it relied on a PoW algorithm called Ethash. It used an evolution of the Dagger-Hashimoto algorithm, which is a combination of Vitalik Buterin's Dagger algorithm and Thaddeus Dryja's Hashimoto algorithm. Ethash is dependent on the generation and analysis of a large dataset, known as a *directed acyclic graph* (or, more simply, "the DAG"). The DAG had an initial size of about 1 GB and continued to slowly and linearly grow, being updated once every epoch (30,000 blocks, or roughly 125 hours).
+이더리움이 PoS로 전환하기 전에, **Ethash**라는 PoW 알고리즘에 의존했어요. 이는 Dagger-Hashimoto 알고리즘의 진화 버전으로, Vitalik Buterin의 Dagger와 Thaddeus Dryja의 Hashimoto를 결합한 것이죠. Ethash는 *directed acyclic graph* (DAG)라고 불리는 대규모 데이터셋을 생성하고 분석하는 데 의존해요. DAG는 초기 크기가 약 1GB였고, 매 epoch(30,000 블록 또는 약 125시간마다)마다 점진적으로 늘어났어요.
 
-The purpose of the DAG was to make the Ethash PoW algorithm dependent on maintaining a large, frequently accessed data structure. This in turn was intended to make Ethash ASIC resistant, which means that it was more difficult to make application-specific integrated circuit (ASIC) mining equipment that is orders of magnitude faster than a fast GPU. Ethereum's founders wanted to avoid centralization in PoW mining, where those with access to specialized silicon-fabrication factories and big budgets could dominate the mining infrastructure and undermine the security of the consensus algorithm.
+DAG의 목적은 Ethash PoW 알고리즘이 대규모 자주 접근되는 데이터 구조를 유지해야 한다는 것에 의존하도록 만드는 것이었어요. 이는 **ASIC 저항성**을 목표로 했는데, ASIC(특정 용도용 집적 회로) 마이닝 장비가 GPU보다 훨씬 빠른 경우 중앙 집중화를 방지하려는 목적이었죠.
 
-Using consumer-level GPUs to carry out the PoW on the Ethereum network meant that more people around the world could participate in the mining process. A larger number of independent miners meant that the mining power was more decentralized, which meant a situation like in Bitcoin, where much of the mining power is concentrated in the hands of a few large, industrial mining operations, could be avoided. The downside of the use of GPUs for mining was that it precipitated a worldwide shortage of GPUs in 2017, causing their price to skyrocket and an outcry from gamers. This led to purchase restrictions at retailers, limiting buyers to one or two GPUs per customer.
+소비자 수준의 GPU를 사용해 이더리움 네트워크에서 PoW를 수행하면 전 세계적으로 더 많은 사람들이 채굴 과정에 참여할 수 있어요. 독립적인 마이너가 많아질수록 **마이닝 파워**가 분산되고, 비트코인처럼 몇몇 대형 산업 마이닝 운영자에게 집중되는 상황을 피할 수 있죠. GPU를 사용한 채굴의 단점은 2017년에 전 세계적으로 GPU 부족 현상을 초래해 가격이 급등하고 게이머들 사이에서 분노가 일어났다는 거예요—리테일러는 구매 제한을 두고 고객당 한두 개의 GPU만 구입하도록 했죠.
 
-Until 2017, the threat of ASIC miners on the Ethereum network was largely non-existent. Using ASICs for Ethereum required the design, manufacture, and distribution of highly customized hardware. Producing them required a considerable investment of time and money. The Ethereum developers' long-expressed plans to move to a PoS consensus algorithm, now realized, likely kept ASIC suppliers from targeting the Ethereum network for a long time.
+2017년 이전까지 이더리움 네트워크에서 ASIC 마이너 위협은 거의 없었어요. 이더리움 개발자들은 PoS 합의 알고리즘으로 전환할 계획을 이미 오래전부터 언급했기 때문에 ASIC 공급업체가 장기간에 걸쳐 이더리움을 겨냥하지 못하도록 했죠.
 
-## Consensus via Proof of Stake
+## Proof of Stake (PoS) 를 통한 합의
 
-Historically, PoW wasn't the first consensus algorithm to be proposed. Before it, many researchers explored ideas based on financial or reputational stake. Even earlier still, some of the first consensus models were permissioned: validators were selected through authority or identity, not open competition. *Practical Byzantine fault tolerance* (PBFT), for example, requires a fixed or curated set of validators, a model that still underlies many traditional distributed systems today.
+역사적으로, PoW는 최초로 제안된 합의 알고리즘이 아니었어요. 그 이전에도 많은 연구자들이 **금전적 또는 평판 기반 스테이크**를 활용한 아이디어를 탐구했죠. 훨씬 더 오래 전에는 일부 최초의 합의 모델이 **허가형**이었어요—검증자는 권위나 신원에 따라 선택되며 공개 경쟁이 아니었죠. 예를 들어, *Practical Byzantine Fault Tolerance* (PBFT)는 고정된 또는 선별된 검증자 집합을 필요로 해요—오늘날에도 많은 전통적인 분산 시스템에서 사용되는 모델이에요.
 
-One of the major breakthroughs of PoW-based consensus was that it made participation permissionless: anyone with the available computational power could contribute and get rewarded, without needing approval to join. That was a huge win for decentralization. In a sense, PoW was invented as a permissionless alternative to the more closed models.
+PoW 기반 합의의 주요 혁신 중 하나는 참여를 **허가 없이** 가능하게 만든 것이었어요: 계산 능력이 있는 누구나 참여하고 보상을 받을 수 있었죠. 이는 탈중앙화에 큰 승리였어요. PoW가 허가형 모델에 대한 무제한 대안으로 발명되었다고 할 수 있어요.
 
-Following Bitcoin's success, many blockchains adopted PoW. But the explosion of research into consensus reignited interest in PoS and led to major advances. From the beginning, Ethereum's founders hoped to eventually migrate to PoS. In fact, Ethereum's original PoW chain included a built-in handicap, the so-called *difficulty bomb*, which was designed to slowly make mining harder over time, forcing the system toward the eventual transition. Ethereum's version of PoS, while permissionless, has some conceptual roots in the earlier authority-based systems: here, identity and participation come from putting down stake. But since anyone with ETH can do so, it preserves the open-access spirit of Nakamoto's design.
+비트코인의 성공 이후, 많은 블록체인이 PoW를 채택했어요. 하지만 합의 연구가 폭발하면서 PoS에 대한 관심이 다시 부활했고, 주요 진전이 이루어졌죠. 이더리움 창시자들은 결국 **PoS**로 전환할 계획을 갖고 있었어요—실제로 이더리움의 원래 PoW 체인은 “difficulty bomb”이라는 내장 핸디캡을 포함하고 있어요. 이는 시간이 지남에 따라 채굴이 점점 어려워지도록 설계돼서 시스템이 궁극적으로 전환하도록 강제해요.
 
-In general, a PoS algorithm works as follows. The blockchain keeps track of a set of validators, and anyone who holds the blockchain's base cryptocurrency (ether, in Ethereum's case) can become a validator by sending a special type of transaction that locks up their ether into a deposit. Validators take turns proposing and voting on the next valid block, and the weight of each validator's vote depends on the size of their deposit (i.e., stake). Validators earn small rewards proportional to their stake when they participate correctly in the protocol. If they make mistakes, like publishing inaccurate or late attestations, they can incur small penalties, roughly on the same scale as the rewards. But there's a much more serious consequence called *slashing*, which happens only when a validator is provably malicious—for example, by publishing conflicting attestations or equivocating blocks. Thus, PoS forces validators to act honestly and follow the consensus rules via a system of reward and punishment. The major difference between PoS and PoW is that the punishment in PoS is intrinsic to the blockchain (e.g., loss of staked ether), whereas in PoW the punishment is extrinsic (e.g., loss of funds spent on electricity).
+이더리움의 **PoS**는 허가 없이도, 스테이크를 걸어 참여할 수 있는 개념적 뿌리를 갖고 있어요—여기서는 이더(ether)를 보유한 누구나 검증자가 될 수 있죠. 이는 비트코인과 같은 허가형 시스템의 일부 개념을 유지하면서도 **개방 접근** 정신을 보존해요.
 
-Since Ethereum was launched in 2015, there was the intention to transition to a PoS consensus protocol. The first concrete step in that direction came on December 1, 2020, with the launch of the Beacon Chain. Initially, the Beacon Chain was an empty blockchain that let everyone become a validator by depositing 32 ETH into a specific deposit contract and handled only its internal consensus of validators and their respective balances. At that time, the Ethereum blockchain was still using Ethash as its consensus protocol.
+일반적으로 PoS 알고리즘은 다음과 같이 작동해요. 블록체인은 검증자 집합을 추적하고, 이더를 예치(예: 32 ETH)를 통해 스테이크를 걸어 검증자가 될 수 있어요. 검증자는 차례대로 **다음 유효한 블록**을 제안하고 투표하며, 각 검증자의 투표 가중치는 그들의 예치금(스테이크) 크기에 비례해요. 검증자는 프로토콜에 올바르게 참여하면 스테이크 비율에 따라 소액 보상을 얻고, 부정확하거나 늦은 증언을 하면 같은 규모의 작은 벌금을 받을 수 있어요—하지만 가장 심각한 결과는 **슬래싱**이 발생해요. 슬래싱은 검증자가 명백히 악의적일 때만 일어나죠—예를 들어, 서로 다른 증언을 게시하거나 블록을 이분화하는 경우에요. 따라서 PoS는 보상과 처벌 시스템을 통해 검증자들이 정직하게 행동하도록 강제해요.
 
-On September 15, 2022, the Merge hard fork occurred, and the Beacon Chain, with its own set of validators, extended its PoS-based consensus protocol to the Ethereum main blockchain, effectively ending the use of Ethash. However, some limitations remained, including the inability for validators to withdraw their capital and leave the validator set. These issues were fully resolved on April 12, 2023, with the Shapella update, which completed the work of transitioning Ethereum from a PoW to a PoS consensus protocol.
+PoW와 달리 PoS에서 벌은 **블록체인 자체**에 내재돼 있어요(예: 스테이크 잃음). 반면 PoW에서는 벌이 **외부적**이에요(전기료 지출).
 
-The PoS consensus protocol used by Ethereum is called *Gasper*. In the following sections, we will explore how it works, starting with basic terminology and progressing to the fork choice rule (LMD-GHOST) and finality gadget (Casper FFG). We will conclude with an example to clarify the theoretical concepts that we have discussed.
+이더리움이 2015년에 출시되면서 PoS 합의 프로토콜로 전환할 의도가 있었어요. 첫 구체적인 단계는 2020년 12월 1일에 **Beacon Chain**을 시작하면서 등장했어요—빈 블록체인이었고, 누구나 32 ETH를 특정 예치 계약에 넣어 검증자가 될 수 있었죠. 이때 이더리움은 여전히 Ethash를 합의 프로토콜로 사용하고 있었어요.
 
-## PoS Terminology
+2022년 9월 15일에 **Merge** 하드 포크가 발생했고, Beacon Chain과 자체 검증자 집합이 PoS 기반 합의를 이더리움 메인 블록체인에 확장했어요—결국 Ethash 사용을 종료한 거예요. 하지만 일부 제한은 여전히 있었죠—검증자가 자본을 인출하고 검증자 세트에서 나갈 수 없었어요. 이는 2023년 4월 12일의 **Shapella** 업데이트로 완전히 해결돼서 이더리움이 PoW에서 PoS 합의 프로토콜로 전환되는 작업이 완료됐어요.
 
-In this section, we'll focus on Ethereum PoS consensus components and terminology.
+이더리움이 사용하는 PoS 합의 프로토콜은 **Gasper**라고 불려요. 다음 섹션에서는 기본 용어부터 시작해 LMD‑GHOST(포크 선택 규칙)와 최종성 장치(Casper FFG)를 탐구하고, 이론적 개념을 명확히 하기 위해 예시를 제공할 거예요.
 
-### Nodes and Validators
+## PoS 용어
 
-*Nodes* form the backbone of the Ethereum network. They communicate with one another and are responsible for validating consensus adherence. *Validators*, which are responsible for proposing and voting on new blocks, are attached to these nodes, but despite what the name might imply, they don't actually validate the blocks themselves. Instead, it's the node software that checks whether blocks and transactions follow the protocol rules. A single node can host multiple validators, and validator duties are carried out by running both an execution client and a consensus client. We'll see exactly what those duties are in the next sections.
+이 섹션에서는 이더리움 PoS 합의 구성 요소와 용어에 집중해요.
 
-One peculiar property of PoS to keep in mind is that the set of active validators is known: this will be key to achieving finality since we can identify when we have reached a majority vote of participants.
+### 노드와 검증자
 
-### Blocks and Attestations
+**노드**는 이더리움 네트워크의 중추를 이루어요. 서로 통신하며 합의 준수를 검증하는 책임이 있죠. **검증자**는 새로운 블록을 제안하고 투표하는 역할을 하지만, 실제로 블록 자체를 검증하지 않아요—블록과 트랜잭션이 프로토콜 규칙을 따르는지 여부를 확인하는 것은 노드 소프트웨어의 일입니다. 한 노드는 여러 검증자를 호스팅할 수 있고, 검증자 의무는 실행 클라이언트와 합의 클라이언트를 모두 실행함으로써 수행돼요. 다음 섹션에서 그 구체적인 역할을 살펴볼게요.
 
-Strict time management is an important property of Ethereum's PoS. The two key intervals in PoS are the *slot*, which is exactly 12 seconds, and the *epoch*, which spans 32 slots.
+PoS를 기억해야 할 특이한 점은 **활성 검증자 집합**이 알려져 있다는 거예요—이는 최종성을 달성하는 데 핵심적이에요, 왜냐하면 우리는 다수의 투표가 이루어졌는지 식별할 수 있기 때문이죠.
 
-At every slot, exactly one validator is selected to propose a block. During every epoch, every validator gets to share its view of the world exactly once, in the form of an *attestation*. An attestation contains votes for the head of the chain that will be used by the LMD-GHOST protocol and votes for checkpoints that will be used by the Casper FFG protocol, where FFG stands for "Friendly Finality Gadget." Attestation sharing is bandwidth intensive, so it's distributed across each epoch instead of every block to spread the necessary workload and keep it manageable.
+### 블록과 증언
 
-The protocol incentivizes block and attestation production and accuracy via a system of rewards and penalties for validators, but it tolerates empty slots and attestations, which can happen for both organic (e.g., a node went offline) and profit-driven reasons. We will expand on this in the later section "Timing Games".
+정확한 시간 관리는 이더리움 PoS에서 중요한 속성이에요. 두 가지 주요 간격은 **슬롯**(정확히 12초)과 **epoch**(32 슬롯으로 구성돼요).
 
-## LMD-GHOST
+각 슬롯마다 정확히 한 명의 검증자가 블록을 제안하도록 선택돼요. 각 epoch마다 모든 검증자는 한 번씩 세계에 대한 시각을 공유해요—이를 **증언(attestation)**이라고 부르죠. 증언은 LMD‑GHOST 프로토콜에서 사용할 체인 헤드를 위한 투표와 Casper FFG 프로토콜에서 사용할 체크포인트를 위한 투표를 포함해요. 증언 공유는 대역폭 집약적이므로, 각 epoch에 걸쳐 배포돼 필요한 작업량을 분산시키고 관리 가능하게 해요.
 
-LMD-GHOST is the main part of the Ethereum consensus protocol: it's the fork choice rule algorithm. It selects the latest block a node should consider valid in its local view of the blockchain. This block is also called the *head of the chain*.
+프로토콜은 블록과 증언 생산 및 정확성을 보상과 벌금 시스템으로 장려하지만, 빈 슬롯과 증언도 허용해요—이는 유기적(예: 노드가 오프라인) 혹은 이익 기반 이유 때문이죠. 나중 섹션인 “Timing Games”에서 이를 더 자세히 다룰게요.
 
-To fully understand how it works, you must know some basic concepts of the Ethereum PoS protocol. In a classic PoW-based consensus protocol, entities responsible for creating new blocks and adding them to the chain (i.e., miners) don't need to adhere to any special requirement. If they publish a block that satisfies the PoW, then it gets accepted by the whole network. In Ethereum's PoS-based consensus protocol, validators must stake a big amount of ETH as collateral—right now, at least 32 ETH—just to enter into the validators set.
+## LMD‑GHOST
 
-As we have previously briefly mentioned, validators have two main duties:
+LMD‑GHOST는 이더리움 합의 프로토콜의 핵심 부분이에요—포크 선택 규칙 알고리즘이죠. 이는 노드가 로컬 블록체인 뷰에서 **유효한 최신 블록**을 선택하도록 해요. 이 블록은 **체인의 헤드**라고도 불려요.
 
-**Block proposing**
+완전히 이해하려면, 이더리움 PoS 프로토콜의 기본 개념 몇 가지를 알아야 해요. 전통적인 PoW 기반 합의에서는 새로운 블록을 만들고 체인에 추가하는 역할(즉, 마이너)은 특별한 요구 사항 없이 수행돼요. PoW가 만족되면 네트워크 전체에서 수락돼요. 반면 이더리움 PoS 기반 합의에서는 검증자가 **스테이크**를 걸어야 해요—현재 최소 32 ETH 이상을 예치해야 검증자 집합에 참여할 수 있어요.
 
-Every slot, a validator is pseudorandomly selected to create and propose the next block for the chain.
+우리가 앞서 간단히 언급했듯이, 검증자는 두 가지 주요 의무가 있어요:
 
-**Creating attestations**
+### 블록 제안
 
-Every slot, a proportion of the validators is selected to publish their votes for the block that they think is the best head of the chain. This vote is then shared to every validator in the form of an attestation.
+각 슬롯마다 **검증자가** 가상적으로 선택돼 체인에 다음 블록을 제안해요.
 
-When a validator votes for a certain block inside an attestation, it's actually assigning it a score. This score is exactly equal to the amount of ETH the validator has staked at the moment they've published the attestation. But there's more: this vote is not only a vote for that block but also a vote for all ancestor blocks that live in the same fork of that selected block, as you can see in Figure 15-2.
+### 증언 생성
+
+각 슬롯마다 **검증자 중 일부**가 자신이 생각하는 최선의 체인 헤드를 위한 투표를 게시하도록 선택돼요. 이 투표는 모든 검증자에게 증언으로 공유돼요.
+
+검증자가 특정 블록에 대해 투표하면, 실제로 그 블록에 점수를 부여해요. 이 점수는 해당 검증자가 증언을 게시할 때 예치한 ETH 양과 정확히 일치해요. 하지만 더 많은 것이 있어요—이 투표는 단지 그 블록뿐 아니라 같은 포크 안에 있는 모든 조상 블록에도 투표하는 거예요(그림 15‑2 참조).
 
 ![Vote propagation to ancestors](images/ch15/maet_1502.png)
 
-Figure 15-2. Vote propagation to ancestors
+*그림 15-2. 조상에게 투표가 전파되는 모습*
 
-You could say that a vote for a block is propagated back to all its ancestors. To make this concept even clearer, we can assign a score to all branches. A *branch* is the link that connects a block with its parent, as shown in Figure 15-3.
+우리가 말하자면, 한 블록에 대한 투표는 그 블록의 모든 조상으로 전파돼요. 이 개념을 더 명확히 하기 위해 **브랜치**(블록과 부모를 연결하는 링크)에 점수를 부여할 수 있어요—그림 15‑3에서 보이죠.
 
 ![Branch definition](images/ch15/maet_1503.png)
 
-Figure 15-3. Branch definition
+*그림 15-3. 브랜치 정의*
 
-We define the score of a branch to be the sum of the score of the block that roots that branch (block B in Figure 15-3) plus the score of all its direct descendant branches.
+우리는 **브랜치의 점수**를 그 브랜치를 루트하는 블록(예: 그림 15‑3의 B)과 모든 직계 자식 브랜치의 점수를 합산한 값으로 정의해요.
 
-Figure 15-4 shows a chain of blocks where each block has a score equal to 1. The branch connecting E to D has a score exactly equal to the score of block E because there are no descendant blocks. To compute the score of branch D→C, you need to add the score of block D to the score of all descendant branches. In this case, there's only one descendant branch: branch E→D. So it's 1 (score of block D) + 1 (score of branch E→D) = 2. Then we have branch C→B: its score is 1 (score of block C) + 2 (score of branch D→C) = 3. Here, we have a small fork with block C′; we need to assign a score to branch C′→B. Its score is just 1 (score of block C′) because block C′ has no direct descendant. Finally, we have branch B→A; to compute its score, we need to sum 1 (score of block B) + 1 (score of branch C′→B) + 3 (score of branch C→B) = 5.
+그림 15‑4는 각 블록이 점수 1인 체인을 보여줘요. 예를 들어, E→D 브랜치는 E 블록만 있는 경우라서 점수가 1이에요. D→C 브랜치를 계산하려면 D 블록의 점수(1)와 직계 자식 브랜치(E→D)의 점수(1)를 더해 2가 돼요. C′→B 브랜치는 B에 대한 다른 자식이 없으므로 점수가 1이에요. 마지막으로 B→A 브랜치를 계산하려면 B 블록의 점수(1) + C′→B(1) + C→B(3)을 합해 5가 돼요.
 
 ![Branch score calculation example](images/ch15/maet_1504.png)
 
-Figure 15-4. Branch score calculation example
+*그림 15-4. 브랜치 점수 계산 예시*
 
-Figure 15-5 contains a more complex scenario with several forks where each block has a different score. Look at it and make sure you understand how the score of each branch is computed.
+그림 15‑5는 여러 포크를 포함한 더 복잡한 시나리오를 보여줘요—각 블록이 다른 점수를 갖고 있어요. 이 그림을 보면서 각 브랜치의 점수가 어떻게 계산되는지 이해했으면 돼요.
 
-![Complex branch scoring](images/ch15/maet_1505.png)
+마지막 예시 이후에는 **블록의 점수**가 단순히 그 블록에만 영향을 주는 것이 아니라, 모든 조상에도 영향을 미친다는 것을 알 수 있어요—즉, 검증자가 증언(아테스테이션)을 통해 특정 블록을 체인 헤드라고 투표하면, 그 블록의 모든 조상도 올바른 체인의 일부로 간주돼요.
 
-Figure 15-5. Complex branch scoring
+이제 LMD‑GHOST가 실제로 어떻게 동작하는지, 그리고 어떤 규칙으로 블록을 선택하는지를 살펴볼게요. 이름부터 분석해 볼까요? LMD‑GHOST는 두 개의 약어를 조합한 거예요: **latest message driven**(최신 메시지 기반)와 **greediest heaviest observed subtree**(가장 무거운 관측된 서브트리를 탐욕스럽게 선택).
 
-After the last example, it should be clear that the score of a block not only influences that single block but also all its ancestors as it gets propagated back to all previous branches. The idea is that if a validator votes (in the form of an attestation) for a block to be the head of the chain, it's also considering all its ancestors valid and part of the correct chain.
+### 최신 메시지 기반 (Latest Message Driven)
 
-Now, we can finally go into the details of how LMD-GHOST really works and how it selects the block to be considered the head of the chain. Let's start by analyzing its name. LMD-GHOST is made up of two acronyms: *latest message driven* and *greediest heaviest observed subtree*.
+각 블록과 브랜치에 점수를 부여하려면, 각 검증자의 **최신 증언**만을 고려해야 해요. 즉, 같은 검증자 V가 두 개의 증언을 보냈다면, 가장 최근 것만 세고 이전 것은 버려야 해요.
 
-### Latest Message Driven
-
-To assign a score to each block and branch, you need to consider only the most recent attestation of each validator. That means that if you receive two attestations from a validator V, then you don't have to count them twice; you need to check which one is the most recent and discard the other one.
-
-Figure 15-6 shows a validator that publishes an attestation on block B in which they share the fact that they think block B is the head of the chain. Then, at a later time during block F, the validator is selected again to post a new attestation in which they express their preference for block F as the new head of the chain. When that validator posts the new attestation at block F, other validators need to discard the old one (published during block B) and consider only the most recent.
+그림 15‑6은 블록 B에서 증언을 게시한 검증자를 보여줘요—이때 그들은 블록 B가 체인 헤드라고 생각해요. 이후 블록 F에서 같은 검증자가 새 증언을 게시하고, 이제는 블록 F를 체인 헤드로 선호하게 돼요. 이 새로운 증언을 게시하면 다른 검증자들은 이전 증언(B)을 버리고 최신 것(F)만 고려해야 해요.
 
 ![Latest message driven example](images/ch15/maet_1506.png)
 
-Figure 15-6. Latest message driven example
+*그림 15-6. 최신 메시지 기반 예시*
 
-### Greediest Heaviest Observed Subtree
+### 가장 무거운 관측된 서브트리 (Greediest Heaviest Observed Subtree)
 
-GHOST is the key aspect of the fork choice rule. The head block is the block with no further descendants that is part of the fork with the highest vote.
+GHOST는 포크 선택 규칙의 핵심이에요—**가장 높은 투표를 가진 서브트리에서 가장 무거운(가장 큰) 블록을 선택**해요. LMD‑GHOST를 실제 상황에 적용해 보면서 어떻게 동작하는지 이해해 볼게요.
 
-Let's see it in practice to better understand how LMD-GHOST works in a real scenario. Figure 15-7 represents the same scenario we used previously.
+그림 15‑7은 앞서 사용한 동일 시나리오를 나타내요.
 
 ![LMD-GHOST scenario](images/ch15/maet_1507.png)
 
-Figure 15-7. LMD-GHOST scenario
+*그림 15-7. LMD‑GHOST 시나리오*
 
-LMD-GHOST always starts from an initial block that is considered part of the finalized chain. Initially, that's the Genesis block, but with the full PoS-based Ethereum consensus protocol, it keeps getting updated with the last justified checkpoint block—that's terminology that we'll explore in "Casper FFG: The Finality Gadget". It's not crucial if you don't know what a justified checkpoint is yet; you just need to know that there's always a starting block.
+LMD‑GHOST는 항상 **초기 블록**(완전히 확정된 체인의 일부)에서 시작해요—처음에는 Genesis 블록이지만, PoS 기반 이더리움 합의 프로토콜에서는 마지막 정당화된 체크포인트 블록으로 계속 업데이트돼요. 아직 정당화된 체크포인트를 모른다면, 단순히 초기 블록을 사용하면 돼요.
 
-In this example, block A is the initial block. Let's assume we're a validator who needs to cast an attestation or who is selected to propose the next block. We need to run LMD-GHOST to know which block is the head of the chain so that we can publish the attestation accordingly or we can build the next block on top of the correct previous head block. We've already collected other validators' attestations up to now, only considering the most recent one for every validator, following the LMD rule of the protocol. So we have the score of all blocks, made up as the sum of the score that each validator gave to each of them.
+이 예시에서 A 블록은 초기 블록이에요. 우리는 **검증자**가 증언을 게시하거나 다음 블록을 제안하도록 선택되었을 때 LMD‑GHOST를 실행해 헤드 블록(체인 헤드)을 알아내야 해요. 이미 다른 검증자들의 증언을 수집했고, 최신 것만 고려했어요—이제 모든 블록의 점수를 계산할 차례에요.
 
-At this point LMD-GHOST works in two steps:
+LMD‑GHOST는 두 단계로 동작해요:
 
-1. It assigns a score to all branches, following the same methodology we explained before by propagating backward the score of each block to all previous branches. Figure 15-8 shows the final scores of all branches.
+1. **브랜치 점수 할당**: 앞서 설명한 방법으로 각 브랜치에 점수를 부여해요. 그림 15‑8은 최종 브랜치 점수를 보여줘요.
+2. **가장 무거운 브랜치 선택**: 초기 블록에서 시작해 GHOST 부분이 가장 높은 점수의 브랜치를 탐욕스럽게 따라가며, 더 이상 자식이 없는 블록에 도달하면 그 블록을 체인 헤드로 반환해요.
+
+그림 15‑8은 최종 브랜치 점수를 보여줘요.
 
 ![Branch scores computed](images/ch15/maet_1508.png)
 
-Figure 15-8. Branch scores computed
+*그림 15-8. 브랜치 점수 계산 결과*
 
-2. Then, starting at the initial block, the GHOST part of the protocol greedily proceeds to select the branch with the highest score until it gets to a block with no descendants. That's the head block returned by the LMD-GHOST fork choice rule.
-
-Let's see this running step-by-step in our example. LMD-GHOST starts at initial block A and immediately goes to block B by following branch B→A as there are no alternative branches to choose from, as shown in Figure 15-9.
+다음 단계에서는 LMD‑GHOST가 어떻게 실행되는지 단계별로 살펴볼게요. LMD‑GHOST는 초기 블록 A에서 시작해 바로 B 블록으로 이동해요—대안이 없으니까(그림 15‑9).
 
 ![LMD-GHOST step 1](images/ch15/maet_1509.png)
 
-Figure 15-9. LMD-GHOST step 1
+*그림 15-9. LMD‑GHOST 단계 1*
 
-Now, there are two branches to choose from:
+이제 두 개의 브랜치가 선택 후보에 있어요:
 
-- Branch C→B with a score equal to 8
-- Branch D→B with a score equal to 6
+- C→B 브랜치(점수 8)
+- D→B 브랜치(점수 6)
 
-GHOST greedily selects branch C→B since it's the one with the highest score, as shown in Figure 15-10. Note that it doesn't matter that block D has a higher score than block C because LMD-GHOST doesn't consider the score of a single block but rather the score of the entire fork that block lives in.
+GHOST는 가장 높은 점수를 가진 **C→B**를 탐욕스럽게 선택해요—그림 15‑10.
 
 ![LMD-GHOST step 2](images/ch15/maet_1510.png)
 
-Figure 15-10. LMD-GHOST step 2
+*그림 15-10. LMD‑GHOST 단계 2*
 
-We now have two different branches to choose from:
+다음으로는 두 개의 브랜치가 남아 있어요:
 
-- Branch E→C with a score equal to 4
-- Branch F→C with a score equal to 3
+- E→C(점수 4)
+- F→C(점수 3)
 
-GHOST selects branch E→C, as shown in Figure 15-11.
+GHOST는 **E→C**를 선택해요—그림 15‑11.
 
 ![LMD-GHOST step 3](images/ch15/maet_1511.png)
 
-Figure 15-11. LMD-GHOST step 3
+*그림 15-11. LMD‑GHOST 단계 3*
 
-At this point, we have only one branch to choose from, branch H→E, so that's the one selected by GHOST, as shown in Figure 15-12.
+이제 한 개의 브랜치만 남아 있어요: H→E—따라서 GHOST는 이를 선택해요(그림 15‑12).
 
 ![LMD-GHOST step 4](images/ch15/maet_1512.png)
 
-Figure 15-12. LMD-GHOST step 4
+*그림 15-12. LMD‑GHOST 단계 4*
 
-Block H has no descendants. LMD-GHOST stops and returns it as the new head block of the chain.
+H 블록은 더 이상 자식이 없으니, LMD‑GHOST는 그 블록을 체인 헤드로 반환해요.
 
-### Incentives
+### 인센티브
 
-LMD-GHOST offers a variety of explicit incentives for validators who strictly follow the rules, and punishments for those who act maliciously. In this section, we'll explore how it prevents malicious actors from breaking the rules and rewards benevolent ones.
+LMD‑GHOST는 규칙을 엄격히 따르는 검증자에게 다양한 명시적 인센티브를 제공하고 악의적인 행동에 대해 처벌해요. 이 섹션에서는 어떻게 악성 행위자를 방지하고 선한 행위자를 보상하는지를 살펴볼게요.
 
-Validators need to perform two different duties:
+검증자는 **두 가지 다른 의무**를 수행해야 해요:
 
-- Proposing blocks
-- Creating attestations
+- 블록 제안
+- 증언 생성
 
-For each of these, LMD-GHOST includes several ways to make sure everyone behaves according to the rules.
+각 항목마다 LMD‑GHOST는 규칙을 따르는 모든 사람을 보장하기 위한 여러 방법이 있어요.
 
-#### Proposing blocks
+#### 블록 제안
 
-When a validator is selected to propose a new block to the chain, it must create only a single valid block. By doing that, the validator earns the sum of the priority fees of all transactions included into the block they have created, plus some newly minted ETH, as you can see in Figure 15-13.
+검증자가 새 블록을 체인에 제안하도록 선택되면, **단 하나의 유효한 블록만** 만들어야 해요. 그렇게 하면 검증자는 자신이 만든 블록에 포함된 모든 트랜잭션의 우선 수수료와 일부 새로 발행된 ETH를 보상으로 얻어요—그림 15‑13 참조.
 
 ![Block proposal reward](images/ch15/maet_1513.png)
 
-Figure 15-13. Block proposal reward
+*그림 15-13. 블록 제안 보상*
 
-If the validator tries to cheat by creating more than one block, the protocol explicitly punishes them by slashing a proportion of their stake. In fact, to become part of the validator set, you must stake some ETH as collateral (at least 32 ETH). This stake is (also) necessary so that the protocol can punish you by slashing—that is, removing—some ETH from it, as shown in Figure 15-14.
+검증자가 한 번에 **두 개 이상의 블록**을 만들려고 하면, 프로토콜은 명시적으로 그들의 스테이크 일부를 슬래싱해요. 실제로 검증자 집합에 참여하려면 일정 ETH(최소 32 ETH)를 담보로 걸어야 해요—이 담보는 **슬래싱**이라는 처벌을 가능하게 해줘요.
 
 ![Block proposal slashing](images/ch15/maet_1514.png)
 
-Figure 15-14. Block proposal slashing
+*그림 15-14. 블록 제안 슬래싱*
 
-> **Note**  
->
-> It's interesting to note here that the explicit punishment is a big difference between Ethereum's PoS consensus protocol and Bitcoin's PoW. Bitcoin miners get rewarded if their block becomes part of the heaviest chain. If they create more than one block for a single block number, there's no explicit punishment.
->
-> You may wonder why. It's because PoW-based systems require some work to be made to create a valid block (the PoW itself). If a miner creates more than one block, they are just wasting time and money because eventually only one block will end up in the heaviest chain, so they'll get rewarded for only one of them.
->
-> Ethereum PoS protocol doesn't require validators to perform a PoW to create a valid block. That means that creating more than a single block is almost free for validators. That's why we need explicit punishment for anyone who tries to cheat in this way.
+> **참고**  
+> 
+> 이더리움 PoS 합의 프로토콜과 비트코인 PoW 사이에서 가장 큰 차이점은 **명시적 처벌**이에요. 비트코인 채굴자는 보상을 받지만, 한 블록 번호에 대해 두 개 이상의 블록을 만들면 명시적인 처벌이 없어요—왜냐하면 하나의 블록만 최종 체인에 남기 때문이죠. PoS에서는 **블록 생성 비용이 거의 없으므로** 여러 블록을 만드는 것이 거의 무료라서, 이를 방지하기 위해 명시적 처벌이 필요해요.
 
-#### Creating attestations
+#### 증언 생성
 
-When a validator is selected to share their view of the network in the form of an attestation, they must publish only a single, valid one. By doing that, they earn a small fee (much smaller than the one earned by the block proposer), as you can see in Figure 15-15.
+검증자가 증언(세계에 대한 시각)을 공유하도록 선택되면, **단 하나의 유효한 증언만** 게시해야 해요. 그렇게 하면 검증자는 소액 수수료를 얻어요—그림 15‑15 참조.
 
 ![Attestation reward](images/ch15/maet_1515.png)
 
-Figure 15-15. Attestation reward
+*그림 15-15. 증언 보상*
 
-If the validator tries to cheat by creating more than a single attestation or contradictory attestations, the protocol explicitly punishes them by slashing a proportion of their stake, as shown in Figure 15-16.
+검증자가 **두 개 이상의 증언**을 만들거나 모순되는 증언을 게시하면, 프로토콜은 명시적으로 그들의 스테이크 일부를 슬래싱해요—그림 15‑16 참조.
 
 ![Attestation slashing](images/ch15/maet_1516.png)
 
-Figure 15-16. Attestation slashing
+*그림 15-16. 증언 슬래싱*
 
-If the validator keeps behaving maliciously for quite a long time, the protocol has the power of force-ejecting them from the validator set.
+검증자가 오랫동안 악의적 행동을 지속하면, 프로토콜은 그들을 검증자 세트에서 강제로 추방할 수 있어요.
 
-## Casper FFG: The Finality Gadget
+## Casper FFG: 최종성 장치
 
-Casper FFG is a kind of metaconsensus protocol. It is an overlay that can be run on top of an underlying consensus protocol in order to add finality to it.
+Casper FFG는 **메타합의** 프로토콜이에요—기본 합의 프로토콜 위에 실행돼 최종성을 추가해요. 이더리움 PoS 합의에서는 기본 프로토콜이 LMD‑GHOST인데, 이는 최종성을 제공하지 않아요. 그래서 Casper FFG가 **최종성 장치** 역할을 해요.
 
-In Ethereum's PoS consensus, the underlying protocol is LMD-GHOST, which does not provide finality. Finality ensures that once blocks are confirmed in the chain, they cannot be reversed: they will be part of the chain forever. So in essence, Casper FFG functions as a finality gadget, and we use it to add finality to LMD-GHOST.
+Casper FFG는 PoS 프로토콜에서 검증자(스테이크를 관리하는 사람들)를 알고 있기 때문에, 투표 집계로 언제 다수의 정직한 검증자가 체크포인트를 최종화했는지 판단할 수 있어요. 모든 검증자의 투표가 스테이크 가치에 따라 가중치가 부여돼요—간단히 설명하기 위해 매번 언급하지 않을게요.
 
-Casper FFG takes advantage of the fact that, in a PoS protocol, we know who our participants are: the validators who manage the staked ether. This means that we can use vote counting to judge when we have seen a majority of the votes of honest validators, or more precisely, votes from validators who manage the majority of the stake. In everything that follows, every validator's vote is weighted by the value of the stake that they manage, but for simplicity, we won't spell this out every time.
+Casper FFG는 **전통적인 Byzantine Fault Tolerant (BFT) 프로토콜**과 마찬가지로, 3분의 1 미만의 검증자가 악의적이거나 오류가 있을 때까지 최종성을 보장해요. 정직한 검증자들이 블록을 최종화하면 모든 정직한 검증자는 이를 동의하게 되어 그 블록은 **반드시** 되돌릴 수 없게 돼요. 정직한 검증자가 전체 검증자의 2/3 이상이 되는 것을 요구함으로써, 시스템은 정직 다수의 관점을 정확히 반영하도록 보장해요.
 
-Casper FFG, like all classic Byzantine fault tolerant (BFT) protocols, can ensure finality as long as fewer than a third of validators are faulty or adversarial. Once a majority of honest validators have declared a block final, all honest validators agree, making that block irreversible. By requiring that honest validators constitute more than two thirds of the total, the system ensures that the consensus accurately represents the honest majority's view. Notably, Casper FFG distinguishes itself from traditional BFT protocols by offering economic finality (you'll find more details in "Accountable Safety and Plausible Liveness") even if more than one-third of validators are compromised.
+Casper FFG는 전통적인 BFT 프로토콜과 차별화되는 점은 **경제적 최종성**을 제공한다는 거예요—정책에 따라 3분의 1 이상이 위반하면, 그 검증자들은 스테이크를 잃게 되는 등 경제적 처벌을 받게 돼요.
 
-### Epochs and Checkpoints
+### Epochs와 Checkpoints
 
-Casper FFG ensures consensus by requiring votes from more than two thirds of validators within an epoch, dividing voting across 32 slots to manage the large validator set efficiently, as shown in Figure 15-17. An epoch is divided into 32 slots, each of which usually contains a block. The first slot of an epoch is its *checkpoint*.
+Casper FFG는 **epoch**마다 32 슬롯으로 나뉘어 투표를 분산시켜요—그림 15‑17 참조. epoch은 32 슬롯으로 구성돼 있고, 각 epoch의 첫 슬롯이 바로 **체크포인트**예요.
 
 ![Epochs and checkpoints](images/ch15/maet_1517.png)
 
-Figure 15-17. Epochs and checkpoints
+*그림 15-17. Epochs와 Checkpoints*
 
-Validators vote once per epoch on a checkpoint, the first slot, to maintain a unified voting focus. This process, which incorporates both Casper FFG and LMD-GHOST votes for efficiency, aims at finalizing checkpoints, in the context of Casper FFG, not entire epochs, clarifying that finality extends to the checkpoint and its preceding content.
+검증자들은 한 epoch마다 체크포인트(첫 번째 슬롯)에 대해 투표해요—Casper FFG와 LMD‑GHOST 투표를 결합해 효율성을 높여요. 목표는 **체크포인트**와 그 이전 내용을 최종화하는 거예요.
 
-### Justification and Finalization
+### 정당화와 최종화
 
-Casper FFG, like traditional BFT protocols, secures network agreement in two stages. Initially, validators broadcast and gather views on a proposed checkpoint. If a significant majority agrees, the checkpoint is *justified*, signaling a tentative agreement. In the subsequent round, if validators confirm widespread support for the justified checkpoint, it achieves *finalization*, meaning it's unanimously agreed upon and irreversible. This process underlines the collaborative effort to ensure network consistency and security, aiming for checkpoints to be justified and then finalized within specific time frames and improving the reliability of the consensus mechanism.
+Casper FFG는 전통적인 BFT 프로토콜처럼 두 단계로 네트워크 합의를 확보해요:
 
-#### Sources and targets, links and conflicts
+1. **정당화 (Justification)**: 검증자들이 체크포인트에 대해 투표를 모아, 다수의 검증자가 이를 지지하면 해당 체크포인트가 정당화돼요.
+2. **최종화 (Finalization)**: 이후 검증자들이 정당화된 체크포인트에 대한 추가적인 지원을 확인하면, 그 체크포인트는 최종화돼요—즉, 모든 정직한 검증자가 동의하고 되돌릴 수 없게 돼요.
 
-In Casper FFG, votes comprise source and target checkpoints, representing validators' commitments to the blockchain's state at different points. These votes are cast as a linked pair, indicating a validator's current and proposed points of consensus. The source vote reflects a validator's acknowledgment of widespread support for a checkpoint, while the target vote represents a conditional commitment to a new checkpoint, dependent on similar support from others. This dual-vote system facilitates a structured progression toward finalizing blocks, ensuring network integrity and continuity.
+### 소스와 타깃, 링크와 충돌
 
-#### Supermajority links
+Casper FFG에서 투표는 **소스**와 **타깃** 체크포인트를 포함해요. 소스는 검증자가 알고 있는 마지막 정당화된 체크포인트이고, 타깃은 다음으로 정당화될 체크포인트에 대한 후보예요. 이 두 값은 하나의 아테스테이션(투표)에서 함께 전송돼요.
 
-In Casper FFG, a *supermajority link* between source and target checkpoints, *s→t*, is established when more than two thirds of validators, by stake weight, endorse the same link, with their votes included in the blockchain. This mechanism ensures consensus and security by validating the sequence of checkpoints through widespread validator agreement.
+### 슈퍼마지오리 링크
 
-#### Justification
+Casper FFG에서는 **슈퍼마지오리 링크**(s→t)가 존재해요—2/3 이상의 검증자(스테이크 가중치 기준)가 같은 링크를 블록체인에 포함시켰을 때 형성돼요. 이 메커니즘은 체크포인트 시퀀스를 광범위한 검증자 동의를 통해 검증해 보안을 강화해요.
 
-In Casper FFG, when a node observes a majority of validators agreeing on a transition from one checkpoint to another, it justifies the old checkpoint. This signifies that the node has seen evidence of consensus from a significant portion of the validator set, as shown in Figure 15-18, making a commitment not to revert to a previous state unless overwhelming consensus is shown for an alternative path.
+### 정당화
+
+Casper FFG에서 노드가 **슈퍼마지오리 링크**를 관찰하면, 해당 소스 체크포인트를 정당화할 수 있어요. 이는 노드가 2/3 이상의 검증자들이 특정 트랜잭션을 지지했다는 증거를 보았다는 뜻이에요—그림 15‑18 참조.
 
 ![Justification process](images/ch15/maet_1518.png)
 
-Figure 15-18. Justification process[^1]
+*그림 15-18. 정당화 프로세스*
 
-[^1]: The node has seen a supermajority link CN → CN + 1, therefore marking CN + 1 as justified. Since CN + 1 is a direct child of CN in the checkpoint tree, it also marks CN as finalized. Finalized checkpoints are cross-hatched and marked with F.
+### 최종화
 
-#### Finalization
-
-When a node observes a consensus (a supermajority link) from one justified checkpoint to its direct child, it finalizes the parent checkpoint, as shown in Figure 15-19. This indicates a network-wide commitment not to revert from this point, backed by a strong majority of validator support. Finalization ensures network stability and security by making the blockchain history immutable past that checkpoint, preventing reversals without significant consequences for validators.
+노드가 한 체크포인트에서 바로 다음 체크포인트로의 **슈퍼마지오리 링크**를 관찰하면, 그 이전 체크포인트를 최종화할 수 있어요—그림 15‑19 참조.
 
 ![Finalization process](images/ch15/maet_1519.png)
 
-Figure 15-19. Finalization process
+*그림 15-19. 최종화 프로세스*
 
-### Slashing
+## Slashing
 
-Casper FFG implements a slashing mechanism to penalize validators for breaches of protocol rules with the aim of securing network consensus. This enforcement discourages actions that could otherwise undermine the blockchain's integrity, such as finalizing conflicting checkpoints. Detection of these breaches, especially complex scenarios like surround votes (see "Fork Choice Rule"), may rely on specialized external services due to their technical challenges. Slashing consequences are proportional to the misconduct's severity and overall network health, with penalties scaling based on the collective behavior within a specific time frame, which ensures fairness and accountability in validators' actions.
+Casper FFG는 검증자가 프로토콜 규칙을 위반했을 때 **슬래싱** 메커니즘을 구현해요—네트워크 합의를 확보하기 위해. 이 처벌은 악의적 행동(예: 충돌하는 체크포인트를 최종화)을 방지하고, 검증자들이 정직하게 행동하도록 유도해요. 슬래싱 결과는 위반 정도와 네트워크 전반적인 건강에 따라 비례적으로 결정돼요—검증자가 얼마나 많은 스테이크를 잃게 되는지는 상황에 따라 달라져요.
 
-### Fork Choice Rule
+## Fork Choice Rule
 
-Casper FFG modifies the traditional LMD-GHOST fork choice rule, mandating that nodes prioritize the chain with the highest justified checkpoint; this checkpoint then effectively becomes the starting block for the LMD-GHOST protocol. This adaptation, which is an evolution from the LMD-GHOST protocol's approach, ensures that the network achieves finality by committing to checkpoints that have been agreed upon by a supermajority of validators. It effectively guarantees that once a checkpoint is justified, the network cannot revert beyond it, reinforcing the security and stability of the blockchain. This rule is also designed to maintain network liveness, aligning with Casper's foundational goals.
+Casper FFG는 기존 LMD‑GHOST 포크 선택 규칙을 수정해, **가장 정당화된 체크포인트**를 가진 체인을 우선시하도록 해요—이 체크포인트가 바로 새로운 LMD‑GHOST 프로토콜의 시작 블록이 돼요. 이 변화는 네트워크가 정당화된 체크포인트를 넘어서는 것을 방지해, 최종성을 확보하면서도 생존성을 유지하도록 설계돼 있어요.
 
-### The Casper Commandments
+## Casper 명령
 
-In Casper FFG, checkpoints are central to ensuring network consensus and security. They are marked by epoch numbers that increase with blockchain progression. Validators must adhere to strict voting rules: they cannot vote on different outcomes for the same checkpoint, so no double-voting, as shown in Figure 15-20. If this voting rule were not in place, a reorg would be much more likely, rendering the chain highly unstable.
+Casper FFG에서 체크포인트는 네트워크 합의와 보안을 보장하는 핵심이예요. 체크포인트는 **epoch 번호**로 표시돼요—체크포인트가 증가함에 따라 체인이 진행돼요. 검증자들은 엄격한 투표 규칙을 따라야 해요: 같은 체크포인트에 대해 다른 결과를 투표할 수 없어요—즉, **두 번 투표(다이얼리팅)**를 방지해요—그림 15‑20 참조.
 
 ![No double-voting rule](images/ch15/maet_1520.png)
 
-Figure 15-20. No double-voting rule
+*그림 15-20. 두 번 투표 금지 규칙*
 
-Validators must also avoid creating votes that could be interpreted as contradicting previous commitments (no surround vote). Violating these principles leads to slashing, a penalty designed to maintain the integrity and accountability of the consensus mechanism, as shown in Figure 15-21.
+검증자들은 또한 **주변(스런들) 투표**를 만들 수 없어요—즉, 이전에 이미 정당화된 체크포인트와 충돌하는 투표를 할 수 없어요—그림 15‑21 참조.
 
 ![No surround vote rule](images/ch15/maet_1521.png)
 
-Figure 15-21. No surround vote rule
+*그림 15-21. 주변 투표 금지 규칙*
 
-### Accountable Safety and Plausible Liveness
+## Accountable Safety & Plausible Liveness
 
-The Casper FFG consensus protocol makes two guarantees that are analogous to, but different from, the concepts of safety and liveness in classical consensus: *accountable safety* and *plausible liveness*.
+Casper FFG는 전통적인 안전과 생존성 개념과 유사하지만 다른 두 가지 보장을 제공해요: **Accountable Safety**와 **Plausible Liveness**.
 
-#### Accountable safety and economic finality
+### Accountable safety & 경제적 최종성
 
-Casper FFG's proof of accountable safety demonstrates that conflicting checkpoints cannot be finalized unless more than one-third of validators violate protocol rules. This system ensures that checkpoints finalized with fewer than one-third adversarial validators remain irreversible, enforcing both network security and economic penalties for dishonest behavior.
+Casper FFG의 **accountable safety** 증명은 충돌하는 체크포인트가 3분의 1 이상의 검증자에 의해 최종화될 수 없다는 것을 보여줘요. 이는 최소한 3분의 1 미만이 악의적이라면, 그 체크포인트는 **반드시** 되돌릴 수 없게 돼요—네트워크 보안과 경제적 처벌을 동시에 제공해요.
 
-Economic finality in Casper FFG introduces a cost to potential attackers, enforcing security not just through protocol rules but also through economic disincentives. Validators who attempt to undermine the network by finalizing conflicting checkpoints face severe penalties, losing a significant portion of their stakes. This approach contrasts with traditional consensus mechanisms by adding a layer of economic consequences, ensuring that finalizing a block carries a substantial cost for malicious actors and thereby enhancing the blockchain's integrity and resilience against attacks.
+### Plausible liveness
 
-#### Plausible liveness
+Casper FFG는 네트워크가 **활동적으로 유지되고**, 정직한 검증자가 처벌받지 않으면서 언제든 합의에 도달할 수 있도록 해줘요—정치적이 아니라 경제적 이유로도 가능하게 돼요.
 
-Casper FFG ensures that the network remains active and can always reach consensus without any honest validators being penalized, embodying the concept of plausible liveness. This means that, provided a supermajority of validators are honest, the protocol can continue justifying and finalizing new checkpoints, avoiding any deadlock scenarios where progress is halted because of fear of slashing. This principle ensures the network's resilience and continuous operation, underlining Casper's adaptability to maintain consensus even under challenging conditions.
+## 실전 예시: 체크포인트 생애 주기
 
-## A Practical Example: The Life Cycle of a Checkpoint
+함께 이더리움 Casper FFG 메커니즘에서 체크포인트가 어떻게 살아가는지 살펴볼게요. 커뮤니티는 수십만 명의 검증자를 가질 수 있어요—모두 한 번에 투표를 처리하는 것은 현실적이지 않아요. 그래서 우리는 **epoch**라는 개념을 사용해요—32 슬롯으로 나뉘어 각 epoch마다 약 1/32의 검증자가 투표해요.
 
-Let's take a journey together through the life cycle of a checkpoint in Ethereum's Casper FFG mechanism.
-
-The community of Ethereum validators can be overwhelmingly large, with potentially hundreds of thousands involved. It's not practical for all these votes to be processed at once. So how do we manage this?
-
-Votes are spread out across what we call an epoch, which is divided into 32 slots, each lasting 12 seconds. This way, each validator votes exactly once per epoch, with about 1/32 of the validator set voting in each slot. Figure 15-22 shows a pool of such validators.
+그림 15‑22는 이러한 검증자 풀을 보여줘요.
 
 ![Validator pool](images/ch15/maet_1522.png)
 
-Figure 15-22. Validator pool
+*그림 15-22. 검증자 풀*
 
-In this example, the number of validators is, of course, much more limited than on the real Ethereum network, but we do have 64 nodes that are divided into 32 groups. Each of the groups will vote for one slot in the epoch, as shown in Figure 15-23.
+이 예시에서는 실제 이더리움 네트워크보다 훨씬 작은 수의 노드(64개)를 사용해요—각 그룹은 epoch의 한 슬롯에 투표해요—그림 15‑23 참조.
 
 ![Validators divided into groups](images/ch15/maet_1523.png)
 
-Figure 15-23. Validators divided into groups
+*그림 15-23. 검증자 그룹화*
 
-Now, what are they voting on? They vote on a checkpoint: specifically, the very first slot of an epoch.[^2] This checkpoint acts as a common goal for validators voting at different times.
-
-[^2]: A checkpoint is always the very first slot of an epoch, but its block hash may be from an earlier block if the checkpoint's own block is missing.
-
-> **Note**  
->
-> It's important to clarify something here: although we often talk about finalizing epochs, in technical terms we're actually finalizing checkpoints, which are these first slots. Once a checkpoint is finalized, everything up to and including that slot is set in stone, secure and unchangeable.
-
-A representation of an epoch—in this case, epoch N—is shown in Figure 15-24. The checkpoint N is the slot 32N; once that checkpoint is finalized, slot 32N-1 and every other slot before that will be considered finalized.
+이제 그들이 무엇을 투표하는지 살펴볼게요: **체크포인트**에 대해—특히, epoch의 첫 번째 슬롯(예: 32N)입니다—그림 15‑24 참조.
 
 ![Epoch representation](images/ch15/maet_1524.png)
 
-Figure 15-24. Epoch representation
+*그림 15-24. Epoch 표현*
 
-The process to achieve this security is rigorous and resembles traditional BFT consensus mechanisms. In the next sections, we'll describe how it works.
+이 체크포인트가 최종화되면, 그 슬롯과 이전 모든 슬롯은 **고정**되고 더 이상 바뀌지 않아요.
 
-### First Round: Justification
+### 첫 번째 라운드: 정당화
 
-Validators each broadcast their own views of the current epoch's checkpoint to the network. Then, they listen to see if a supermajority of the network agrees with their perspectives. If they do, this checkpoint is "justified." At this stage, validators believe that the majority of the network supports this checkpoint for finalization, although they are not entirely certain that everyone agrees just yet.
+각 검증자는 현재 epoch의 체크포인트에 대한 자신의 시각을 네트워크에 브로드캐스트해요. 그런 다음 2/3 이상의 검증자들이 이를 지지하는지 확인해요—정당화 단계예요.
 
-The key issue is that validators can't yet be sure that malicious actors on the network aren't feeding them false information about the network's state—saying one thing to them and something else to others. This is a very important point that's often overlooked. If all participants were always honest, justification would imply finalization, and the entire two-round process could be avoided.
+### 두 번째 라운드: 최종화
 
-When a validator justifies a checkpoint, they have received approval from two thirds of the network for that specific checkpoint, as shown in Figure 15-25, but this first round of approval is only local to the validator itself. It's possible, especially under adversarial conditions, that not enough validators have reached a consensus. Traditional PBFT-style consensus mechanisms—like those used in Algorand, Dfinity, and Cosmos—would halt at this stage and lose liveness. Ethereum, on the other hand, keeps going. If it can't justify a checkpoint, no problem—it simply moves on and tries to justify the next one. This works because Ethereum relies on LMD-GHOST for liveness, while Casper FFG is just an overlay—a "nice to have." So if finality stalls temporarily, that's not a critical issue.
-
-![Justification round](images/ch15/maet_1525.png)
-
-Figure 15-25. Justification round
-
-### Second Round: Finalization
-
-Validators announce that they have heard from a supermajority that they also support this checkpoint. They check again to see if the rest of the network confirms that this supermajority indeed exists. If so, the validators can "finalize" the checkpoint, as shown in Figure 15-26. Finalization is a powerful step—it means that no honest validator will ever revert this checkpoint. They may not have marked it as finalized in their local view yet, but at least they've marked it as justified, and it cannot be reversed without punishable actions.
+검증자들은 **슈퍼마지오리 링크**를 통해 다른 검증자들이 이 체크포인트에 대한 지원을 확인했는지 다시 한 번 점검해요. 모든 것이 일치하면, 그 체크포인트가 **최종화**돼요—그림 15‑26 참조.
 
 ![Finalization round](images/ch15/maet_1526.png)
 
-Figure 15-26. Finalization round
+*그림 15-26. 최종화 라운드*
 
-In practice, each round ideally spans one epoch, meaning it takes one epoch to justify a checkpoint and another to finalize it. That totals about 12.8 minutes. However, thanks to the pipelined design of Casper FFG, we can finalize a checkpoint every 6.4 minutes, once per epoch.
+실제에서는 각 라운드가 한 epoch을 걸리며, 총 약 **12.8분**이 걸려요—하지만 Casper FFG의 파이프라인 설계 덕분에 **한 epoch마다 하나씩** 체크포인트를 최종화할 수 있어요.
 
-> **Note**  
->
-> It's also worth noting that from an external viewpoint, we might see signs that a checkpoint will likely be finalized before the 12.8 minutes are up since votes are accumulated gradually as the epoch progresses, assuming there's no significant chain reorganization. However, the official in-protocol actions of justification and finalization occur only at the end of an epoch.
+### 충돌 정당화
 
-There are a lot of things that can go wrong during the justification and finalization of checkpoints. Let's analyze two important cases and how they are handled by this friendly finality gadget.
+왜 두 단계가 필요한지 이해하려면, **정당화와 최종화** 사이의 차이를 생각해 보세요. 정당화는 **로컬 합의**에 관한 것이고, 최종화는 **전역 합의**에 관한 거예요. 정당화된 체크포인트를 기반으로 한 검증자는 그 체크포인트를 뒤집지 않을 것을 약속하지만, 다른 검증자들은 아직 다른 정보를 가질 수 있어요.
 
-### Conflicting Justification
+---
 
-It's insightful to think about why we need both "justified" and "finalized" statuses for checkpoints. Why isn't it sufficient to immediately finalize a checkpoint once a supermajority of two thirds has voted in favor of it?
+## Gasper: 실제 예시
 
-Here's the distinction: justification is about local agreement, whereas finality is about global consensus.
-
-Justifying a checkpoint means that I, as a validator, have received confirmation from two thirds of the validators that they approve the checkpoint. This approval, however, represents only my local perspective. It's possible that other validators have different information; I can't be sure. Despite this uncertainty, as an honest validator, I commit to never reversing any checkpoint that I've justified based on my local data.
-
-Finalizing a checkpoint, on the other hand, takes this a step further. It occurs when I've received assurances from two thirds of the validators that they, too, have heard from two thirds of their peers confirming the checkpoint's validity. This means that a supermajority of the network—not just my local view—acknowledges and commits to this checkpoint. It's this broad consensus that protects the checkpoint from being reversed globally. Therefore, a finalized checkpoint is not just locally recognized; it's globally secured.
-
-Let's explore an extreme scenario to understand the consensus process better. Suppose we have four validators, A, B, C, and D, as shown in Figure 15-27. All of them are honest, but the network they operate in can experience indefinite delays. For the sake of this example, imagine that there's a checkpoint at every block height.
-
-![Four validators scenario](images/ch15/maet_1527.png)
-
-Figure 15-27. Four validators scenario
-
-Every validator in the scenario has the block 0 and can therefore justify the checkpoint 0; so 0, the source, is justified locally for all four validators, and 1 is the target (see "Sources and targets, links and conflicts").
-
-Now let's imagine that A is severely delayed in the network connection and that it's also chosen to propose a block. A proposes a block in epoch 2. This block contains all four votes to justify checkpoint 1, but since its network connection is severely delayed, the other validators never see it.
-
-A has a supermajority link (see "Supermajority links") between the source 0 and the target 1, so it will finalize checkpoint 0 and justify checkpoint 1. Meanwhile, B, C, and D saw no votes in the current epoch, so they still have only justified checkpoint 0. They will also vote for an empty checkpoint in this epoch, which is checkpoint X, as shown in Figure 15-28.
-
-![Network delay scenario step 1](images/ch15/maet_1528.png)
-
-Figure 15-28. Network delay scenario step 1
-
-In epoch 3, one validator among B, C, and D is chosen to propose a block.
-
-This block contains three votes with the source as checkpoint 0 and the target as checkpoint X; therefore, there is a supermajority link between 0 and X that allows the validators B, C, and D to have checkpoint 0 as finalized and checkpoint X as justified, as shown in Figure 15-29. A, on the other hand, considers this block to be invalid, because in its local view, 1 is justified and cannot be reverted. The only solution for validator A's chain to continue is to delete its memory and resync with the rest of the network.
-
-![Network delay scenario step 2](images/ch15/maet_1529.png)
-
-Figure 15-29. Network delay scenario step 2
-
-> **Note**  
->
-> It is important to remember that in this example, validators B, C, and D never saw the block proposed by A. Since they did not observe block 2—the block that would have justified checkpoint 1—they cannot agree on block 1 and are therefore unable to justify checkpoint 1. As a result, they vote on an empty checkpoint instead.
-
-This example demonstrates that even simple network delays can cause nodes to have differing views of justification and finalization. However, this alone doesn't justify the need for two separate phases: justification followed by finalization. The reasoning behind the two phases is very straightforward: if we didn't have a justification step, A would have finalized checkpoint 1, which would have been considered invalid by the rest of the validators, as shown in Figure 15-30.
-
-![Without justification step](images/ch15/maet_1530.png)
-
-Figure 15-30. Without justification step
-
-In the previous example, A had to delete its memory and resync with the rest of the network. This is because justification, as we said before, is similar to a local step and can be reverted. However, this would not have been possible if A had directly finalized checkpoint 1. Without the two phases, A would have had a finalized block reverted and B, C, and D would have been able to orphan block 1 without being slashed. The only way to guarantee safety is with a two-way commit: justification and finalization.
-
-## Gasper: A Real Example
-
-So far, we have seen how Casper FFG and LMD-GHOST work on their own. Let's see now how they are combined into Gasper and used inside the Ethereum PoS consensus protocol.
-
-The best way to fully understand how Gasper works is to follow a real example of a blockchain using it to gain consensus over the history of blocks. We won't use Ethereum mainnet for our example. Instead, we'll create a mock-up network with three validators in order to better describe what is happening during each phase of the consensus protocol, as you will see in Figure 15-31.
+이제 우리는 **Casper FFG**와 **LMD‑GHOST**가 어떻게 결합돼 이더리움 PoS 합의 프로토콜에서 동작하는지 살펴볼게요. 메인넷 대신, 세 명의 검증자를 가진 가짜 네트워크를 만들어 각 단계가 어떻게 진행되는지 보여줄 거예요—그림 15‑31 참조.
 
 ![Gasper mock network](images/ch15/maet_1531.png)
 
-Figure 15-31. Gasper mock network
+*그림 15-31. Gasper 모형 네트워크*
 
-The three validators have the same number of ETH in stake, so their voting power—that is, their contribution to the score of every block in which they vote—is the same. Also, every validator publishes an attestation every block, instead of once in an epoch as in the Ethereum mainnet.
+세 검증자는 같은 양의 ETH를 스테이크해 있어, **투표 파워**가 동일합니다—각 블록에 대한 점수도 같아요. 또한 각 검증자는 **블록마다** 증언을 게시해요—메인넷에서는 epoch당 한 번이죠.
 
-Our goal is to see the life of a block from being published to first being justified and then finalized.
+### Epoch 구조
 
-In our simplified network, every epoch is made of three slots, shown in Figure 15-32.
+간단히 하기 위해, 이 가짜 네트워크의 epoch은 세 슬롯으로 구성돼요—그림 15‑32 참조.
 
 ![Simplified epoch structure](images/ch15/maet_1532.png)
 
-Figure 15-32. Simplified epoch structure
+*그림 15-32. 단순화된 epoch 구조*
 
-Let's start our example at epoch number 1. This is not the real first epoch; we just call it "epoch 1" for simplicity. Validator A is the one selected to propose the first block. We can call the block that they are to propose block 1, as shown in Figure 15-33.
+우리 예제는 에포크 1번에서 시작할게요. 실제로는 이게 진짜 첫 에포크는 아니지만, 이해하기 쉽게 "에포크 1"이라고 부르기로 해요. 첫 번째 블록을 제안할 검증자는 A로 정해졌어요. A가 제안할 블록을 블록 1이라고 할 수 있고, Figure 15-33에서 볼 수 있어요.
 
-![Block 1 proposal](images/ch15/maet_1533.png)
+![블록 1 제안](images/ch15/maet_1533.png)
 
-Figure 15-33. Block 1 proposal
+Figure 15-33. 블록 1 제안
 
-Validator A publishes block 1, and immediately, that block starts propagating in the network. Shortly after the publication, validators B and C receive it and save it into their view of the network.
+검증자 A가 블록 1을 네트워크에 공개하면, 이 블록은 곧바로 네트워크에 퍼져요. 공개된 직후에 검증자 B와 C도 이 블록을 받아서 각자의 네트워크 뷰에 저장하게 돼요.
 
-Then, all the validators make an attestation by voting what they think is the last head block of the chain. To do that, they have to run LMD-GHOST on their local views. The result is block 1. These attestations are published and shared with all validators.
+그 다음, 모든 검증자는 자신이 생각하는 체인의 최신 헤드 블록에 투표(어테스테이션)해요. 이 과정에서 각자 로컬 뷰에서 LMD-GHOST를 실행해서 결과를 얻어요. 이 경우 결과는 블록 1이에요. 이 어테스테이션들은 모두 공개되어, 모든 검증자가 볼 수 있어요.
 
-Now, validator B is selected to propose the block at the next slot—slot 2—as you'll see in Figure 15-34. To do that, the validator still has to run LMD-GHOST on their local view of the network to get the last head block to build on top of.
+이제 다음 슬롯, 즉 슬롯 2에서는 검증자 B가 블록 제안자로 선정돼요(Figure 15-34 참고). 이때도 검증자 B는 자신의 네트워크 뷰에서 LMD-GHOST를 실행해서 가장 마지막 헤드 블록을 찾고, 그 위에 블록을 쌓아야 해요.
 
-![Block 2 proposal](images/ch15/maet_1534.png)
+![블록 2 제안](images/ch15/maet_1534.png)
 
-Figure 15-34. Block 2 proposal
+Figure 15-34. 블록 2 제안
 
-Here is validator B's view of the network:
+검증자 B의 네트워크 뷰는 다음과 같아요:
 
-- Validator A attestation: head block: block 1
-- Validator B attestation: head block: block 1
-- Validator C attestation: head block: block 1
+* 검증자 A 어테스테이션: 헤드 블록: 블록 1
+* 검증자 B 어테스테이션: 헤드 블록: 블록 1
+* 검증자 C 어테스테이션: 헤드 블록: 블록 1
 
-So the result of LMD-GHOST for validator B is block 1. They can now publish block 2 on top of block 1. Inside block 2, validator B saves also all the attestations they have seen that were not included in a previous block. So they save the three attestations that contain a vote for block 1.
+즉, B가 LMD-GHOST로 얻은 결과는 블록 1이에요. 그래서 이제 블록 1 위에 블록 2를 올릴 수 있어요. 블록 2 안에는 이전 블록에 포함되지 않았던 어테스테이션들을 모두 저장해요. 여기서는 블록 1에 투표한 어테스테이션 3개를 저장하죠.
 
-Block 2 propagates in the network and, shortly after its publication, validators A and C receive it. Remember that while LMD-GHOST uses both votes shared via P2P and included in blocks, Casper FFG takes into consideration only votes included into blocks. So while including LMD-GHOST votes into the block doesn't affect LMD-GHOST results if validators are already sharing them through the P2P network, it's fundamental for Casper FFG since that's the only way validators get to know them.
+블록 2가 네트워크에 퍼지고, 얼마 후 검증자 A와 C도 이 블록을 받게 돼요. 참고로 LMD-GHOST는 블록 안에 포함된 투표와 P2P 네트워크로 공유된 투표를 모두 사용하지만, Casper FFG는 블록에 포함된 투표만 참고해요. 그래서 LMD-GHOST 투표가 이미 P2P로 공유되고 있으면 굳이 블록에 포함하지 않아도 결과에 영향을 주지 않지만, Casper FFG에서는 블록에 꼭 포함되어야만 해요.
 
-Again, all validators make an attestation by voting what they think is the last head block of the chain. Since they all have block 2 in their local views, they all vote for it to be the head of the chain. Then, they publish these attestations so that all validators can see them.
+다시, 모든 검증자는 어테스테이션을 해서 블록 2가 헤드라고 투표해요. 이제 모든 검증자가 블록 2를 로컬 뷰에서 가지고 있으니, 다들 블록 2를 헤드로 투표해요. 이 어테스테이션들은 또 모두에게 공개돼요.
 
-Now, validator C is selected to propose the next block at slot 3. They run LMD-GHOST on top of their local view to get the head block. Here is validator C's view of the network:
+이제 검증자 C가 슬롯 3에서 다음 블록 제안자로 뽑혔어요. C도 자신의 로컬 뷰에서 LMD-GHOST를 실행해 헤드 블록을 구해요. C의 네트워크 뷰는 아래와 같아요:
 
-- Validator A attestation: head block: block 2
-- Validator B attestation: head block: block 2
-- Validator C attestation: head block: block 2
+* 검증자 A 어테스테이션: 헤드 블록: 블록 2
+* 검증자 B 어테스테이션: 헤드 블록: 블록 2
+* 검증자 C 어테스테이션: 헤드 블록: 블록 2
 
-The result is block 2, so validator C publishes block 3 on top of it, shown in Figure 15-35.
+결과는 블록 2이고, 검증자 C가 그 위에 블록 3을 올려요(Figure 15-35 참고).
 
-![Block 3 proposal](images/ch15/maet_1535.png)
+![블록 3 제안](images/ch15/maet_1535.png)
 
-Figure 15-35. Block 3 proposal
+Figure 15-35. 블록 3 제안
 
-Inside block 3, validator C saves the three attestations voting for block 2 because they were not included in previous blocks.
+블록 3에는 블록 2에 투표한 3개의 어테스테이션이 저장돼요(이전 블록에 없던 것만).
 
-Block 3 propagates in the network and, shortly after its publication, validators A and B receive it. Then, the validators make an attestation voting for it.
+블록 3도 네트워크에 퍼지고, 곧 검증자 A와 B가 받게 돼요. 이후 검증자들은 다시 블록 3에 투표합니다.
 
-Now, we go back to validator A. They have to propose the next block—slot 4—which is also the first block of the new epoch—epoch 2—as you'll see in Figure 15-36.
+이제 다시 검증자 A 차례에요. A는 다음 블록(슬롯 4), 즉 새로운 에포크(에포크 2)의 첫 블록을 제안해야 해요(Figure 15-36 참고).
 
-![Block 4 proposal - new epoch](images/ch15/maet_1536.png)
+![블록 4 제안 - 새로운 에포크](images/ch15/maet_1536.png)
 
-Figure 15-36. Block 4 proposal - new epoch
+Figure 15-36. 블록 4 제안 - 새로운 에포크
 
-Validator A runs LMD-GHOST on their local view to get the head of the chain. Here is validator A's view of the network:
+검증자 A가 자신의 로컬 뷰에서 LMD-GHOST를 돌리면 아래와 같은 결과가 나와요:
 
-- Validator A attestation: head block: block 3
-- Validator B attestation: head block: block 3
-- Validator C attestation: head block: block 3
+* 검증자 A 어테스테이션: 헤드 블록: 블록 3
+* 검증자 B 어테스테이션: 헤드 블록: 블록 3
+* 검증자 C 어테스테이션: 헤드 블록: 블록 3
 
-The result is block 3, so validator A publishes block 4 on top of it.
+그래서 A는 블록 3 위에 블록 4를 올려요.
 
-Inside block 4, validator A saves the three attestations voting for block 3 because they were not included in previous blocks.
+블록 4에도 이전에 포함되지 않았던 블록 3 투표 어테스테이션 3개를 저장해요.
 
-Block 4 propagates in the network and, shortly after its publication, validators B and C receive it. The validators have to make a new attestation voting for it to be the head of the chain. But this time, something changes.
+블록 4가 퍼진 뒤 곧 B와 C가 이 블록을 받고, 검증자들은 또다시 블록 4에 투표해야 해요. 그런데 이번엔 뭔가 달라져요.
 
-We are in a new epoch, so the validators have to update the Casper FFG part of the vote. In fact, we previously ignored that an attestation includes not only a vote for the last head block of the chain—the LMD-GHOST part of the consensus protocol—but also a vote for the Casper-FFG checkpoints. In particular, every attestation includes a source and a target vote. The source vote is the last justified checkpoint that the validator knows about, while the target vote represents what the validator thinks should become the next block to be justified.
+새로운 에포크가 시작됐기 때문에, 검증자들은 Casper FFG 투표 부분도 업데이트해야 해요. 사실 지금까지 어테스테이션에는 단순히 LMD-GHOST 투표만 있다고 했지만, 실제로는 Casper-FFG 체크포인트 투표도 들어가요. 즉, 각 어테스테이션에는 소스와 타겟 투표가 있어요. 소스 투표는 검증자가 알고 있는 마지막 정당화된 체크포인트, 타겟 투표는 다음 정당화되어야 한다고 생각하는 블록이에요.
 
-So the attestation that validators A, B, and C make is as follows:
+이번에 A, B, C가 만드는 어테스테이션은 다음과 같아요:
 
-**Attestation**
+**어테스테이션**
 
-- Head block: block 4
-- Source block: block 1
-- Target block: block 4
+* 헤드 블록: 블록 4
+* 소스 블록: 블록 1
+* 타겟 블록: 블록 4
 
-The target block is easy to select because it's just the first block of the epoch (there could be some edge cases where the target block is not the first one of an epoch, but we ignore them for simplicity's sake). The source block is calculated by looking at the attestations a validator has and seeing if there is a block voted to be the target block by more than two thirds of the validators. We didn't include source and target block in the previous attestations, but let's say that they all include block 1 as the target block. So right now, we have justified block 1 because there is a supermajority link from block 1 to block 4. See Figure 15-37.
+타겟 블록은 그냥 해당 에포크의 첫 블록을 선택하면 돼서 간단해요(물론 예외 케이스도 있지만, 여기선 생략할게요). 소스 블록은 검증자가 가지고 있는 어테스테이션을 보고 2/3 이상의 검증자가 타겟으로 찍은 블록이 있으면 그걸로 해요. 이전 투표에서 다들 블록 1을 타겟으로 찍었다고 가정할게요. 그래서 지금은 블록 1에 블록 4로 가는 슈퍼메이저리티(2/3 이상) 링크가 생겨서, 블록 1이 정당화됐다고 할 수 있어요(Figure 15-37 참고).
 
-![Block 1 justified](images/ch15/maet_1537.png)
+![블록 1 정당화](images/ch15/maet_1537.png)
 
-Figure 15-37. Block 1 justified
+Figure 15-37. 블록 1 정당화
 
-These attestations are then published and shared with all the validators and will be included in the next slots (usually in the very next slot). We can skip blocks 5 and 6 and go straight to block 7, the first block of the next epoch: epoch 3, shown in Figure 15-38.
+이 어테스테이션들은 공개되고, 보통 다음 슬롯에 블록에 포함돼요. 5, 6번 블록은 생략하고, 바로 다음 에포크(에포크 3)의 첫 블록인 7번으로 넘어갈게요(Figure 15-38 참고).
 
-![Block 7 proposal - epoch 3](images/ch15/maet_1538.png)
+![블록 7 제안 - 에포크 3](images/ch15/maet_1538.png)
 
-Figure 15-38. Block 7 proposal - epoch 3
+Figure 15-38. 블록 7 제안 - 에포크 3
 
-Again, validator A is selected to propose the block. They run LMD-GHOST on their local view. Here is validator A's view of the network:
+이번에도 검증자 A가 블록 제안자로 뽑혔어요. A가 자신의 로컬 뷰를 보면 다음과 같아요:
 
-- Validator A attestation: head block: block 6, source block: 1, target block: 4
-- Validator B attestation: head block: block 6, source block: 1, target block: 4
-- Validator C attestation: head block: block 6, source block: 1, target block: 4
+* 검증자 A 어테스테이션: 헤드 블록: 블록 6, 소스 블록: 1, 타겟 블록: 4
+* 검증자 B 어테스테이션: 헤드 블록: 블록 6, 소스 블록: 1, 타겟 블록: 4
+* 검증자 C 어테스테이션: 헤드 블록: 블록 6, 소스 블록: 1, 타겟 블록: 4
 
-The result is block 6, so they publish block 7 on top of it.
+결과는 블록 6이고, 그 위에 블록 7을 올려요.
 
-Block 7 propagates in the network and, shortly after its publication, validators B and C receive it. The validators have to make a new attestation voting for it to be the head of the chain. And something changes again here.
+블록 7도 퍼지고, B와 C가 받게 돼요. 그리고 또 블록 7에 투표를 하게 되죠. 여기서도 변화가 하나 더 생겨요.
 
-We are in the next epoch—epoch 3—so the Casper-FFG part of the attestation changes again. In fact, the attestation that validators A, B, and C make is like this:
+에포크 3으로 넘어왔으니, 어테스테이션의 Casper-FFG 부분도 다시 바뀌어요. 이번 어테스테이션은 다음과 같아요:
 
-**Attestation**
+**어테스테이션**
 
-- Head block: block 7
-- Source block: block 4
-- Target block: block 7
+* 헤드 블록: 블록 7
+* 소스 블록: 블록 4
+* 타겟 블록: 블록 7
 
-As you can see, the target block is now block 7, and the source block is block 4. This is true because validators A, B, and C all voted for a target block equal to block 4 in the previous attestation. We have now justified block 4 because we have a new supermajority link from block 4 to block 7, as shown in Figure 15-39.
+여기서 보면, 타겟 블록이 블록 7로, 소스 블록이 블록 4로 바뀌었어요. 이건 이전 어테스테이션에서 다들 블록 4를 타겟으로 찍었기 때문이에요. 이제 블록 4도 슈퍼메이저리티 링크를 통해 정당화됐고, Figure 15-39에서 볼 수 있듯이 블록 1도 최종화(finalized)됐어요.
 
-![Block 4 justified, block 1 finalized](images/ch15/maet_1539.png)
+![블록 4 정당화, 블록 1 최종화](images/ch15/maet_1539.png)
 
-Figure 15-39. Block 4 justified, block 1 finalized
+Figure 15-39. 블록 4 정당화, 블록 1 최종화
 
-We have also finalized block 1 because it's a justified checkpoint whose direct child—block 4—is also justified. When a validator considers a block to be finalized, that means the validator has seen a confirmation from more than two thirds of the validators that they all have seen that that block is justified. In fact, if we take validator A—this applies to validators B and C, too—they have seen B and C's attestations where they voted for block 1 as the source block. Voting for block 1 as the source block means that B and C previously had seen a two-thirds majority of votes for block 1 as the target block. So we can be sure that, in order to revert block 1, at least one third of the validators must be slashed because they double-voted.
+블록 1이 최종화된 이유는, 블록 1이 정당화된 체크포인트이고, 그 자식 블록(블록 4)도 정당화됐기 때문이에요. 블록이 최종화됐다는 건, 전체 검증자 중 2/3 이상이 그 블록이 정당화된 걸 확인했다는 뜻이에요. 예를 들어, 검증자 A가 B와 C가 블록 1을 소스 블록으로 투표한 어테스테이션을 확인했다면, 이는 이전에 2/3 이상이 블록 1을 타겟으로 투표했다는 증거에요. 따라서 블록 1을 되돌리려면, 최소 1/3의 검증자가 더블 투표(=슬래시 대상)를 해야 가능해요.
 
-## Controversy and Competition
+---
 
-At this point, you might be wondering why we need so many different consensus algorithms. Which one works better? The answer to this question is at the center of the most exciting area of research in distributed systems during the past decade. It all boils down to what you consider "better"—which, in the context of computer science, is about assumptions, goals, and the unavoidable trade-offs.
+## 논쟁과 경쟁
 
-It is likely that no algorithm can optimize across all dimensions of the problem of decentralized consensus. When someone suggests that one consensus algorithm is "better" than the others, you should start asking questions that clarify, better at what: immutability? Finality? Decentralization? Cost? There is no clear answer, at least not yet. Furthermore, the design of consensus algorithms is at the center of a multibillion-dollar industry and generates enormous controversy and heated arguments. In the end, there might not be a "correct" answer, just as there might be different answers for different applications.
+여기서 궁금할 수 있어요. 이렇게 다양한 합의 알고리즘이 필요한 이유는 뭘까? 뭐가 더 나을까? 사실 이 질문이 지난 10년간 분산 시스템 연구에서 가장 뜨거운 주제 중 하나였어요. 결국엔 "무엇을 더 낫다고 볼 것인가?"에 달렸어요. 불변성? 최종성? 탈중앙화? 비용? 각자 장단점이 달라서, 한 가지가 모든 면에서 최고일 수는 없어요. 합의 알고리즘 설계 자체가 수십억 달러 규모 산업의 핵심이라, 논쟁과 경쟁이 치열해요. 정답은 아직 없고, 각 애플리케이션마다 다를 수도 있죠.
 
-The entire blockchain industry is one giant experiment where these questions will be tested under adversarial conditions, with enormous monetary value at stake. In the end, history will answer the controversy.
+블록체인 산업 전체가 하나의 거대한 실험장이에요. 이 질문들에 대한 답은 실제로 돈이 오가는, 경쟁이 치열한 환경에서 검증될 거예요. 역사가 답을 내릴 때까지는 논쟁이 계속될 거예요.
 
-The controversies in a consensus protocol can be many, and coordinating the network to solve them is challenging. Aligning incentives is crucial but not always possible. We will examine two current problems of the Ethereum consensus algorithm.
+합의 프로토콜에는 다양한 논쟁거리가 있고, 네트워크 전체가 합의에 도달하도록 조율하는 것도 쉽지 않아요. 인센티브를 잘 맞추는 게 핵심이지만, 항상 가능한 건 아니에요. 여기서는 이더리움 합의 알고리즘에서 현재 논의되고 있는 두 가지 이슈를 소개할게요.
 
-### Timing Games
+---
 
-In Ethereum's protocol, time is structured into 12-second units called slots. Each slot assigns a validator the role of proposing a block right at the start (*t* = 0). A committee of attesters is then tasked with validating this block, aiming to do so by four seconds into the slot (*t* = 4), which is considered the attestation deadline.
+### 타이밍 게임
 
-*Timing games* are strategies where validators wait as long as possible before proposing a block to maximize their MEV rewards, as shown in Figure 15-40. This practice involves a delicate balance, requiring validators to delay their proposals to capture more value while ensuring that their block is supported by a sufficient portion of the attesting committee to remain on the canonical chain.
+이더리움 프로토콜에서는 12초 단위의 슬롯으로 시간이 나뉘어요. 각 슬롯 시작점(*t* = 0)에서 블록 제안자(검증자)가 정해지고, 어테스터 위원회가 블록을 검증하는데, 이걸 4초(*t* = 4)까지 끝내는 게 목표예요. 이 4초가 어테스테이션 마감 시간이죠.
 
-![Timing game strategy](images/ch15/maet_1540.png)
+*타이밍 게임*은 검증자들이 최대한 늦게 블록을 제안해서 MEV(추가 수익)를 더 얻으려는 전략이에요(Figure 15-40 참고). 타이밍을 잘 잡으면 이익을 더 얻을 수 있지만, 너무 늦으면 블록이 체인에 못 올라가서 손해를 볼 수도 있어요. 그래서 언제 제안할지 신중하게 고민해야 해요.
 
-Figure 15-40. Timing game strategy
+![타이밍 게임 전략](images/ch15/maet_1540.png)
 
-Timing games in Ethereum create a competitive landscape where gains from MEV for one validator may lead to disadvantages for others. This competition can disrupt consensus by increasing the number of missed slots and potential block reorganizations. Additionally, it motivates attesters to postpone their validations, adding layers of complexity to the process.
+Figure 15-40. 타이밍 게임 전략
 
-"Principles of Consensus" points out the importance of liveness for Ethereum's consensus process. However, timing games pose a threat to this critical feature by compromising the network's reliability.
+이런 타이밍 게임은 한쪽의 이익이 다른 쪽의 손해로 이어져요. 그래서 경쟁이 심해지고, 블록이 놓치는 경우나 체인 재조직 가능성이 커져요. 또 어테스터들도 검증을 최대한 늦추고 싶어 하면서 복잡성이 커져요.
 
-What's a timing game? It's like waiting for the perfect moment to make a move, aiming to get the most out of it. This is what some of the people keeping the network up and running are trying to do. They're waiting for the right time to act to get the most rewards. But this waiting game can be risky. If their internet is slow or they're not too experienced, they may miss their chance to do their part. And missing too many chances could make the network less dependable.
+"합의의 원칙"에서는 이더리움 합의에 있어 *라이브니스(liveness, 네트워크의 지속적인 동작)*가 매우 중요하다고 강조해요. 그런데 타이밍 게임은 이 핵심을 위협할 수 있어요.
 
-![Timing game risk visualization](images/ch15/maet_1541.png)
+타이밍 게임이 뭐냐고요? 가장 이득을 볼 수 있는 "타이밍"을 기다리는 거예요. 검증자들이 보상을 더 많이 받으려고 기다리다가, 너무 늦거나 네트워크 상황이 좋지 않으면, 자신이 해야 할 역할을 놓칠 수도 있죠. 여러 번 놓치면, 네트워크 신뢰도가 떨어져요.
 
-Figure 15-41. Timing game risk visualization
+![타이밍 게임 위험 시각화](images/ch15/maet_1541.png)
 
-Right now, this isn't a big problem. Most of the entries working as validators aren't really getting into these timing games or aren't playing them at all, as shown in Figure 15-41.
+Figure 15-41. 타이밍 게임 위험 시각화
 
-> **Note**  
+지금은 사실 이게 큰 문제는 아니에요. 대부분의 검증자들은 이런 타이밍 게임을 심하게 하진 않고, 실제로 Figure 15-41에서도 알 수 있듯이 크게 나타나지 않고 있어요.
+
+> **참고**
 >
-> Since we wrote this chapter in 2024, things have changed a bit. Right now, a solution has been added in the [Dencun hard fork](https://oreil.ly/TXJYS) called "proposer boost" that does punish late block proposers. The proposer boost adds weight to the attestations of the block proposer in the slot where the block is proposed.
+> 이 챕터를 2024년에 썼을 때와 비교해서, 최근에는 [덴쿤 하드포크(Dencun hard fork)](https://oreil.ly/TXJYS)에서 "프로포저 부스트"라는 해결책이 추가됐어요. 이 기능은 블록을 늦게 제안하는 검증자를 불이익 주는 방식이에요. 프로포저 부스트는, 해당 슬롯에서 블록 제안자의 어테스테이션에 가중치를 더해줘요.
 
-### Centralization of Supermajority
+---
 
-The concept of supermajority client risk in Ethereum is all about balancing the network's health and security. Ethereum decided to use multiple clients to prevent any single point of failure. This is because all software, including these clients, can have bugs. The real trouble starts when there's a consensus bug, which could lead to something serious, such as creating infinite ether out of thin air. If just one client ran the whole show and it got hit by such a bug, fixing it would be a nightmare. The network could keep running with the bug active long enough for an attacker to cause irreversible damage.
+### 슈퍼메이저리티(초과다수) 중앙화
 
-Let's analyze a quick example of what could happen if a majority client had a bug. Note that every block in Figure 15-42 is a checkpoint and not a block in the blockchain.
+이더리움에서 *슈퍼메이저리티 클라이언트 리스크*란, 네트워크의 건강과 보안을 모두 챙기려는 고민에서 나왔어요. 이더리움은 여러 클라이언트를 사용하게 권장해요. 하나만 쓸 경우, 그 소프트웨어에 버그가 생기면 큰 문제가 되거든요. 특히 합의(컨센서스) 버그가 생기면, 이더를 무한히 찍어낼 수도 있어요. 만약 모든 사람이 한 클라이언트만 쓴다면, 그 버그가 고쳐지기 전까지 해킹이나 큰 피해가 생길 수도 있죠.
 
-![Majority client bug scenario](images/ch15/maet_1542.png)
+예를 들어, 대다수 검증자들이 쓰는 클라이언트에 버그가 생긴다고 가정해볼게요. Figure 15-42는 각 블록이 체크포인트이고, 실제 블록은 아니에요.
 
-Figure 15-42. Majority client bug scenario
+![대다수 클라이언트에 버그가 있을 때의 시나리오](images/ch15/maet_1542.png)
 
-Functional clients disregard the epoch containing the invalid block (labeled "B"). The arrow pointing to block B serves to justify the invalid epoch, while the one coming from it finalizes it.
+Figure 15-42. 대다수 클라이언트에 버그가 있을 때의 시나리오
 
-Assuming the bug is resolved and the validators who finalized the invalid epoch wish to switch back to the correct chain B, a preliminary action required is the justification of epoch X, as shown in Figure 15-43.
+정상적인 클라이언트들은 유효하지 않은 블록(B)이 있는 에포크를 무시해요. B 블록을 가리키는 화살표가 잘못된 에포크를 정당화하고, 그 이후 화살표가 에포크를 최종화해요.
 
-![Recovery from bug requires justification](images/ch15/maet_1543.png)
+만약 버그가 수정되고, 잘못된 에포크를 최종화했던 검증자들이 다시 올바른 체인으로 돌아오고 싶으면, 먼저 X 에포크를 정당화해야 해요(Figure 15-43 참고).
 
-Figure 15-43. Recovery from bug requires justification
+![버그 복구를 위해 필요한 정당화](images/ch15/maet_1543.png)
 
-To engage in the justification of epoch X, requiring a supermajority link as shown by the dashed arrow, validators must bypass the arrow coming out of block B, which represents the finalization of the invalid epoch. Casting votes for both links could lead to penalties for these validators.
+Figure 15-43. 버그 복구를 위해 필요한 정당화
 
-The multiclient approach offers a safety net. If a bug pops up in a client that less than half the network uses, the rest of the network, running other clients, simply ignores the buggy block. This keeps the network on track, minimizing disruption. But if a majority client—especially one used by more than two thirds of validators—introduces a bug, that could wrongly finalize the chain, leading to a potential split.
+X 에포크를 정당화하려면(점선 화살표처럼 슈퍼메이저리티 링크가 필요), 검증자들은 B 블록 이후 화살표(=잘못된 에포크 최종화)를 뛰어넘어야 해요. 두 방향 모두에 투표하면, 검증자에게 페널티가 생길 수 있어요.
 
-Ethereum encourages diversifying clients because if everyone used the same client and it failed, the whole network would be at risk. The penalties for running a client that goes against the grain are there to discourage putting all our eggs in one basket. This way, if a client does have a bug, the damage is contained, affecting fewer users. If a minority client causes trouble, it's less of an issue because the majority can correct the path and continue finalizing the chain.
+여러 클라이언트를 쓰면 만약 한 클라이언트에 버그가 생겨도, 그걸 쓰는 사람이 50% 미만이라면 나머지는 그냥 무시하고 체인을 계속 이어가요. 그런데 2/3 이상이 한 클라이언트를 쓰고 버그가 생기면, 잘못된 체인이 잘못 최종화될 수 있고
 
-The more we spread out our choices across different clients, the safer Ethereum becomes. It's not just about avoiding technical failures; it's about safeguarding Ethereum's future against any single point of failure. This diversity is our best defense against network-wide crises, ensuring that Ethereum remains robust and resilient no matter what comes its way.
 
-When we first wrote this chapter, the percentage of usage for Geth was 63%, which was a problem, as we explained previously. Right now the situation is more healthy, but it will still need to improve in the future; as of now, 41% of the execution clients are using Geth and 38% are using Nethermind, as shown in Figure 15-44.
+, 네트워크가 분열될 위험이 있어요.
 
-![Current execution client distribution](images/ch15/maet_1544.png)
+이더리움은 모두가 같은 클라이언트만 쓰지 않도록 권장하고, 이를 위반하면 페널티도 줘요. 다양하게 나눠서 사용하면, 일부 클라이언트에 버그가 생겨도 전체 피해가 적어지고, 빠르게 정상화할 수 있죠.
 
-Figure 15-44. Current execution client distribution
+클라이언트를 다양하게 쓸수록 이더리움은 더 안전해져요. 단순히 기술적 문제가 아니라, 이더리움의 미래를 지키는 일이기도 해요. 한 가지에 의존하는 걸 피하는 게 최선이에요.
 
-This issue affects not only execution clients but also consensus clients, although the problem on the consensus side was quickly addressed, and the situation is now relatively healthy and stable, as shown in Figure 15-45.
+이 챕터를 처음 쓸 때 Geth의 점유율이 63%였는데, 이건 위험하다고 설명했었어요. 지금은 좀 나아져서 Geth 41%, Nethermind 38% 정도로 분산됐어요(Figure 15-44 참고).
 
-![Current consensus client distribution](images/ch15/maet_1545.png)
+![현재 실행 클라이언트 분포](images/ch15/maet_1544.png)
 
-Figure 15-45. Current consensus client distribution
+Figure 15-44. 현재 실행 클라이언트 분포
 
-## Conclusion
+이슈는 실행 클라이언트뿐 아니라 합의 클라이언트에도 있지만, 합의 쪽은 문제를 빠르게 해결해서 지금은 꽤 건강한 상태에요(Figure 15-45 참고).
 
-The consensus algorithm is one of the most complicated (and delicate) things in Ethereum. It represents a never-ending journey of innovation and improvement, with ongoing proposals to enhance its functionality and efficiency. Features such as single-slot finality and the ability to increase the max effective balance for validators illustrate the continuous efforts to refine and optimize the system.
+![현재 합의 클라이언트 분포](images/ch15/maet_1545.png)
 
-Understanding the core principles of consensus provides a solid foundation for appreciating these advancements and their impact on the robustness and scalability of the Ethereum network. As Ethereum evolves, so too will its consensus mechanisms, driving forward the capabilities of this pioneering blockchain technology.
+Figure 15-45. 현재 합의 클라이언트 분포
 
-For further reading, we recommend:
+---
 
-- [Gasper paper](https://oreil.ly/1BoMt)
-- [Upgrading Ethereum](https://oreil.ly/Jzh-9) by Ben Edgington
-- ["Decentralization Is Good or Not? Defending Consensus in Ethereum 2.0"](https://oreil.ly/VNC1Q)
+## 결론
+
+합의 알고리즘은 이더리움에서 가장 복잡하고, 민감한 부분이에요. 계속해서 혁신과 개선이 이어지고 있고, 앞으로도 새로운 기능이 꾸준히 추가될 예정이에요. 예를 들어, "싱글 슬롯 파이널리티"나, 검증자의 최대 유효 밸런스 증가 등 다양한 실험이 이루어지고 있어요.
+
+합의의 핵심 원리를 이해하면, 이런 발전이 이더리움의 견고함과 확장성에 얼마나 중요한지 알 수 있어요. 이더리움이 발전할수록 합의 메커니즘도 계속 진화할 거예요.
+
+더 공부하고 싶다면 아래 자료들도 추천드려요!
+
+* [Gasper 논문](https://oreil.ly/1BoMt)
+* [Upgrading Ethereum](https://oreil.ly/Jzh-9) by Ben Edgington
+* ["탈중앙화는 좋은가? 이더리움 2.0에서 합의를 지키기"](https://oreil.ly/VNC1Q)
+
+---
